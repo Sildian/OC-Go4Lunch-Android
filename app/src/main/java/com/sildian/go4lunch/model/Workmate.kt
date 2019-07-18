@@ -18,10 +18,20 @@ data class Workmate (
     }
 
     fun addLike(restaurant:Restaurant){
-
+        if(!this.likes.contains(restaurant)){
+            this.likes.add(restaurant)
+        }
     }
 
     fun updateLunch(restaurant:Restaurant?){
-
+        var rest:Restaurant?=this.lunchRestaurant
+        if(rest!=null){
+            rest.updateLunch(this, false)
+        }
+        this.lunchRestaurant=restaurant
+        rest=this.lunchRestaurant
+        if(rest!=null){
+            rest.updateLunch(this, true)
+        }
     }
 }

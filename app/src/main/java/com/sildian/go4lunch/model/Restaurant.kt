@@ -1,5 +1,6 @@
 package com.sildian.go4lunch.model
 
+import android.location.Location
 import com.google.android.gms.maps.model.LatLng
 
 data class Restaurant (
@@ -28,18 +29,31 @@ data class Restaurant (
     }
 
     fun getDistanceInMeters(userLocation:LatLng):Int{
-        return 0
+        /*val distanceResults:FloatArray= floatArrayOf()
+        Location.distanceBetween(this.location.latitude, this.location.longitude,
+                userLocation.latitude, userLocation.longitude, distanceResults)
+        val distance:Int= Math.round(distanceResults.get(distanceResults.size-1))*/
+        val earthRadius:Int=6371
+        val arg1:Double=Math.sin(this.location.latitude)*Math.sin(userLocation.latitude)
+        val arg2:Double=Math.cos(this.location.latitude)*Math.cos(userLocation.latitude)*
+                Math.cos(this.location.longitude-userLocation.longitude)
+        val distanceInKMeters:Double=earthRadius*Math.acos(arg1+arg2)
+        return (distanceInKMeters*1000).toInt()
     }
 
     fun getNbStars():Int{
-        return 0
+        val nbStars:Int=Math.round(this.score/5*3).toInt()
+        return nbStars
     }
 
     fun increaseNbLikes(){
-
+        this.nbLikes++
     }
 
     fun updateLunch(workmate:Workmate, eatsHere:Boolean){
-
+        when{
+            !this.lunchWorkmates.contains(workmate)&&eatsHere->this.lunchWorkmates.add(workmate)
+            this.lunchWorkmates.contains(workmate)&&!eatsHere->this.lunchWorkmates.remove(workmate)
+        }
     }
 }
