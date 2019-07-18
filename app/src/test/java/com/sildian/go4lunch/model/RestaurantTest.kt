@@ -8,12 +8,12 @@ import org.junit.Assert.*
 class RestaurantTest {
 
     @Test
-    fun given_loc1_is_10_8_loc2_is_12_4_when_getDistanceInMeters_then_checkDistanceIs1328409() {
-        var restaurant:Restaurant=Restaurant("R1", "R1", "Miam miam", LatLng(10.0, 8.0), null,
+    fun given_loc1_is_40_m5_loc2_is_41p261388_m3p3125_when_getDistanceInMeters_then_checkDistanceIs199872() {
+        var restaurant:Restaurant=Restaurant("R1", "R1", "Miam miam", LatLng(40.0, -5.0), null,
                 null, "1 rue Miam", null, null, "Toujours ouvert", 2.5)
-        val location:LatLng=LatLng(12.0, 4.0)
+        val location:LatLng=LatLng(41.261388, -3.3125)
         val distance:Int=restaurant.getDistanceInMeters(location)
-        assertEquals(1328409, distance)
+        assertEquals(199872, distance)
     }
 
     @Test
