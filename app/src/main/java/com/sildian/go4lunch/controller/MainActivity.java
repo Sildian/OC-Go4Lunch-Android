@@ -1,7 +1,9 @@
-package com.sildian.go4lunch;
+package com.sildian.go4lunch.controller;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.sildian.go4lunch.R;
 
 public class MainActivity extends AppCompatActivity {
 
