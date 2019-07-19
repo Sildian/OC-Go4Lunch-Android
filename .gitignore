@@ -11,5 +11,4 @@
 /build
 /captures
 .externalNativeBuild
-app/google-services.json
 app/src/main/res/values/id_facebook.xml
