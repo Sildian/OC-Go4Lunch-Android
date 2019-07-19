@@ -1,6 +1,10 @@
 package com.sildian.go4lunch.model
 
 import com.google.android.gms.maps.model.LatLng
+import kotlin.math.acos
+import kotlin.math.cos
+import kotlin.math.roundToLong
+import kotlin.math.sin
 
 /*************************************************************************************************
  * Restaurant
@@ -14,7 +18,7 @@ data class Restaurant (
         val location: LatLng,                       //The location
         val imageUrl:String?,                       //The image's url
         val cuisineType:String?,                    //The cuisine type
-        val adress:String,                          //The adress
+        val address:String,                         //The address
         val phoneNumber:String?,                    //The phone number
         val webUrl:String?,                         //The web url
         val openingHours:String,                    //The opening hours
@@ -26,9 +30,9 @@ data class Restaurant (
     /**This constructor allows to fill all fields**/
 
     constructor(placeId:String, firebaseId:String?, name:String, location:LatLng, imageUrl:String?,
-                cuisineType:String?, adress:String, phoneNumber:String?, webUrl:String?, openingHours:String, score:Double,
+                cuisineType:String?, address:String, phoneNumber:String?, webUrl:String?, openingHours:String, score:Double,
                 nbLikes:Int, lunchWorkmates:ArrayList<Workmate>):
-            this(placeId, firebaseId, name, location, imageUrl, cuisineType, adress, phoneNumber, webUrl, openingHours, score){
+            this(placeId, firebaseId, name, location, imageUrl, cuisineType, address, phoneNumber, webUrl, openingHours, score){
 
         this.nbLikes=nbLikes
         this.lunchWorkmates=lunchWorkmates
@@ -40,11 +44,11 @@ data class Restaurant (
      */
 
     fun getDistanceInMeters(userLocation:LatLng):Int{
-        val earthRadius:Double=6371.0
-        val arg1:Double=Math.sin(Math.toRadians(this.location.latitude))*Math.sin(Math.toRadians(userLocation.latitude))
-        val arg2:Double=Math.cos(Math.toRadians(this.location.latitude))*Math.cos(Math.toRadians(userLocation.latitude))*
-                Math.cos(Math.toRadians(userLocation.longitude-this.location.longitude))
-        val distanceInKMeters:Double=earthRadius*Math.acos(arg1+arg2)
+        val earthRadius=6371.0
+        val arg1:Double= sin(Math.toRadians(this.location.latitude)) * sin(Math.toRadians(userLocation.latitude))
+        val arg2:Double= cos(Math.toRadians(this.location.latitude)) * cos(Math.toRadians(userLocation.latitude)) *
+                cos(Math.toRadians(userLocation.longitude-this.location.longitude))
+        val distanceInKMeters:Double=earthRadius* acos(arg1+arg2)
         return (distanceInKMeters*1000).toInt()
     }
 
@@ -54,8 +58,7 @@ data class Restaurant (
      */
 
     fun getNbStars():Int{
-        val nbStars:Int=Math.round(this.score/5*3).toInt()
-        return nbStars
+        return (score / 5 * 3).roundToLong().toInt()
     }
 
     /**Increases the number of likes by 1**/
