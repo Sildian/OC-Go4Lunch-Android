@@ -29,7 +29,15 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+    //Firebase
+    implementation 'com.google.firebase:firebase-core:17.0.1'
+    implementation 'com.firebaseui:firebase-ui-auth:5.0.0'
+
+    //Facebook
+    implementation 'com.facebook.android:facebook-android-sdk:4.42.0'
 }
 repositories {
     mavenCentral()
 }
+apply plugin: 'com.google.gms.google-services'
