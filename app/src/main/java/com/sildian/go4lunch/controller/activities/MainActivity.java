@@ -1,5 +1,6 @@
 package com.sildian.go4lunch.controller.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,21 +14,37 @@ import android.view.MenuItem;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.sildian.go4lunch.R;
 
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+/**************************************************************************************************
+ * MainActivity
+ * Monitors the main user interactions
+ *************************************************************************************************/
+
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    /**Request keys**/
 
     private static final int KEY_REQUEST_LOGIN=10;
+
+    /**UI Components**/
+
+    private BottomNavigationView navigationBar;
+
+    /**Callbacks**/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar)findViewById(R.id.activity_main_toolbar));
+        this.navigationBar=findViewById(R.id.activity_main_navigation_bar);
+        this.navigationBar.setOnNavigationItemSelectedListener(this);
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         if(user==null) {
             startLoginActivity();
@@ -43,12 +60,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
+            //TODO replace by an actions
             case R.id.menu_toolbar_search:
-                //TODO replace by an action
                 Log.i("TAG_MENU", "Search");
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch(menuItem.getItemId()){
+            //TODO replace by actions
+            case R.id.menu_navigation_map:
+                Log.i("TAG_MENU", "Map");
+                break;
+            case R.id.menu_navigation_list:
+                Log.i("TAG_MENU", "List");
+                break;
+            case R.id.menu_navigation_workmates:
+                Log.i("TAG_MENU", "Workmates");
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -60,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    /**Logs a user to Firebase**/
 
     private void startLoginActivity(){
         startActivityForResult(
@@ -74,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
                         .build(),
                 KEY_REQUEST_LOGIN);
     }
+
+    /**Handles the result when a user logs to Firebase**/
 
     private void handleLoginResult(int resultCode, Intent data) {
 

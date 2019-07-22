@@ -3,5 +3,8 @@
 
     <!-- Menu -->
     <string name="menu_search">Search</string>
+    <string name="menu_map">Map View</string>
+    <string name="menu_list">List View</string>
+    <string name="menu_workmates">Workmates</string>
 
 </resources>
