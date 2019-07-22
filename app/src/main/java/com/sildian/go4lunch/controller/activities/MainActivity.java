@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.controller.fragments.MapFragment;
 
 import java.util.Arrays;
 
@@ -32,9 +34,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private static final int KEY_REQUEST_LOGIN=10;
 
+    /**Fragments ids**/
+
+    private static final int ID_FRAGMENT_MAP=0;
+    private static final int ID_FRAGMENT_LIST=1;
+    private static final int ID_FRAGMENT_WORKMATES=2;
+
     /**UI Components**/
 
     private BottomNavigationView navigationBar;
+    private Fragment fragment;
 
     /**Callbacks**/
 
@@ -49,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if(user==null) {
             startLoginActivity();
         }
+
+        //TODO move this after login activity
+        showFragment(ID_FRAGMENT_MAP);
     }
 
     @Override
@@ -70,18 +82,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch(menuItem.getItemId()){
-            //TODO replace by actions
-            case R.id.menu_navigation_map:
-                Log.i("TAG_MENU", "Map");
-                break;
-            case R.id.menu_navigation_list:
-                Log.i("TAG_MENU", "List");
-                break;
-            case R.id.menu_navigation_workmates:
-                Log.i("TAG_MENU", "Workmates");
-                break;
-        }
+        showFragment(menuItem.getItemId());
         return true;
     }
 
@@ -95,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
-    /**Logs a user to Firebase**/
+    /**Logs a user in Firebase**/
 
     private void startLoginActivity(){
         startActivityForResult(
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 KEY_REQUEST_LOGIN);
     }
 
-    /**Handles the result when a user logs to Firebase**/
+    /**Handles the result when a user logs in Firebase**/
 
     private void handleLoginResult(int resultCode, Intent data) {
 
@@ -134,5 +135,25 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 Log.d("TAG_LOGIN", "Unknown error");
             }
         }
+    }
+
+    /**Shows a fragment according to the id
+     * @param id : the fragment's id
+     */
+
+    private void showFragment(int id){
+        this.fragment=getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
+        switch(id){
+            case ID_FRAGMENT_MAP:
+                this.fragment = new MapFragment();
+                break;
+            case ID_FRAGMENT_LIST:
+                break;
+            case ID_FRAGMENT_WORKMATES:
+                break;
+        }
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.activity_main_fragment, this.fragment)
+                .commit();
     }
 }
