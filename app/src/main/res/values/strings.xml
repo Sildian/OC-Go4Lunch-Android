@@ -7,4 +7,6 @@
     <string name="menu_list">List View</string>
     <string name="menu_workmates">Workmates</string>
 
+    <!-- Messages sent to the user -->
+
 </resources>

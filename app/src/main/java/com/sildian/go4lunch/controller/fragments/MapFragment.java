@@ -3,16 +3,16 @@ package com.sildian.go4lunch.controller.fragments;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.sildian.go4lunch.R;
 
 /**************************************************************************************************
@@ -20,7 +20,7 @@ import com.sildian.go4lunch.R;
  * Shows the map and allows the user to find and select restaurants
  *************************************************************************************************/
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**Bundle keys**/
 
@@ -102,8 +102,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map=googleMap;
+        updateUserLocation();
+    }
 
-        //TODO replace by actions
-        Log.i("TAG_MAP", "Map uploaded");
+    @Override
+    protected void onUserLocationReceived() {
+        this.map.addMarker(new MarkerOptions().position(this.userLocation));
+        this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(this.userLocation, 15));
     }
 }

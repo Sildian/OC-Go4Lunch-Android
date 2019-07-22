@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     /**Request keys**/
 
-    private static final int KEY_REQUEST_LOGIN=10;
+    private static final int KEY_REQUEST_LOGIN=101;
 
     /**Fragments ids**/
 
