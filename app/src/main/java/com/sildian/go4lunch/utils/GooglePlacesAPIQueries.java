@@ -34,9 +34,9 @@ public interface GooglePlacesAPIQueries {
     /**Gets nearby places**/
 
     @GET(NEARBY_SEARCH_URL)
-    Observable<GooglePlacesSearchResponse> getNearbyPlaces
-            (@Query("location") String location, @Query("radius") String radius,
-             @Query("type") String placeType, @Query("key") String apiKey);
+    Observable<GooglePlacesSearchResponse> getNearbyPlaces(
+            @Query("location") String location, @Query("radius") String radius,
+            @Query("type") String placeType, @Query("key") String apiKey);
 
     /**Gets details information about a place**/
 

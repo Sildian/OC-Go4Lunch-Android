@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
+import com.sildian.go4lunch.model.api.HerePlacesResponse;
 
 import java.util.concurrent.TimeUnit;
 
@@ -67,6 +68,36 @@ public class APIStreams {
         /*Runs the query and returns the response*/
 
         return apiQueries.getPlaceDetails(placeId, queryApiKey)
+                .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**Gets extra details information about a restaurant from Here API
+     * @param context : the context
+     * @param location : the location
+     * @param radius : the radius in meters
+     * @param restaurantName : the restaurant's name
+     * @return : a response containing the information
+     */
+
+    public static Observable<HerePlacesResponse> streamGetRestaurantExtraDetails
+            (Context context, LatLng location, long radius, String restaurantName){
+
+        /*Prepares Retrofit queries*/
+
+        HerePlacesAPIQueries apiQueries=HerePlacesAPIQueries.retrofit.create(HerePlacesAPIQueries.class);
+
+        /*Prepares the query's parameters*/
+
+        String queryArea=location.latitude+","+location.longitude+";r="+radius;
+        String queryPlaceType="restaurant";
+        String queryAppId=context.getString(R.string.here_app_id);
+        String queryAppCode=context.getString(R.string.here_app_code);
+
+        /*Runs the query and returns the response*/
+
+        return apiQueries.getPlaceExtraDetails(queryArea, queryPlaceType, restaurantName, queryAppId, queryAppCode)
                 .subscribeOn(Schedulers.io())
                 .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread());
