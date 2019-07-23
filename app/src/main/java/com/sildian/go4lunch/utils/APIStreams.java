@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 
 import java.util.concurrent.TimeUnit;
@@ -42,6 +43,30 @@ public class APIStreams {
         /*Runs the query and returns the response*/
 
         return apiQueries.getNearbyPlaces(queryLocation, queryRadius, queryPlaceType, queryApiKey)
+                .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**Gets detail information about a restaurant
+     * @param context : context
+     * @param placeId : the Google place id
+     * @return a response containing the information
+     */
+
+    public static Observable<GooglePlacesDetailsResponse> streamGetRestaurantDetails(Context context, String placeId){
+
+        /*Prepares Retrofit queries*/
+
+        GooglePlacesAPIQueries apiQueries=GooglePlacesAPIQueries.retrofit.create(GooglePlacesAPIQueries.class);
+
+        /*Prepares the query's parameters*/
+
+        String queryApiKey=context.getString(R.string.google_api_key);
+
+        /*Runs the query and returns the response*/
+
+        return apiQueries.getPlaceDetails(placeId, queryApiKey)
                 .subscribeOn(Schedulers.io())
                 .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread());

@@ -1,5 +1,6 @@
 package com.sildian.go4lunch.utils;
 
+import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 
 import io.reactivex.Observable;
@@ -20,6 +21,7 @@ public interface GooglePlacesAPIQueries {
 
     String BASE_URL="https://maps.googleapis.com/maps/api/place/";
     String NEARBY_SEARCH_URL="nearbysearch/json?";
+    String DETAILS_URL="details/json?";
 
     /**Retrofit builder**/
 
@@ -35,4 +37,9 @@ public interface GooglePlacesAPIQueries {
     Observable<GooglePlacesSearchResponse> getNearbyPlaces
             (@Query("location") String location, @Query("radius") String radius,
              @Query("type") String placeType, @Query("key") String apiKey);
+
+    /**Gets details information about a place**/
+
+    @GET(DETAILS_URL)
+    Observable<GooglePlacesDetailsResponse> getPlaceDetails(@Query("placeid") String placeId, @Query("key") String apiKey);
 }
