@@ -11,8 +11,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.controller.activities.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,8 +36,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**Constructor**/
 
-    public MapFragment() {
-        // Required empty public constructor
+    public MapFragment(LatLng userLocation) {
+        super(userLocation);
     }
 
     /**Callbacks**/
@@ -103,11 +105,13 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map=googleMap;
-        updateUserLocation();
+        MainActivity mainActivity=(MainActivity)getActivity();
+        mainActivity.updateUserLocation();
     }
 
     @Override
-    protected void onUserLocationReceived() {
+    public void onUserLocationReceived(LatLng userLocation) {
+        this.userLocation=userLocation;
         this.map.addMarker(new MarkerOptions().position(this.userLocation));
         this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(this.userLocation, 15));
     }

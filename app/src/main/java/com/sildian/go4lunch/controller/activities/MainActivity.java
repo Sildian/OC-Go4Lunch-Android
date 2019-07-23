@@ -4,9 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,10 +20,16 @@ import android.view.MenuItem;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.controller.fragments.BaseFragment;
 import com.sildian.go4lunch.controller.fragments.MapFragment;
 
 import java.util.Arrays;
@@ -33,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     /**Request keys**/
 
     private static final int KEY_REQUEST_LOGIN=101;
+    private static final int KEY_REQUEST_PERMISSION=201;
 
     /**Fragments ids**/
 
@@ -40,10 +52,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private static final int ID_FRAGMENT_LIST=1;
     private static final int ID_FRAGMENT_WORKMATES=2;
 
+    /**Location permission**/
+
+    private static final String PERMISSION_LOCATION= Manifest.permission.ACCESS_FINE_LOCATION;
+
+    /**Location management**/
+
+    private FusedLocationProviderClient fusedLocationProviderClient;        //Allows to get the location
+    private LatLng userLocation;                                            //The user's location
+
     /**UI Components**/
 
     private BottomNavigationView navigationBar;
-    private Fragment fragment;
+    private BaseFragment fragment;
 
     /**Callbacks**/
 
@@ -61,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         //TODO move this after login activity
         showFragment(ID_FRAGMENT_MAP);
+        this.fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
+        updateUserLocation();
     }
 
     @Override
@@ -142,10 +165,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
      */
 
     private void showFragment(int id){
-        this.fragment=getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
+        this.fragment=(BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
         switch(id){
             case ID_FRAGMENT_MAP:
-                this.fragment = new MapFragment();
+                this.fragment = new MapFragment(this.userLocation);
                 break;
             case ID_FRAGMENT_LIST:
                 break;
@@ -155,5 +178,46 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_main_fragment, this.fragment)
                 .commit();
+    }
+
+    /**Gets the user's location**/
+
+    public void updateUserLocation() {
+
+        /*Checks if the location research can begin*/
+
+        if (this.fusedLocationProviderClient!=null) {
+            if (Build.VERSION.SDK_INT<23||checkSelfPermission(PERMISSION_LOCATION)== PackageManager.PERMISSION_GRANTED) {
+
+                /*Begins the location research*/
+
+                this.fusedLocationProviderClient.getLastLocation()
+                        .addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                    fragment.onUserLocationReceived(userLocation);
+                                } else {
+                                    //TODO handle
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                //TODO handle
+                            }
+                        });
+
+            }else if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
+                //TODO handle
+            }else{
+                ActivityCompat.requestPermissions(this, new String[]{PERMISSION_LOCATION}, KEY_REQUEST_PERMISSION);
+                //TODO handle result
+            }
+        }else{
+            //TODO handle
+        }
     }
 }
