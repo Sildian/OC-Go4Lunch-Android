@@ -3,7 +3,6 @@ package com.sildian.go4lunch.controller.fragments;
 
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sildian.go4lunch.R;
+
+import org.jetbrains.annotations.NotNull;
 
 /**************************************************************************************************
  * MapFragment
@@ -40,7 +41,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     /**Callbacks**/
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_map, container, false);
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -53,7 +54,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Bundle mapViewBundle = outState.getBundle(KEY_BUNDLE_MAPVIEW);
         if (mapViewBundle == null) {

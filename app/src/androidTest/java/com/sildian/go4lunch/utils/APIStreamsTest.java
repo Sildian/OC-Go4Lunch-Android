@@ -1,6 +1,9 @@
 package com.sildian.go4lunch.utils;
 
+import android.content.Context;
 import android.util.Log;
+
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
@@ -12,15 +15,16 @@ import io.reactivex.observers.TestObserver;
 
 import static org.junit.Assert.*;
 
-public class APIStreamsTest {
+public class APIStreamsTest{
 
     @Test
-    public void given_myPositionAndRadius1500_when_streamGetNearbyRestaurants_then_checkResponse(){
+    public void given_MyPositionAndRadius1500_when_streamGetNearbyRestaurants_then_checkResponseHasResults(){
 
+        Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
         LatLng location=new LatLng(48.942682, 2.137834);
         long radius=1500;
 
-        Observable<GooglePlacesSearchResponse> observable= APIStreams.streamGetNearbyRestaurants(location, radius);
+        Observable<GooglePlacesSearchResponse> observable= APIStreams.streamGetNearbyRestaurants(context, location, radius);
         TestObserver<GooglePlacesSearchResponse> testObserver=new TestObserver<>();
         observable.subscribeWith(testObserver)
                 .assertNoErrors()
@@ -34,7 +38,7 @@ public class APIStreamsTest {
         }
 
         GooglePlacesSearchResponse response=testObserver.values().get(0);
-        assertTrue(response.getResults()!=null);
+        assertNotNull(response.getResults());
         assertTrue(response.getResults().size()>0);
     }
 }
