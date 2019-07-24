@@ -13,30 +13,19 @@ import kotlin.math.sin
 
 data class Restaurant (
         val placeId:String,                         //The place id returned by Google Places API
-        val firebaseId:String?,                     //The id given by Firebase after it is stored
         val name:String,                            //The name
         val location: LatLng,                       //The location
         val imageUrl:String?,                       //The image's url
-        val cuisineType:String?,                    //The cuisine type
         val address:String,                         //The address
-        val phoneNumber:String?,                    //The phone number
-        val webUrl:String?,                         //The web url
-        val openingHours:String,                    //The opening hours
         val score:Double)                           //The score given by Google's users
 {
-    var nbLikes:Int=0;private set                               //The number of likes given by the workmates
-    var lunchWorkmates=arrayListOf<Workmate>();private set      //The workmates to eat in this restaurant today
-
-    /**This constructor allows to fill all fields**/
-
-    constructor(placeId:String, firebaseId:String?, name:String, location:LatLng, imageUrl:String?,
-                cuisineType:String?, address:String, phoneNumber:String?, webUrl:String?, openingHours:String, score:Double,
-                nbLikes:Int, lunchWorkmates:ArrayList<Workmate>):
-            this(placeId, firebaseId, name, location, imageUrl, cuisineType, address, phoneNumber, webUrl, openingHours, score){
-
-        this.nbLikes=nbLikes
-        this.lunchWorkmates=lunchWorkmates
-    }
+    var firebaseId:String?=null                     //The id given by Firebase after it is stored
+    var phoneNumber:String?=null                    //The phone number
+    var webUrl:String?=null                         //The web url
+    var openingHours:String?=null                   //The opening hours
+    var cuisineType:String?=null                    //The cuisine type
+    var nbLikes:Int=0                               //The number of likes given by the workmates
+    val lunchWorkmates=arrayListOf<Workmate>()      //The workmates to eat in this restaurant today
 
     /**Distance between the restaurant and the user
      * @Param userLocation : the user location

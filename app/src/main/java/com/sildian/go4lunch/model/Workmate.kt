@@ -11,18 +11,8 @@ data class Workmate (
         val lastName:String,                                //The last name
         val imageUrl:String?)                               //The image's url
 {
-    var likes=arrayListOf<Restaurant>();private set         //The list of liked restaurants
+    val likes=arrayListOf<Restaurant>()                     //The list of liked restaurants
     var lunchRestaurant:Restaurant?=null;private set        //The restaurant where the workmate eats today
-
-    /**This constructor allows to fill all fields**/
-
-    constructor(firebaseId:String, firstName:String, lastName:String, imageUrl:String?,
-                likes:ArrayList<Restaurant>, lunchRestaurant:Restaurant?):
-            this(firebaseId, firstName, lastName, imageUrl){
-
-        this.likes=likes
-        this.lunchRestaurant=lunchRestaurant
-    }
 
     /**Adds a restaurant to the list of liked restaurants
      * @Param restaurant : the liked restaurant
@@ -31,6 +21,7 @@ data class Workmate (
     fun addLike(restaurant:Restaurant){
         if(!this.likes.contains(restaurant)){
             this.likes.add(restaurant)
+            restaurant.increaseNbLikes()
         }
     }
 
