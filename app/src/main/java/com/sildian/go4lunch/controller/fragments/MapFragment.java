@@ -105,8 +105,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map=googleMap;
-        MainActivity mainActivity=(MainActivity)getActivity();
-        mainActivity.updateUserLocation();
     }
 
     @Override
