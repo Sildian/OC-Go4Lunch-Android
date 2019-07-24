@@ -26,7 +26,7 @@ class HerePlacesResponse {
             @SerializedName("category") @Expose val category:Category?=null
             @SerializedName("icon") @Expose val icon:String?=null
             @SerializedName("vicinity") @Expose val vicinity:String?=null
-            @SerializedName("having") @Expose val having:List<Object>?=null
+            @SerializedName("having") @Expose val having:List<Any>?=null
             @SerializedName("type") @Expose val type:String?=null
             @SerializedName("href") @Expose val href:String?=null
             @SerializedName("tags") @Expose val tags:List<Tag>?=null

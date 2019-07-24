@@ -6,11 +6,12 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.sildian.go4lunch"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -34,6 +35,10 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //Multidex support
+    def multidex_version = "2.0.1"
+    implementation "androidx.multidex:multidex:$multidex_version"
 
     //Google materials
     implementation 'com.google.android.material:material:1.0.0'
@@ -60,9 +65,6 @@ dependencies {
     //RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
-
-    //Multidex support
-    implementation 'com.android.support:multidex:1.0.3'
 }
 repositories {
     mavenCentral()
