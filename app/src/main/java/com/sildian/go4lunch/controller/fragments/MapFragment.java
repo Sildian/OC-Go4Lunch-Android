@@ -1,6 +1,10 @@
 package com.sildian.go4lunch.controller.fragments;
 
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -11,12 +15,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
+import com.sildian.go4lunch.model.Restaurant;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**************************************************************************************************
  * MapFragment
@@ -36,8 +45,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**Constructor**/
 
-    public MapFragment(LatLng userLocation) {
-        super(userLocation);
+    public MapFragment(LatLng userLocation, List<Restaurant> restaurants) {
+        super(userLocation, restaurants);
     }
 
     /**Callbacks**/
@@ -110,7 +119,38 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     @Override
     public void onUserLocationReceived(LatLng userLocation) {
         this.userLocation=userLocation;
-        this.map.addMarker(new MarkerOptions().position(this.userLocation));
-        this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(this.userLocation, 15));
+        if(this.map!=null) {
+            this.map.addMarker(new MarkerOptions().position(this.userLocation));
+            this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(this.userLocation, 15));
+        }
+    }
+
+    @Override
+    public void onRestaurantsReceived(List<Restaurant> restaurants) {
+        this.restaurants=restaurants;
+        if(this.map!=null) {
+            for (Restaurant restaurant : this.restaurants) {
+                this.map.addMarker(new MarkerOptions()
+                        .position(restaurant.getLocation())
+                        .icon(getBitmapDescriptor(R.drawable.ic_restaurant)));
+            }
+        }
+    }
+
+    //TODO move this to an other class
+
+    private BitmapDescriptor getBitmapDescriptor(int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            VectorDrawable vectorDrawable = (VectorDrawable) getActivity().getDrawable(id);
+            int h = vectorDrawable.getIntrinsicHeight();
+            int w = vectorDrawable.getIntrinsicWidth();
+            vectorDrawable.setBounds(0, 0, w, h);
+            Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bm);
+            vectorDrawable.draw(canvas);
+            return BitmapDescriptorFactory.fromBitmap(bm);
+        } else {
+            return BitmapDescriptorFactory.fromResource(id);
+        }
     }
 }

@@ -31,8 +31,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.fragments.BaseFragment;
 import com.sildian.go4lunch.controller.fragments.MapFragment;
+import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
+import com.sildian.go4lunch.utils.api.APIStreams;
+import com.sildian.go4lunch.utils.builders.RestaurantBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /**************************************************************************************************
  * MainActivity
@@ -56,10 +65,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private static final String PERMISSION_LOCATION= Manifest.permission.ACCESS_FINE_LOCATION;
 
-    /**Location management**/
+    /**Location and map management**/
 
     private FusedLocationProviderClient fusedLocationProviderClient;        //Allows to get the location
     private LatLng userLocation;                                            //The user's location
+    private List<Restaurant> restaurants;                                   //The list of restaurants in the area
+    private Disposable disposable;                                          //The disposable which gets the response from the API
 
     /**UI Components**/
 
@@ -75,15 +86,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setSupportActionBar((Toolbar)findViewById(R.id.activity_main_toolbar));
         this.navigationBar=findViewById(R.id.activity_main_navigation_bar);
         this.navigationBar.setOnNavigationItemSelectedListener(this);
+        this.fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
+        this.restaurants=new ArrayList<>();
+
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         if(user==null) {
             startLoginActivity();
+        }else{
+            initializeMapAndLocation();
         }
-
-        //TODO move this after login activity
-        showFragment(ID_FRAGMENT_MAP);
-        this.fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
-        updateUserLocation();
     }
 
     @Override
@@ -137,6 +148,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
+    /**Initializes the map and the user's location**/
+
+    private void initializeMapAndLocation(){
+        showFragment(ID_FRAGMENT_MAP);
+        updateUserLocation();
+    }
+
     /**Logs a user in Firebase**/
 
     private void startLoginActivity(){
@@ -163,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         if(resultCode == RESULT_OK) {
             Log.d("TAG_LOGIN", "Connected");
+            initializeMapAndLocation();
         }else {
             if (loginResponse == null) {
                 Log.d("TAG_LOGIN", "Canceled");
@@ -186,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         this.fragment=(BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
         switch(id){
             case ID_FRAGMENT_MAP:
-                this.fragment = new MapFragment(this.userLocation);
+                this.fragment = new MapFragment(this.userLocation, this.restaurants);
                 break;
             case ID_FRAGMENT_LIST:
                 break;
@@ -198,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 .commit();
     }
 
-    /**Gets the user's location**/
+    /**Gets the user's location and then searches the nearby restaurants**/
 
     public void updateUserLocation() {
 
@@ -216,6 +235,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                                 if (location != null) {
                                     userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                                     fragment.onUserLocationReceived(userLocation);
+
+                                    //TODO replace radius by a variable
+                                    runGooglePlacesSearchQuery(userLocation, 1500);
                                 } else {
                                     //TODO handle
                                 }
@@ -236,5 +258,36 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }else{
             //TODO handle
         }
+    }
+
+    /**Runs a query to get the list of restaurants near a location and within a radius
+     * @param location : the location
+     * @param radius : the radius in meters
+     */
+
+    private void runGooglePlacesSearchQuery(LatLng location, long radius){
+        this.disposable= APIStreams.streamGetNearbyRestaurants(this, location, radius)
+                .subscribeWith(new DisposableObserver<GooglePlacesSearchResponse>(){
+            @Override
+            public void onNext(GooglePlacesSearchResponse response) {
+                if(response.getResults()!=null) {
+                    restaurants.clear();
+                    for (GooglePlacesSearchResponse.Result apiRestaurant : response.getResults()) {
+                        restaurants.add(RestaurantBuilder.Companion.buildRestaurant(apiRestaurant, getString(R.string.google_maps_key)));
+                    }
+                    fragment.onRestaurantsReceived(restaurants);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("TAG_API", e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 }
