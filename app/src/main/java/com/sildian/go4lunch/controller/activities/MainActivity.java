@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     /**Request keys**/
 
     private static final int KEY_REQUEST_LOGIN=101;
-    private static final int KEY_REQUEST_PERMISSION=201;
+    private static final int KEY_REQUEST_PERMISSION_LOCATION=201;
 
     /**Fragments ids**/
 
@@ -115,6 +115,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         switch(requestCode){
             case KEY_REQUEST_LOGIN:
                 handleLoginResult(resultCode, data);
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode){
+            case KEY_REQUEST_PERMISSION_LOCATION:
+                if(grantResults.length>0){
+                    switch(grantResults[0]){
+                        case PackageManager.PERMISSION_GRANTED:
+                            updateUserLocation();
+                            break;
+                        case PackageManager.PERMISSION_DENIED:
+                            //TODO Handle
+                            break;
+                    }
+                }
                 break;
         }
     }
@@ -213,8 +231,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }else if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
                 //TODO handle
             }else{
-                ActivityCompat.requestPermissions(this, new String[]{PERMISSION_LOCATION}, KEY_REQUEST_PERMISSION);
-                //TODO handle result
+                ActivityCompat.requestPermissions(this, new String[]{PERMISSION_LOCATION}, KEY_REQUEST_PERMISSION_LOCATION);
             }
         }else{
             //TODO handle
