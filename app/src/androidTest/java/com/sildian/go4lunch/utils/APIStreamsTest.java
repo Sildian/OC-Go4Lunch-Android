@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.model.api.HerePlacesResponse;
+import com.sildian.go4lunch.utils.api.APIStreams;
 
 import org.junit.Test;
 

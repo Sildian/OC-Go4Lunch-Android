@@ -10,10 +10,10 @@ import com.google.gson.annotations.SerializedName
 
 class HerePlacesResponse {
 
-    @SerializedName("results") @Expose val results: Results? = null
+    @SerializedName("results") @Expose val results: Result? = null
     @SerializedName("search") @Expose val search: Search? = null
 
-    class Results {
+    class Result {
 
         @SerializedName("items") @Expose val items:List<Item>?=null
 

@@ -1,4 +1,4 @@
-package com.sildian.go4lunch.utils;
+package com.sildian.go4lunch.utils.api;
 
 import com.sildian.go4lunch.model.api.HerePlacesResponse;
 
