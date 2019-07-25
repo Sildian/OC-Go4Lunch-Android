@@ -129,7 +129,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             for (Restaurant restaurant : this.restaurants) {
                 this.map.addMarker(new MarkerOptions()
                         .position(restaurant.getLocation())
-                        .icon(getBitmapDescriptor(R.drawable.ic_restaurant)));
+                        .icon(getBitmapDescriptor(R.drawable.ic_restaurant_location_off)));
             }
         }
     }
