@@ -32,6 +32,7 @@ import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.fragments.BaseFragment;
 import com.sildian.go4lunch.controller.fragments.MapFragment;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.utils.api.APIStreams;
 import com.sildian.go4lunch.utils.builders.RestaurantBuilder;
@@ -48,7 +49,7 @@ import io.reactivex.observers.DisposableObserver;
  * Monitors the main user interactions
  *************************************************************************************************/
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     /**Request keys**/
 
@@ -93,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if(user==null) {
             startLoginActivity();
         }else{
+            this.currentUser=new Workmate(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString());
             initializeMapAndLocation();
         }
     }
@@ -181,6 +183,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         if(resultCode == RESULT_OK) {
             Log.d("TAG_LOGIN", "Connected");
+            createWorkmateInFirebase(FirebaseAuth.getInstance().getCurrentUser());
             initializeMapAndLocation();
         }else {
             if (loginResponse == null) {
@@ -237,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                                     fragment.onUserLocationReceived(userLocation);
 
                                     //TODO replace radius by a variable
+                                    //TODO reactivate this line
                                     runGooglePlacesSearchQuery(userLocation, 1500);
                                 } else {
                                     //TODO handle

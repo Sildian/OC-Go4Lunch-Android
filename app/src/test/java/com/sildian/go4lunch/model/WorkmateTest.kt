@@ -9,7 +9,7 @@ class WorkmateTest {
 
     @Test
     fun given_MiamMiam_when_addLike_then_checkLikesContainsMiamMiam() {
-        val workmate=Workmate("W1", "Maurice", "Jody", null)
+        val workmate=Workmate("W1", "Maurice Jody", null)
         val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), null,
                 "1 rue Miam",2.5)
         workmate.addLike(restaurant)
@@ -20,7 +20,7 @@ class WorkmateTest {
 
     @Test
     fun given_MiamMiam_when_updateLunch_then_checkLunchRestaurantIsMiamMiamAndContainsMauriceJody() {
-        val workmate = Workmate("W1", "Maurice", "Jody", null)
+        val workmate = Workmate("W1", "Maurice Jody", null)
         val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), null,
                 "1 rue Miam",2.5)
         workmate.updateLunch(restaurant)
@@ -30,8 +30,7 @@ class WorkmateTest {
             assertEquals("Miam miam", workmateRestaurant.name)
         }
         assertEquals(restaurant, workmate.lunchRestaurant)
-        assertEquals("Maurice", restaurant.lunchWorkmates[0].firstName)
-        assertEquals("Jody", restaurant.lunchWorkmates[0].lastName)
+        assertEquals("Maurice Jody", restaurant.lunchWorkmates[0].name)
         assertTrue(restaurant.lunchWorkmates.contains(workmate))
     }
 }

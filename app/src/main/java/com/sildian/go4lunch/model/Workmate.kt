@@ -7,8 +7,7 @@ package com.sildian.go4lunch.model
 
 data class Workmate (
         val firebaseId:String,                              //The id given by Firebase
-        val firstName:String,                               //The first name
-        val lastName:String,                                //The last name
+        val name:String,                                    //The name
         val imageUrl:String?)                               //The image's url
 {
     val likes=arrayListOf<Restaurant>()                     //The list of liked restaurants
