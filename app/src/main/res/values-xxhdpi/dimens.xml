@@ -4,6 +4,8 @@
     <dimen name="text_size_menu_item">19sp</dimen>
     <dimen name="text_size_title">16sp</dimen>
     <dimen name="text_size_body">13sp</dimen>
-    <dimen name="components_margin">4dp</dimen>
+    <dimen name="components_margin_small">4dp</dimen>
+    <dimen name="components_margin_medium">6dp</dimen>
+    <dimen name="components_margin_large">8dp</dimen>
     <dimen name="image_width">80dp</dimen>
 </resources>

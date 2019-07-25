@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
 import com.sildian.go4lunch.model.Restaurant;
@@ -40,6 +41,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**UI Components**/
 
+    private FloatingActionButton locationButton;
     private MapView mapView;
     private GoogleMap map;
 
@@ -54,13 +56,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_map, container, false);
-        Bundle mapViewBundle = null;
-        if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(KEY_BUNDLE_MAPVIEW);
-        }
-        this.mapView = view.findViewById(R.id.fragment_map_map_view);
-        this.mapView.onCreate(mapViewBundle);
-        this.mapView.getMapAsync(this);
+        initializeLocationButton(view);
+        initializeMapView(view, savedInstanceState);
         return view;
     }
 
@@ -135,6 +132,31 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                         .icon(getBitmapDescriptor(R.drawable.ic_restaurant)));
             }
         }
+    }
+
+    /**Initializes the location button**/
+
+    private void initializeLocationButton(View view){
+        this.locationButton=view.findViewById(R.id.fragment_map_button_location);
+        this.locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity mainActivity=(MainActivity) getActivity();
+                mainActivity.updateUserLocation();
+            }
+        });
+    }
+
+    /**Initializes the map view**/
+
+    private void initializeMapView(View view, Bundle savedInstanceState){
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(KEY_BUNDLE_MAPVIEW);
+        }
+        this.mapView = view.findViewById(R.id.fragment_map_map_view);
+        this.mapView.onCreate(mapViewBundle);
+        this.mapView.getMapAsync(this);
     }
 
     //TODO move this to an other class
