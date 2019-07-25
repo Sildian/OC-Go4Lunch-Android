@@ -11,7 +11,9 @@
 /build
 /captures
 .externalNativeBuild
-app/src/main/res/values/id_facebook.xml
-app/src/main/res/values/id_here.xml
 app/src/debug/res/values/google_maps_api.xml
 app/src/release/res/values/google_maps_api.xml
+app/src/debug/res/values/id_facebook.xml
+app/src/release/res/values/id_facebook.xml
+app/src/debug/res/values/id_here.xml
+app/src/release/res/values/id_here.xml
