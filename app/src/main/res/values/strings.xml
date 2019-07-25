@@ -7,6 +7,9 @@
     <string name="menu_list">List View</string>
     <string name="menu_workmates">Workmates</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <!-- Messages sent to the user -->
 
 </resources>

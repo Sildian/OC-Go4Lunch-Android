@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.fragments.BaseFragment;
+import com.sildian.go4lunch.controller.fragments.ListFragment;
 import com.sildian.go4lunch.controller.fragments.MapFragment;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
@@ -153,7 +154,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     /**Initializes the map and the user's location**/
 
     private void initializeMapAndLocation(){
-        showFragment(ID_FRAGMENT_MAP);
+        showFragment(R.id.menu_navigation_map);
         updateUserLocation();
     }
 
@@ -207,12 +208,13 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     private void showFragment(int id){
         this.fragment=(BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
         switch(id){
-            case ID_FRAGMENT_MAP:
+            case R.id.menu_navigation_map:
                 this.fragment = new MapFragment(this.userLocation, this.restaurants);
                 break;
-            case ID_FRAGMENT_LIST:
+            case R.id.menu_navigation_list:
+                this.fragment = new ListFragment(this.userLocation, this.restaurants);
                 break;
-            case ID_FRAGMENT_WORKMATES:
+            case R.id.menu_navigation_workmates:
                 break;
         }
         getSupportFragmentManager().beginTransaction()

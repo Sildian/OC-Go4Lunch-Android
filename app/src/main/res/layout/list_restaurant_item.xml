@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/list_restaurant_item_part1"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/list_restaurant_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/components_margin_small"
+            android:text="Name"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/text_size_title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/list_restaurant_item_cuisine_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/components_margin_small"
+            android:text="Cuisine type"
+            android:textSize="@dimen/text_size_body" />
+
+        <TextView
+            android:id="@+id/list_restaurant_item_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/components_margin_small"
+            android:text="Address"
+            android:textSize="@dimen/text_size_body" />
+
+        <TextView
+            android:id="@+id/list_restaurant_item_opening_hours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/components_margin_small"
+            android:text="Opening hours"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/list_restaurant_item_part_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/list_restaurant_item_image"
+        app:layout_constraintStart_toEndOf="@id/list_restaurant_item_part1"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/list_restaurant_item_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/components_margin_small"
+            android:text="Distance"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/text_size_title" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/components_margin_small"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/list_restaurant_item_workmates_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_person" />
+
+            <TextView
+                android:id="@+id/list_restaurant_item_nb_workmates"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:text="Nb"
+                android:textSize="@dimen/text_size_body" />
+
+        </LinearLayout>
+
+        <RatingBar
+            android:id="@+id/list_restaurant_item_stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/components_margin_small"
+            android:clickable="false"
+            android:numStars="3"
+            android:rating="1"
+            style="@style/RatingBarTheme" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/list_restaurant_item_image"
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/image_width"
+        android:layout_margin="@dimen/components_margin_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/list_restaurant_item_part_2"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars[12]" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
