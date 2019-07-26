@@ -1,6 +1,9 @@
 package com.sildian.go4lunch.model
 
 import com.google.android.gms.maps.model.LatLng
+import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse
+import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse
+import com.sildian.go4lunch.model.api.HerePlacesResponse
 import kotlin.math.acos
 import kotlin.math.cos
 import kotlin.math.roundToLong
@@ -15,7 +18,6 @@ data class Restaurant (
         val placeId:String,                         //The place id returned by Google Places API
         val name:String,                            //The name
         val location: LatLng,                       //The location
-        val imageUrl:String?,                       //The image's url
         val address:String,                         //The address
         val score:Double)                           //The score given by Google's users
 {
@@ -26,6 +28,30 @@ data class Restaurant (
     var cuisineType:String?=null                    //The cuisine type
     var nbLikes:Int=0                               //The number of likes given by the workmates
     val lunchWorkmates=arrayListOf<Workmate>()      //The workmates to eat in this restaurant today
+
+    /**Constructor called to build a Restaurant from Google Places API's result
+     * @Param apiRestaurant :  : the result received from the api
+     */
+
+    constructor(apiRestaurant: GooglePlacesSearchResponse.Result):
+            this(apiRestaurant.placeId.toString(),
+                    apiRestaurant.name.toString(),
+                    if(apiRestaurant.geometry!=null&&apiRestaurant.geometry.location!=null
+                            &&apiRestaurant.geometry.location.lat!=null&&apiRestaurant.geometry.location.lng!=null)
+                        LatLng(apiRestaurant.geometry.location.lat.toDouble(), apiRestaurant.geometry.location.lng.toDouble())
+                    else LatLng(0.0, 0.0) ,
+                    apiRestaurant.vicinity.toString(),
+                    if(apiRestaurant.rating!=null)
+                        apiRestaurant.rating.toDouble()
+                    else 0.0)
+
+    fun addDetails(apiRestaurant: GooglePlacesDetailsResponse.Result){
+        //TODO define this
+    }
+
+    fun addExtraDetails(apiRestaurant: HerePlacesResponse.Result){
+        //TODO define this
+    }
 
     /**Distance between the restaurant and the user
      * @Param userLocation : the user location

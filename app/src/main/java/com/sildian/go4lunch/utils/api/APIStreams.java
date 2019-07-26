@@ -156,7 +156,7 @@ public class APIStreams {
                     if (exception instanceof ApiException) {
                         ApiException apiException = (ApiException) exception;
                         int statusCode = apiException.getStatusCode();
-                        Log.d("TAG_PLACE", "Place not found: " + exception.getMessage());
+                        Log.d("TAG_API", exception.getMessage());
                     }
                 });
             }

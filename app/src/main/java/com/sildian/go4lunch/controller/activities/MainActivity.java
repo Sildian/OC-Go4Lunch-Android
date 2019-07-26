@@ -38,7 +38,6 @@ import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.utils.api.APIStreams;
-import com.sildian.go4lunch.utils.builders.RestaurantBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -286,7 +285,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 if(response.getResults()!=null) {
                     restaurants.clear();
                     for (GooglePlacesSearchResponse.Result apiRestaurant : response.getResults()) {
-                        restaurants.add(RestaurantBuilder.Companion.buildRestaurant(apiRestaurant, getString(R.string.google_maps_key)));
+                        restaurants.add(new Restaurant(apiRestaurant));
                     }
                     fragment.onRestaurantsReceived(restaurants);
                 }
