@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.view.RestaurantAdapter;
@@ -36,8 +37,8 @@ public class ListFragment extends BaseFragment {
 
     /**Constructor**/
 
-    public ListFragment(LatLng userLocation, List<Restaurant> restaurants) {
-        super(userLocation, restaurants);
+    public ListFragment(PlacesClient placesClient, LatLng userLocation, List<Restaurant> restaurants) {
+        super(placesClient, userLocation, restaurants);
     }
 
     /**Callbacks**/
@@ -63,7 +64,7 @@ public class ListFragment extends BaseFragment {
     /**Initializes the restaurants view**/
 
     private void initializeRestaurantsView(){
-        this.restaurantAdapter=new RestaurantAdapter(this.restaurants, Glide.with(this), this.userLocation);
+        this.restaurantAdapter=new RestaurantAdapter(this.placesClient, this.restaurants, this.userLocation);
         this.restaurantsView.setAdapter(this.restaurantAdapter);
         this.restaurantsView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }

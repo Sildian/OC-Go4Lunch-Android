@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
@@ -47,8 +48,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**Constructor**/
 
-    public MapFragment(LatLng userLocation, List<Restaurant> restaurants) {
-        super(userLocation, restaurants);
+    public MapFragment(PlacesClient placesClient, LatLng userLocation, List<Restaurant> restaurants) {
+        super(placesClient, userLocation, restaurants);
     }
 
     /**Callbacks**/

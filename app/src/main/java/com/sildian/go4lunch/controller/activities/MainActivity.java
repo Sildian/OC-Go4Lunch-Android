@@ -25,6 +25,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -69,6 +71,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
     /**Location and map management**/
 
+    private PlacesClient placesClient;                                      //The placesClient allowing to use Google Places API
     private FusedLocationProviderClient fusedLocationProviderClient;        //Allows to get the location
     private LatLng userLocation;                                            //The user's location
     private List<Restaurant> restaurants;                                   //The list of restaurants in the area
@@ -86,10 +89,14 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar)findViewById(R.id.activity_main_toolbar));
+        Places.initialize(this, getString(R.string.google_maps_key));
+        this.placesClient = Places.createClient(this);
         this.navigationBar=findViewById(R.id.activity_main_navigation_bar);
         this.navigationBar.setOnNavigationItemSelectedListener(this);
         this.fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
         this.restaurants=new ArrayList<>();
+
+        //TODO Improve this
 
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         if(user==null) {
@@ -209,10 +216,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         this.fragment=(BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
         switch(id){
             case R.id.menu_navigation_map:
-                this.fragment = new MapFragment(this.userLocation, this.restaurants);
+                this.fragment = new MapFragment(this.placesClient, this.userLocation, this.restaurants);
                 break;
             case R.id.menu_navigation_list:
-                this.fragment = new ListFragment(this.userLocation, this.restaurants);
+                this.fragment = new ListFragment(this.placesClient, this.userLocation, this.restaurants);
                 break;
             case R.id.menu_navigation_workmates:
                 break;

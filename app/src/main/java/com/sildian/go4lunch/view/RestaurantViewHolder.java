@@ -7,11 +7,12 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.maps.model.LatLng;
+
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.utils.api.APIStreams;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,19 +36,24 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.list_restaurant_item_stars) RatingBar starsRatingBar;
     @BindView(R.id.list_restaurant_item_image) ImageView imageView;
 
+    /**Information**/
+
+    private PlacesClient placesClient;                  //The placesClient allowing to use Google Places API
+
     /**Constructor**/
 
-    public RestaurantViewHolder(View itemView){
+    public RestaurantViewHolder(View itemView, PlacesClient placesClient){
         super(itemView);
         ButterKnife.bind(this, itemView);
+        this.placesClient=placesClient;
     }
 
     /**Updates with a restaurant
      * @param restaurant : the restaurant
-     * @param glide : glide manager to display the image
+     * @param userLocation : the user location
      */
 
-    public void update(Restaurant restaurant, RequestManager glide, LatLng userLocation){
+    public void update(Restaurant restaurant, LatLng userLocation){
         this.nameText.setText(restaurant.getName());
         this.cuisineTypeText.setText(restaurant.getCuisineType());
         this.addressText.setText(restaurant.getAddress());
@@ -58,8 +64,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.nbWorkmatesText.setVisibility(restaurant.getLunchWorkmates().size()>0?View.VISIBLE:View.INVISIBLE);
         this.nbWorkmatesText.setText(String.valueOf(restaurant.getLunchWorkmates().size()));
         this.starsRatingBar.setRating(restaurant.getNbStars());
-        if(restaurant.getImageUrl()!=null) {
-            glide.load(restaurant.getImageUrl()).apply(RequestOptions.noTransformation()).into(this.imageView);
-        }
+        APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
     }
 }

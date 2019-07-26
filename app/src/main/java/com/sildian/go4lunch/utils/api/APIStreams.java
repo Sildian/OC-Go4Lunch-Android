@@ -1,13 +1,26 @@
 package com.sildian.go4lunch.utils.api;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.widget.ImageView;
 
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.model.api.HerePlacesResponse;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -101,5 +114,52 @@ public class APIStreams {
                 .subscribeOn(Schedulers.io())
                 .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**Gets a restaurant's main image
+     * @param placesClient : the placesClient allowing to use Google Places API
+     * @param restaurant : the restaurant
+     * @param imageView : the imageView displaying the image
+     */
+
+    public static void streamGetRestaurantImage(PlacesClient placesClient, Restaurant restaurant, ImageView imageView) {
+
+        /*Prepares the query's parameters*/
+
+        List<Place.Field> fields = Arrays.asList(Place.Field.PHOTO_METADATAS);
+        FetchPlaceRequest placeRequest = FetchPlaceRequest.newInstance(restaurant.getPlaceId(), fields);
+
+        /*Runs the query to get the reference*/
+
+        placesClient.fetchPlace(placeRequest).addOnSuccessListener((response) -> {
+
+            Place place = response.getPlace();
+
+            if(place.getPhotoMetadatas()!=null) {
+                PhotoMetadata photoMetadata = place.getPhotoMetadatas().get(0);
+                String attributions = photoMetadata.getAttributions();
+
+                /*Prepares the query to get the image*/
+
+                FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                        .setMaxWidth(500)
+                        .setMaxHeight(300)
+                        .build();
+
+                /*Runs the query to get the image*/
+
+                placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                    imageView.setImageBitmap(bitmap);
+
+                }).addOnFailureListener((exception) -> {
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        int statusCode = apiException.getStatusCode();
+                        Log.d("TAG_PLACE", "Place not found: " + exception.getMessage());
+                    }
+                });
+            }
+        });
     }
 }
