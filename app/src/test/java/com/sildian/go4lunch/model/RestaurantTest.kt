@@ -1,7 +1,9 @@
 package com.sildian.go4lunch.model
 
 import com.google.android.gms.maps.model.LatLng
+import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse
+import com.sildian.go4lunch.model.api.HerePlacesResponse
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -36,6 +38,60 @@ class RestaurantTest {
         assertEquals(12.78, restaurant.location.longitude, 0.0)
         assertEquals("1 rue Miam", restaurant.address)
         assertEquals(2, restaurant.getNbStars())
+    }
+
+    @Test
+    fun give_FakeDetails_when_addDetails_then_checkDetailsReceived(){
+
+        val open: GooglePlacesDetailsResponse.Result.OpeningHours.Period.Open=
+                Mockito.mock(GooglePlacesDetailsResponse.Result.OpeningHours.Period.Open::class.java)
+        Mockito.`when`(open.day).thenReturn(2)
+        Mockito.`when`(open.time).thenReturn("1200")
+
+        val close:GooglePlacesDetailsResponse.Result.OpeningHours.Period.Close=
+                Mockito.mock(GooglePlacesDetailsResponse.Result.OpeningHours.Period.Close::class.java)
+        Mockito.`when`(close.day).thenReturn(2)
+        Mockito.`when`(close.time).thenReturn("1345")
+
+        val period:GooglePlacesDetailsResponse.Result.OpeningHours.Period=
+                Mockito.mock(GooglePlacesDetailsResponse.Result.OpeningHours.Period::class.java)
+        Mockito.`when`(period.open).thenReturn(open)
+        Mockito.`when`(period.close).thenReturn(close)
+
+        val periods=listOf(period)
+
+        val openingHours:GooglePlacesDetailsResponse.Result.OpeningHours=
+                Mockito.mock(GooglePlacesDetailsResponse.Result.OpeningHours::class.java)
+        Mockito.`when`(openingHours.periods).thenReturn(periods)
+
+        val apiRestaurant:GooglePlacesDetailsResponse.Result=Mockito.mock(GooglePlacesDetailsResponse.Result::class.java)
+        Mockito.`when`(apiRestaurant.internationalPhoneNumber).thenReturn("01 02 03 04 05")
+        Mockito.`when`(apiRestaurant.website).thenReturn("https://www.superresto.com/")
+        Mockito.`when`(apiRestaurant.openingHours).thenReturn(openingHours)
+
+        val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
+        restaurant.addDetails(apiRestaurant)
+        assertEquals("01 02 03 04 05", restaurant.phoneNumber)
+        assertEquals("https://www.superresto.com/", restaurant.webUrl)
+        assertEquals(1, restaurant.openingHours.size)
+        assertEquals(2, restaurant.openingHours[0].day)
+        assertEquals("1200", restaurant.openingHours[0].openTime)
+        assertEquals("1345", restaurant.openingHours[0].closeTime)
+    }
+
+    @Test
+    fun given_italian_when_addExtraDetails_then_checkCuisineTypeIsItalian(){
+
+        val tag: HerePlacesResponse.Result.Item.Tag=Mockito.mock(HerePlacesResponse.Result.Item.Tag::class.java)
+        Mockito.`when`(tag.title).thenReturn("Italian")
+        val tags=listOf(tag)
+
+        val apiRestaurant:HerePlacesResponse.Result.Item=Mockito.mock(HerePlacesResponse.Result.Item::class.java)
+        Mockito.`when`(apiRestaurant.tags).thenReturn(tags)
+
+        val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
+        restaurant.addExtraDetails(apiRestaurant)
+        assertEquals("Italian", restaurant.cuisineType)
     }
 
     @Test

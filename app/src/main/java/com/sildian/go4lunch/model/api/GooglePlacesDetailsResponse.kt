@@ -77,56 +77,56 @@ class GooglePlacesDetailsResponse {
                 }
             }
         }
-    }
 
-    class OpeningHours {
+        class OpeningHours {
 
-        @SerializedName("open_now") @Expose val openNow:Boolean?=null
-        @SerializedName("periods") @Expose val periods:List<Period>?=null
-        @SerializedName("weekday_text") @Expose val weekdayText:List<String>?=null
+            @SerializedName("open_now") @Expose val openNow:Boolean?=null
+            @SerializedName("periods") @Expose val periods:List<Period>?=null
+            @SerializedName("weekday_text") @Expose val weekdayText:List<String>?=null
 
-        class Period {
+            class Period {
 
-            @SerializedName("close") @Expose val close:Close?=null
-            @SerializedName("open") @Expose val open:Open?=null
+                @SerializedName("close") @Expose val close:Close?=null
+                @SerializedName("open") @Expose val open:Open?=null
 
-            class Close {
+                class Close {
 
-                @SerializedName("day") @Expose val day:Int?=null
-                @SerializedName("time") @Expose val time:String?=null
-            }
+                    @SerializedName("day") @Expose val day:Int?=null
+                    @SerializedName("time") @Expose val time:String?=null
+                }
 
-            class Open {
+                class Open {
 
-                @SerializedName("day") @Expose val day:Int?=null
-                @SerializedName("time") @Expose val time:String?=null
+                    @SerializedName("day") @Expose val day:Int?=null
+                    @SerializedName("time") @Expose val time:String?=null
+                }
             }
         }
-    }
 
-    class Photo {
+        class Photo {
 
-        @SerializedName("height") @Expose val height:Int?=null
-        @SerializedName("html_attributions") @Expose val htmlAttributions:List<String>?=null
-        @SerializedName("photo_reference") @Expose val photoReference:String?=null
-        @SerializedName("width") @Expose val width:Int?=null
-    }
+            @SerializedName("height") @Expose val height:Int?=null
+            @SerializedName("html_attributions") @Expose val htmlAttributions:List<String>?=null
+            @SerializedName("photo_reference") @Expose val photoReference:String?=null
+            @SerializedName("width") @Expose val width:Int?=null
+        }
 
-    class PlusCode {
+        class PlusCode {
 
-        @SerializedName("compound_code") @Expose val compoundCode:String?=null
-        @SerializedName("global_code") @Expose val globalCode:String?=null
-    }
+            @SerializedName("compound_code") @Expose val compoundCode:String?=null
+            @SerializedName("global_code") @Expose val globalCode:String?=null
+        }
 
-    class Review {
+        class Review {
 
-        @SerializedName("author_name") @Expose val authorName:String?=null
-        @SerializedName("author_url") @Expose val authorUrl:String?=null
-        @SerializedName("language") @Expose val language:String?=null
-        @SerializedName("profile_photo_url") @Expose val profilePhotoUrl:String?=null
-        @SerializedName("rating") @Expose val rating:Int?=null
-        @SerializedName("relative_time_description") @Expose val relativeTimeDescription:String?=null
-        @SerializedName("text") @Expose val text:String?=null
-        @SerializedName("time") @Expose val time:Int?=null
+            @SerializedName("author_name") @Expose val authorName:String?=null
+            @SerializedName("author_url") @Expose val authorUrl:String?=null
+            @SerializedName("language") @Expose val language:String?=null
+            @SerializedName("profile_photo_url") @Expose val profilePhotoUrl:String?=null
+            @SerializedName("rating") @Expose val rating:Int?=null
+            @SerializedName("relative_time_description") @Expose val relativeTimeDescription:String?=null
+            @SerializedName("text") @Expose val text:String?=null
+            @SerializedName("time") @Expose val time:Int?=null
+        }
     }
 }

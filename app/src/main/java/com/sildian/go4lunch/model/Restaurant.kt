@@ -1,6 +1,8 @@
 package com.sildian.go4lunch.model
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse
 import com.sildian.go4lunch.model.api.HerePlacesResponse
@@ -24,7 +26,7 @@ data class Restaurant (
     var firebaseId:String?=null                     //The id given by Firebase after it is stored
     var phoneNumber:String?=null                    //The phone number
     var webUrl:String?=null                         //The web url
-    var openingHours:String?=null                   //The opening hours
+    var openingHours=arrayListOf<Period>()          //The opening hours
     var cuisineType:String?=null                    //The cuisine type
     var nbLikes:Int=0                               //The number of likes given by the workmates
     val lunchWorkmates=arrayListOf<Workmate>()      //The workmates to eat in this restaurant today
@@ -43,12 +45,36 @@ data class Restaurant (
                     apiRestaurant.vicinity.toString(),
                     apiRestaurant.rating)
 
+    /**Adds details from Google Places Details API's result
+     * @Param apiRestaurant : the result received from the api
+     */
+
     fun addDetails(apiRestaurant: GooglePlacesDetailsResponse.Result){
-        //TODO define this
+        this.phoneNumber=apiRestaurant.internationalPhoneNumber
+        this.webUrl=apiRestaurant.website
+        if(apiRestaurant.openingHours!=null&&apiRestaurant.openingHours.periods!=null) {
+            for(item in apiRestaurant.openingHours.periods){
+                if(item.open!=null&&item.close!=null&&item.open.day!=null) {
+                    val day = item.open.day
+                    val openTime = item.open.time
+                    val closeTime = item.close.time
+                    val period=Period(day.toInt(), openTime.toString(), closeTime.toString())
+                    this.openingHours.add(period)
+                }
+            }
+        }
     }
 
-    fun addExtraDetails(apiRestaurant: HerePlacesResponse.Result){
-        //TODO define this
+    /**Adds extra details from Here Places API's result
+     * @Param apiRestaurant : the result received from the api
+     */
+
+    fun addExtraDetails(apiRestaurant: HerePlacesResponse.Result.Item){
+        if(apiRestaurant.tags!=null&&apiRestaurant.tags.size>0){
+            this.cuisineType=
+                    if(apiRestaurant.tags.size>1)apiRestaurant.tags[1].title
+                    else apiRestaurant.tags[0].title
+        }
     }
 
     /**Distance between the restaurant and the user
@@ -91,4 +117,6 @@ data class Restaurant (
             this.lunchWorkmates.contains(workmate)&&!eatsHere->this.lunchWorkmates.remove(workmate)
         }
     }
+
+    class Period (val day:Int, val openTime:String, val closeTime:String)
 }

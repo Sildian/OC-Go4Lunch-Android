@@ -57,7 +57,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.nameText.setText(restaurant.getName());
         this.cuisineTypeText.setText(restaurant.getCuisineType());
         this.addressText.setText(restaurant.getAddress());
-        this.openingHoursText.setText(restaurant.getOpeningHours());
+        //this.openingHoursText.setText(restaurant.getOpeningHours());
         String distance=restaurant.getDistanceInMeters(userLocation)+" m";
         this.distanceText.setText(distance);
         this.workmatesIcon.setVisibility(restaurant.getLunchWorkmates().size()>0?View.VISIBLE:View.INVISIBLE);
