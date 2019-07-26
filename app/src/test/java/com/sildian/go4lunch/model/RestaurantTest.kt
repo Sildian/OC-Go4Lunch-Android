@@ -35,7 +35,7 @@ class RestaurantTest {
         assertEquals(25.15, restaurant.location.latitude, 0.0)
         assertEquals(12.78, restaurant.location.longitude, 0.0)
         assertEquals("1 rue Miam", restaurant.address)
-        assertEquals(2.5, restaurant.score, 0.0)
+        assertEquals(2, restaurant.getNbStars())
     }
 
     @Test

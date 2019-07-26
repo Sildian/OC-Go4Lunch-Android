@@ -19,7 +19,7 @@ data class Restaurant (
         val name:String,                            //The name
         val location: LatLng,                       //The location
         val address:String,                         //The address
-        val score:Double)                           //The score given by Google's users
+        val score:Double?)                          //The score given by Google's users
 {
     var firebaseId:String?=null                     //The id given by Firebase after it is stored
     var phoneNumber:String?=null                    //The phone number
@@ -41,9 +41,7 @@ data class Restaurant (
                         LatLng(apiRestaurant.geometry.location.lat.toDouble(), apiRestaurant.geometry.location.lng.toDouble())
                     else LatLng(0.0, 0.0) ,
                     apiRestaurant.vicinity.toString(),
-                    if(apiRestaurant.rating!=null)
-                        apiRestaurant.rating.toDouble()
-                    else 0.0)
+                    apiRestaurant.rating)
 
     fun addDetails(apiRestaurant: GooglePlacesDetailsResponse.Result){
         //TODO define this
@@ -73,7 +71,7 @@ data class Restaurant (
      */
 
     fun getNbStars():Int{
-        return (score / 5 * 3).roundToLong().toInt()
+        return if(score!=null)(score / 5 * 3).roundToLong().toInt() else 0
     }
 
     /**Increases the number of likes by 1**/
