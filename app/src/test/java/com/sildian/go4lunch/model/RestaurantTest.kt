@@ -8,6 +8,9 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import org.mockito.Mockito
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 class RestaurantTest {
 
@@ -100,6 +103,48 @@ class RestaurantTest {
         val location=LatLng(41.261388, -3.3125)
         val distance:Int=restaurant.getDistanceInMeters(location)
         assertEquals(199872, distance)
+    }
+
+    @Test
+    fun given_MondayAt11am_when_getCurrentOpeningHours_then_check_currentOpeningHoursClosed(){
+
+        val calendar= Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_WEEK, 2)
+        calendar.set(Calendar.HOUR_OF_DAY, 11)
+        calendar.set(Calendar.MINUTE, 0)
+
+        val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
+        restaurant.openingHours.add(Restaurant.Period(0, "1200", "1500"))
+        restaurant.openingHours.add(Restaurant.Period(2, "1200", "1345"))
+        restaurant.openingHours.add(Restaurant.Period(2, "1930", "2145"))
+
+        val currentOpeningHours:Restaurant.Period?=restaurant.getCurrentOpeningHours(calendar)
+        assertNotNull(currentOpeningHours)
+        if(currentOpeningHours!=null) {
+            assertEquals(-1, currentOpeningHours.day)
+        }
+    }
+
+    @Test
+    fun given_TuesdayAt11am_when_getCurrentOpeningHours_then_check_currentOpeningHoursAre1200to1345(){
+
+        val calendar= Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_WEEK, 3)
+        calendar.set(Calendar.HOUR_OF_DAY, 11)
+        calendar.set(Calendar.MINUTE, 0)
+
+        val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
+        restaurant.openingHours.add(Restaurant.Period(0, "1200", "1500"))
+        restaurant.openingHours.add(Restaurant.Period(2, "1930", "2145"))
+        restaurant.openingHours.add(Restaurant.Period(2, "1200", "1345"))
+
+        val currentOpeningHours:Restaurant.Period?=restaurant.getCurrentOpeningHours(calendar)
+        assertNotNull(currentOpeningHours)
+        if(currentOpeningHours!=null) {
+            assertEquals(2, currentOpeningHours.day)
+            assertEquals("1200", currentOpeningHours.openTime)
+            assertEquals("1345", currentOpeningHours.closeTime)
+        }
     }
 
     @Test

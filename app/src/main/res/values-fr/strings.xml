@@ -10,4 +10,9 @@
 
     <!-- Messages sent to the user -->
 
+    <!-- Text displayed on the screen -->
+    <string name="text_restaurant_opening_hours_unknown">Horaires inconnus</string>
+    <string name="text_restaurant_opening_hours_closed">Fermé</string>
+    <string name="text_restaurant_opening_hours_open">Ouvre</string>
+
 </resources>

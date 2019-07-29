@@ -13,7 +13,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.utils.DateUtilities;
 import com.sildian.go4lunch.utils.api.APIStreams;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,9 +88,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
                     @Override
                     public void onNext(Restaurant restaurantWithAllDetails) {
                         cuisineTypeText.setText(restaurantWithAllDetails.getCuisineType());
-                        if(restaurantWithAllDetails.getOpeningHours().size()>0) {
-                            openingHoursText.setText(restaurantWithAllDetails.getOpeningHours().get(0).getCloseTime());
-                        }
+                        updateOpeningHours(restaurantWithAllDetails);
                     }
 
                     @Override
@@ -100,5 +101,42 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
                     }
                 });
+    }
+
+    /**Updates the opening hours
+     * @param restaurantWithAllDetails : the restaurant
+     */
+
+    private void updateOpeningHours(Restaurant restaurantWithAllDetails){
+
+        /*Prepares the parameters*/
+
+        Calendar calendar= Calendar.getInstance();
+        String openingHours;
+        Restaurant.Period currentOpeningHours=restaurantWithAllDetails.getCurrentOpeningHours(calendar);
+
+        /*If the current opening hours are null, then shows hours unknown*/
+
+        if(currentOpeningHours==null){
+            openingHours=itemView.getContext().getString(R.string.text_restaurant_opening_hours_unknown);
+
+            /*If the current opening hours return day -1, then shows restaurant closed*/
+
+        }else if(currentOpeningHours.getDay()==-1){
+            openingHours=itemView.getContext().getString(R.string.text_restaurant_opening_hours_closed);
+
+            /*Else formats the opening hours and shows it*/
+
+        }else{
+            String inputTimeFormat="HHmm";
+            String ouputTimeFormat= DateUtilities.Companion.getLocalTimeFormatPattern();
+            String openTime=DateUtilities.Companion.convertFormat
+                    (inputTimeFormat, ouputTimeFormat, currentOpeningHours.getOpenTime());
+            String closeTime=DateUtilities.Companion.convertFormat
+                    (inputTimeFormat, ouputTimeFormat, currentOpeningHours.getCloseTime());
+            openingHours=itemView.getContext().getString
+                    (R.string.text_restaurant_opening_hours_open) +" "+openTime+" - "+closeTime;
+        }
+        openingHoursText.setText(openingHours);
     }
 }

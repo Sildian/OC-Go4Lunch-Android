@@ -1,11 +1,12 @@
 package com.sildian.go4lunch.model
 
 import com.google.android.gms.maps.model.LatLng
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+
 import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse
 import com.sildian.go4lunch.model.api.HerePlacesResponse
+import java.util.*
+
 import kotlin.math.acos
 import kotlin.math.cos
 import kotlin.math.roundToLong
@@ -26,7 +27,7 @@ data class Restaurant (
     var firebaseId:String?=null                     //The id given by Firebase after it is stored
     var phoneNumber:String?=null                    //The phone number
     var webUrl:String?=null                         //The web url
-    var openingHours=arrayListOf<Period>()          //The opening hours
+    var openingHours=arrayListOf<Period>()          //The opening hours for each day of the week
     var cuisineType:String?=null                    //The cuisine type
     var nbLikes:Int=0                               //The number of likes given by the workmates
     val lunchWorkmates=arrayListOf<Workmate>()      //The workmates to eat in this restaurant today
@@ -91,6 +92,57 @@ data class Restaurant (
         return (distanceInKMeters*1000).toInt()
     }
 
+    /**Gets the current opening hours
+     * @Param calendar : the calendar
+     */
+
+    fun getCurrentOpeningHours(calendar: Calendar):Period?{
+
+        /*Sets the current day and time with a format matching the periods contents*/
+
+        val currentDay=calendar.get(Calendar.DAY_OF_WEEK)-1
+        val currentTime:Int=(calendar.get(Calendar.HOUR_OF_DAY).toString()+calendar.get(Calendar.MINUTE).toString()).toInt()
+
+        /*If opening hours are empty, return null*/
+
+        if(openingHours.isEmpty()){
+            return null
+        }else {
+
+            /*Gets all opening periods matching the current day*/
+
+            val matchingPeriods=arrayListOf<Period>()
+            for(item in openingHours){
+                if(item.day==currentDay){
+                    matchingPeriods.add(item)
+                }
+            }
+
+            /*If no matching period exist, return a period with day -1 indicating that the restaurant is closed*/
+
+            if (matchingPeriods.isEmpty()){
+                return Period(-1, "", "")
+
+                /*If one matching period exists, return this period*/
+
+            }else if(matchingPeriods.size==1){
+                return Period(matchingPeriods[0].day, matchingPeriods[0].openTime, matchingPeriods[0].closeTime)
+
+                /*If several matching periods exist, return the next period to the current time*/
+
+            }else{
+                fun selector(p: Period): Int = p.openTime.toInt()
+                matchingPeriods.sortBy { selector(it) }
+                for(item in matchingPeriods){
+                    if(item.openTime.toInt()>=currentTime||item.closeTime.toInt()>=currentTime){
+                        return item
+                    }
+                }
+                return Period(-1, "", "")
+            }
+        }
+    }
+
     /**Calculates the number of stars
      * using the Google's score on 5 and given that the max number of stars is 3
      * @return the number of stars
@@ -117,6 +169,8 @@ data class Restaurant (
             this.lunchWorkmates.contains(workmate)&&!eatsHere->this.lunchWorkmates.remove(workmate)
         }
     }
+
+    /**This nested class provides with periods allowing to know the opening hours for each day of the week**/
 
     class Period (val day:Int, val openTime:String, val closeTime:String)
 }
