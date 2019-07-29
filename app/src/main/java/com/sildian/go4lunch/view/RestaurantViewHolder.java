@@ -1,5 +1,6 @@
 package com.sildian.go4lunch.view;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -16,6 +17,8 @@ import com.sildian.go4lunch.utils.api.APIStreams;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 /************************************************************************************************
  * RestaurantViewHolder
@@ -26,6 +29,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     /**UI components**/
 
+    private View itemView;
     @BindView(R.id.list_restaurant_item_name) TextView nameText;
     @BindView(R.id.list_restaurant_item_cuisine_type) TextView cuisineTypeText;
     @BindView(R.id.list_restaurant_item_address) TextView addressText;
@@ -39,11 +43,13 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     /**Information**/
 
     private PlacesClient placesClient;                  //The placesClient allowing to use Google Places API
+    private Disposable disposable;                      //The disposable which gets the response from the API
 
     /**Constructor**/
 
     public RestaurantViewHolder(View itemView, PlacesClient placesClient){
         super(itemView);
+        this.itemView=itemView;
         ButterKnife.bind(this, itemView);
         this.placesClient=placesClient;
     }
@@ -55,9 +61,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
     public void update(Restaurant restaurant, LatLng userLocation){
         this.nameText.setText(restaurant.getName());
-        this.cuisineTypeText.setText(restaurant.getCuisineType());
+        this.cuisineTypeText.setText("");
         this.addressText.setText(restaurant.getAddress());
-        //this.openingHoursText.setText(restaurant.getOpeningHours());
+        this.openingHoursText.setText("");
         String distance=restaurant.getDistanceInMeters(userLocation)+" m";
         this.distanceText.setText(distance);
         this.workmatesIcon.setVisibility(restaurant.getLunchWorkmates().size()>0?View.VISIBLE:View.INVISIBLE);
@@ -65,5 +71,34 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.nbWorkmatesText.setText(String.valueOf(restaurant.getLunchWorkmates().size()));
         this.starsRatingBar.setRating(restaurant.getNbStars());
         APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
+        runRestaurantAllDetailsQuery(restaurant);
+    }
+
+    /**Runs a query to get all details about a restaurant from Google and Here APIs, and update the related fields
+     * @param restaurant : the restaurant
+     */
+
+    private void runRestaurantAllDetailsQuery(Restaurant restaurant){
+        //TODO change radius to value
+        this.disposable= APIStreams.streamGetRestaurantAllDetails(this.itemView.getContext(), restaurant, 100)
+                .subscribeWith(new DisposableObserver<Restaurant>(){
+                    @Override
+                    public void onNext(Restaurant restaurantWithAllDetails) {
+                        cuisineTypeText.setText(restaurantWithAllDetails.getCuisineType());
+                        if(restaurantWithAllDetails.getOpeningHours().size()>0) {
+                            openingHoursText.setText(restaurantWithAllDetails.getOpeningHours().get(0).getCloseTime());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("TAG_API", e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }

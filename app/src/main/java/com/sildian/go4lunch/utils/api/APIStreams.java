@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
@@ -25,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /*************************************************************************************************
@@ -114,6 +114,44 @@ public class APIStreams {
                 .subscribeOn(Schedulers.io())
                 .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**Gets all detail information about a restaurant : both details and extra details
+     * @param context : the context
+     * @param restaurant : the restaurant
+     * @param radius : the radius in meters
+     * @return the restaurant containing all the additional detail information
+     */
+
+    public static Observable<Restaurant> streamGetRestaurantAllDetails
+            (Context context, Restaurant restaurant, long radius){
+
+        /*Runs the query to get details from GooglePlacesDetails API*/
+
+        return streamGetRestaurantDetails(context, restaurant.getPlaceId())
+                .map(new Function<GooglePlacesDetailsResponse, Restaurant>(){
+                    @Override
+                    public Restaurant apply(GooglePlacesDetailsResponse response) throws Exception {
+                        restaurant.addDetails(response.getResult());
+                        return restaurant;
+                    }
+                })
+
+                /*Then runs the query to get extra details from HerePlaces API*/
+
+                .flatMap(new Function<Restaurant, Observable<Restaurant>>(){
+                    @Override
+                    public Observable<Restaurant> apply(Restaurant restaurant) throws Exception {
+                        return streamGetRestaurantExtraDetails(context, restaurant.getLocation(), radius, restaurant.getName())
+                                .map(new Function<HerePlacesResponse, Restaurant>(){
+                                    @Override
+                                    public Restaurant apply(HerePlacesResponse response) throws Exception {
+                                        restaurant.addExtraDetails(response.getResults().getItems().get(0));
+                                        return restaurant;
+                                    }
+                                });
+                    }
+                });
     }
 
     /**Gets a restaurant's main image

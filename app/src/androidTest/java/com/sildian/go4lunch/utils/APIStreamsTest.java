@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.model.api.HerePlacesResponse;
@@ -93,5 +94,33 @@ public class APIStreamsTest{
         assertNotNull(response.getResults());
         assertNotNull(response.getResults().getItems());
         assertEquals("Asian", response.getResults().getItems().get(0).getTags().get(0).getTitle());
+    }
+
+    @Test
+    public void given_Toyama_when_streamGetRestaurantAllDetails_then_check_NameIsToyamaAndTagIsJapanese(){
+
+        Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
+        String placeId="ChIJh0aPKn9h5kcRaOvBGMJDv50";
+        LatLng location=new LatLng(48.94556, 2.151771);
+        long radius=100;
+
+        Restaurant restaurant=new Restaurant(placeId, "Toyama", location, "Fake address", 5.0);
+
+        Observable<Restaurant> observable= APIStreams.streamGetRestaurantAllDetails(context, restaurant, radius);
+        TestObserver<Restaurant> testObserver=new TestObserver<>();
+        observable.subscribeWith(testObserver)
+                .assertNoErrors()
+                .assertNoTimeout()
+                .awaitTerminalEvent();
+
+        if(testObserver.errorCount()>0){
+            for(Throwable error:testObserver.errors()) {
+                Log.d("TAG_API", error.getMessage());
+            }
+        }
+
+        Restaurant restaurantWithDetails=testObserver.values().get(0);
+        assertEquals("Toyama", restaurantWithDetails.getName());
+        assertEquals("Japanese", restaurantWithDetails.getCuisineType());
     }
 }
