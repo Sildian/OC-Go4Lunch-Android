@@ -10,9 +10,14 @@
 
     <!-- Messages sent to the user -->
 
-    <!-- Text displayed on the screen -->
+    <!-- Text displayed within TextViews -->
     <string name="text_restaurant_opening_hours_unknown">Horaires inconnus</string>
     <string name="text_restaurant_opening_hours_closed">Fermé</string>
     <string name="text_restaurant_opening_hours_open">Ouvre</string>
+
+    <!--Text displayed within Buttons -->
+    <string name="button_restaurant_call">Appeler</string>
+    <string name="button_restaurant_like">J\'aime</string>
+    <string name="button_restaurant_website">Site web</string>
 
 </resources>
