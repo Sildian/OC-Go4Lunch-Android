@@ -41,14 +41,16 @@ public class ListFragment extends BaseFragment {
         super(placesClient, userLocation, restaurants);
     }
 
-    /**Callbacks**/
+    /**BaseFragment abstract methods**/
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_list, container, false);
-        ButterKnife.bind(this, view);
+    protected int getFragmentLayout() {
+        return R.layout.fragment_list;
+    }
+
+    @Override
+    protected void initializeView(Bundle SavedInstanceState) {
         initializeRestaurantsView();
-        return view;
     }
 
     @Override

@@ -29,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import butterknife.BindView;
+
 /**************************************************************************************************
  * MapFragment
  * Shows the map and allows the user to find and select restaurants
@@ -42,8 +44,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**UI Components**/
 
-    private FloatingActionButton locationButton;
-    private MapView mapView;
+    @BindView(R.id.fragment_map_button_location) FloatingActionButton locationButton;
+    @BindView(R.id.fragment_map_map_view) MapView mapView;
     private GoogleMap map;
 
     /**Constructor**/
@@ -53,14 +55,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     }
 
     /**Callbacks**/
-
-    @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_map, container, false);
-        initializeLocationButton(view);
-        initializeMapView(view, savedInstanceState);
-        return view;
-    }
 
     @Override
     public void onSaveInstanceState(@NotNull Bundle outState) {
@@ -114,6 +108,20 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         this.map=googleMap;
     }
 
+
+    /**BaseFragment abstract methods**/
+
+    @Override
+    protected int getFragmentLayout() {
+        return R.layout.fragment_map;
+    }
+
+    @Override
+    protected void initializeView(Bundle savedInstanceState) {
+        initializeLocationButton();
+        initializeMapView(savedInstanceState);
+    }
+
     @Override
     public void onUserLocationReceived(LatLng userLocation) {
         this.userLocation=userLocation;
@@ -137,8 +145,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**Initializes the location button**/
 
-    private void initializeLocationButton(View view){
-        this.locationButton=view.findViewById(R.id.fragment_map_button_location);
+    private void initializeLocationButton(){
         this.locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,12 +157,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**Initializes the map view**/
 
-    private void initializeMapView(View view, Bundle savedInstanceState){
+    private void initializeMapView(Bundle savedInstanceState){
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(KEY_BUNDLE_MAPVIEW);
         }
-        this.mapView = view.findViewById(R.id.fragment_map_map_view);
         this.mapView.onCreate(mapViewBundle);
         this.mapView.getMapAsync(this);
     }
