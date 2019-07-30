@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -22,4 +22,62 @@
         app:srcCompat="@drawable/ic_my_location"
         app:backgroundTint="@android:color/white" />
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/fragment_map_restaurant_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:behavior_hideable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/fragment_map_text_restaurant_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/components_margin_small"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                android:text="Name"/>
+
+            <RatingBar
+                android:id="@+id/fragment_map_restaurant_stars"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/components_margin_small"
+                android:clickable="false"
+                android:numStars="3"
+                android:rating="0" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/fragment_map_text_restaurant_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/components_margin_small"
+            android:text="Address"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/fragment_map_button_restaurant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:layout_margin="@dimen/components_margin_small"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/button_restaurant_more_details"
+            app:iconTint="@color/colorPrimary"
+            app:icon="@drawable/ic_restaurant" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

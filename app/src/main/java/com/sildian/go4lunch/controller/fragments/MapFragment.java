@@ -1,27 +1,22 @@
 package com.sildian.go4lunch.controller.fragments;
 
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.VectorDrawable;
-import android.os.Build;
 import android.os.Bundle;
-
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
@@ -49,8 +44,14 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
 
     /**UI Components**/
 
-    @BindView(R.id.fragment_map_button_location) FloatingActionButton locationButton;
     @BindView(R.id.fragment_map_map_view) MapView mapView;
+    @BindView(R.id.fragment_map_button_location) FloatingActionButton locationButton;
+    @BindView(R.id.fragment_map_restaurant_description) LinearLayout restaurantDescriptionLayout;
+    @BindView(R.id.fragment_map_text_restaurant_name) TextView restaurantNameText;
+    @BindView(R.id.fragment_map_restaurant_stars) RatingBar restaurantStars;
+    @BindView(R.id.fragment_map_text_restaurant_address) TextView restaurantAddressText;
+    @BindView(R.id.fragment_map_button_restaurant) Button restaurantButton;
+    private BottomSheetBehavior bottomSheet;
     private GoogleMap map;
 
     /**Constructor**/
@@ -73,27 +74,27 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        this.mapView.onResume();
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         this.mapView.onStart();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        this.mapView.onStop();
+    public void onResume() {
+        super.onResume();
+        this.mapView.onResume();
     }
 
     @Override
     public void onPause() {
         this.mapView.onPause();
         super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.mapView.onStop();
     }
 
     @Override
@@ -116,11 +117,14 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        this.bottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
         if(marker.getTag()!=null){
-            Intent restaurantActivityIntent=new Intent(getActivity(), RestaurantActivity.class);
-            restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, currentUser);
-            restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, (Restaurant)marker.getTag());
-            startActivity(restaurantActivityIntent);
+            Restaurant restaurant=(Restaurant)marker.getTag();
+            this.restaurantNameText.setText(restaurant.getName());
+            this.restaurantStars.setRating(restaurant.getNbStars());
+            this.restaurantAddressText.setText(restaurant.getAddress());
+            this.restaurantButton.setTag(restaurant);
+            this.bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
             return true;
         }else {
             return false;
@@ -138,6 +142,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     protected void initializeView(Bundle savedInstanceState) {
         initializeLocationButton();
         initializeMapView(savedInstanceState);
+        initializeRestaurantButton();
+        this.bottomSheet=BottomSheetBehavior.from(this.restaurantDescriptionLayout);
     }
 
     @Override
@@ -183,5 +189,21 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         }
         this.mapView.onCreate(mapViewBundle);
         this.mapView.getMapAsync(this);
+    }
+
+    /**Initializes the restaurant button**/
+
+    private void initializeRestaurantButton(){
+        this.restaurantButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v.getTag()!=null) {
+                    Intent restaurantActivityIntent = new Intent(getActivity(), RestaurantActivity.class);
+                    restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, currentUser);
+                    restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, (Restaurant) v.getTag());
+                    startActivity(restaurantActivityIntent);
+                }
+            }
+        });
     }
 }

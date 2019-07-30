@@ -19,5 +19,6 @@
     <string name="button_restaurant_call">Appeler</string>
     <string name="button_restaurant_like">J\'aime</string>
     <string name="button_restaurant_website">Site web</string>
+    <string name="button_restaurant_more_details">Plus</string>
 
 </resources>

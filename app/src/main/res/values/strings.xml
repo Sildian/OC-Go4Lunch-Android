@@ -18,5 +18,6 @@
     <string name="button_restaurant_call">Call</string>
     <string name="button_restaurant_like">Like</string>
     <string name="button_restaurant_website">Website</string>
+    <string name="button_restaurant_more_details">More details</string>
 
 </resources>
