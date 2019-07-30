@@ -74,7 +74,7 @@ class RestaurantTest {
 
         val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
         restaurant.addDetails(apiRestaurant)
-        assertEquals("01 02 03 04 05", restaurant.phoneNumber)
+        assertEquals("0102030405", restaurant.phoneNumber)
         assertEquals("https://www.superresto.com/", restaurant.webUrl)
         assertEquals(1, restaurant.openingHours.size)
         assertEquals(2, restaurant.openingHours[0].day)
