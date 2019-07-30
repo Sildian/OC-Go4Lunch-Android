@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.model.Workmate;
 
 import java.util.List;
 
@@ -24,8 +25,11 @@ import butterknife.ButterKnife;
 
 public abstract class BaseFragment extends Fragment {
 
+    /**Information**/
+
     protected PlacesClient placesClient;                                        //The placesClient allowing to use Google Places API
     protected LatLng userLocation;                                              //The user's location
+    protected Workmate currentUser;                                             //The current user
     protected List<Restaurant> restaurants;                                     //The list of restaurants in the area
 
     /**Abstract methods**/
@@ -37,9 +41,10 @@ public abstract class BaseFragment extends Fragment {
 
     /**Constructor**/
 
-    public BaseFragment(PlacesClient placesClient, LatLng userLocation, List<Restaurant> restaurants) {
+    public BaseFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
         this.placesClient=placesClient;
         this.userLocation=userLocation;
+        this.currentUser=currentUser;
         this.restaurants=restaurants;
     }
 

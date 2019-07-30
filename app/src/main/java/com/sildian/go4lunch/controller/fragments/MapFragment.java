@@ -1,6 +1,7 @@
 package com.sildian.go4lunch.controller.fragments;
 
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.VectorDrawable;
@@ -18,12 +19,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
+import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.model.Workmate;
+import com.sildian.go4lunch.utils.ImageUtilities;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +41,7 @@ import butterknife.BindView;
  * Shows the map and allows the user to find and select restaurants
  *************************************************************************************************/
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     /**Bundle keys**/
 
@@ -50,8 +55,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     /**Constructor**/
 
-    public MapFragment(PlacesClient placesClient, LatLng userLocation, List<Restaurant> restaurants) {
-        super(placesClient, userLocation, restaurants);
+    public MapFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
+        super(placesClient, userLocation, currentUser, restaurants);
     }
 
     /**Callbacks**/
@@ -106,8 +111,21 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map=googleMap;
+        this.map.setOnMarkerClickListener(this);
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if(marker.getTag()!=null){
+            Intent restaurantActivityIntent=new Intent(getActivity(), RestaurantActivity.class);
+            restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, currentUser);
+            restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, (Restaurant)marker.getTag());
+            startActivity(restaurantActivityIntent);
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     /**BaseFragment abstract methods**/
 
@@ -138,7 +156,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             for (Restaurant restaurant : this.restaurants) {
                 this.map.addMarker(new MarkerOptions()
                         .position(restaurant.getLocation())
-                        .icon(getBitmapDescriptor(R.drawable.ic_restaurant_location_off)));
+                        .icon(ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_off)))
+                .setTag(restaurant);
             }
         }
     }
@@ -164,22 +183,5 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         }
         this.mapView.onCreate(mapViewBundle);
         this.mapView.getMapAsync(this);
-    }
-
-    //TODO move this to an other class
-
-    private BitmapDescriptor getBitmapDescriptor(int id) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            VectorDrawable vectorDrawable = (VectorDrawable) getActivity().getDrawable(id);
-            int h = vectorDrawable.getIntrinsicHeight();
-            int w = vectorDrawable.getIntrinsicWidth();
-            vectorDrawable.setBounds(0, 0, w, h);
-            Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bm);
-            vectorDrawable.draw(canvas);
-            return BitmapDescriptorFactory.fromBitmap(bm);
-        } else {
-            return BitmapDescriptorFactory.fromResource(id);
-        }
     }
 }

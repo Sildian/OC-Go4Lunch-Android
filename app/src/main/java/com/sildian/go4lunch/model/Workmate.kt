@@ -1,17 +1,47 @@
 package com.sildian.go4lunch.model
 
+import android.os.Parcel
+import android.os.Parcelable
+
 /*************************************************************************************************
  * Workmate
  * This class monitors the data related to a workmate
  ************************************************************************************************/
 
-data class Workmate (
+data class Workmate(
         val firebaseId:String,                              //The id given by Firebase
         val name:String,                                    //The name
         val imageUrl:String?)                               //The image's url
+    :Parcelable
 {
     val likes=arrayListOf<Restaurant>()                     //The list of liked restaurants
     var lunchRestaurant:Restaurant?=null;private set        //The restaurant where the workmate eats today
+
+    /**Constructor (Parcelable)**/
+
+    constructor(parcel: Parcel):this(parcel.readString(), parcel.readString(), parcel.readString())
+
+    /**Parcelable**/
+
+    override fun writeToParcel(parcel: Parcel, flags:Int){
+        parcel.writeString(this.firebaseId)
+        parcel.writeString(this.name)
+        parcel.writeString(this.imageUrl)
+    }
+
+    override fun describeContents():Int{
+        return 0
+    }
+
+    companion object CREATOR:Parcelable.Creator<Workmate>{
+        override fun createFromParcel(parcel: Parcel): Workmate {
+            return Workmate(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Workmate?> {
+            return arrayOfNulls(size)
+        }
+    }
 
     /**Adds a restaurant to the list of liked restaurants
      * @Param restaurant : the liked restaurant

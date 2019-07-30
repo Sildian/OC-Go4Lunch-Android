@@ -1,5 +1,7 @@
 package com.sildian.go4lunch.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.android.gms.maps.model.LatLng
 
 import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse
@@ -23,6 +25,7 @@ data class Restaurant (
         val location: LatLng,                       //The location
         val address:String,                         //The address
         val score:Double?)                          //The score given by Google's users
+    : Parcelable
 {
     var firebaseId:String?=null                     //The id given by Firebase after it is stored
     var phoneNumber:String?=null                    //The phone number
@@ -45,6 +48,36 @@ data class Restaurant (
                     else LatLng(0.0, 0.0) ,
                     apiRestaurant.vicinity.toString(),
                     apiRestaurant.rating)
+
+    /**Constructor (Parcelable)**/
+
+    constructor(parcel: Parcel):
+            this(parcel.readString(), parcel.readString(), parcel.readParcelable(LatLng::class.java.classLoader),
+                    parcel.readString(), parcel.readDouble())
+
+    /**Parcelable**/
+
+    override fun writeToParcel(parcel:Parcel, flags: Int) {
+        parcel.writeString(this.placeId)
+        parcel.writeString(this.name)
+        parcel.writeParcelable(this.location, flags)
+        parcel.writeString(this.address)
+        parcel.writeDouble(if(this.score!=null)this.score.toDouble() else 0.0) //TODO change 0.0
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR:Parcelable.Creator<Restaurant>{
+        override fun createFromParcel(parcel: Parcel): Restaurant {
+            return Restaurant(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Restaurant?> {
+            return arrayOfNulls(size)
+        }
+    }
 
     /**Adds details from Google Places Details API's result
      * @Param apiRestaurant : the result received from the api

@@ -10,6 +10,7 @@
         android:id="@+id/fragment_restaurant_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:minHeight="@dimen/image_large_min_height"
         app:layout_constraintBottom_toTopOf="@+id/fragment_restaurant_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,6 +40,7 @@
                 android:layout_margin="@dimen/components_margin_small"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
                 android:text="Name"/>
 
             <RatingBar
@@ -105,8 +107,6 @@
             android:layout_weight="1"
             android:layout_marginTop="@dimen/components_margin_small"
             android:layout_marginBottom="@dimen/components_margin_small"
-            android:layout_marginStart="@dimen/components_margin_large"
-            android:layout_marginEnd="@dimen/components_margin_large"
             android:textColor="@color/colorPrimary"
             android:text="@string/button_restaurant_call"
             app:icon="@drawable/ic_phone"
@@ -120,8 +120,6 @@
             android:layout_weight="1"
             android:layout_marginTop="@dimen/components_margin_small"
             android:layout_marginBottom="@dimen/components_margin_small"
-            android:layout_marginStart="@dimen/components_margin_large"
-            android:layout_marginEnd="@dimen/components_margin_large"
             android:textColor="@color/colorPrimary"
             android:text="@string/button_restaurant_like"
             app:icon="@drawable/ic_like"
@@ -135,8 +133,6 @@
             android:layout_weight="1"
             android:layout_marginTop="@dimen/components_margin_small"
             android:layout_marginBottom="@dimen/components_margin_small"
-            android:layout_marginStart="@dimen/components_margin_large"
-            android:layout_marginEnd="@dimen/components_margin_large"
             android:textColor="@color/colorPrimary"
             android:text="@string/button_restaurant_website"
             app:icon="@drawable/ic_website"

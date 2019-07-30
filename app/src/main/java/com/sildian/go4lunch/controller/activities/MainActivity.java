@@ -58,11 +58,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     private static final int KEY_REQUEST_LOGIN=101;
     private static final int KEY_REQUEST_PERMISSION_LOCATION=201;
 
-    /**Fragments ids**/
+    /**Bundle keys**/
 
-    private static final int ID_FRAGMENT_MAP=0;
-    private static final int ID_FRAGMENT_LIST=1;
-    private static final int ID_FRAGMENT_WORKMATES=2;
+    public static final String KEY_BUNDLE_USER="KEY_BUNDLE_USER";
+    public static final String KEY_BUNDLE_RESTAURANT="KEY_BUNDLE_RESTAURANT";
 
     /**Location permission**/
 
@@ -215,10 +214,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         this.fragment=(BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
         switch(id){
             case R.id.menu_navigation_map:
-                this.fragment = new MapFragment(this.placesClient, this.userLocation, this.restaurants);
+                this.fragment = new MapFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
             case R.id.menu_navigation_list:
-                this.fragment = new ListFragment(this.placesClient, this.userLocation, this.restaurants);
+                this.fragment = new ListFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
             case R.id.menu_navigation_workmates:
                 break;
