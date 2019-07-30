@@ -99,44 +99,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fragment_restaurant_description">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/fragment_restaurant_button_call"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/components_margin_small"
-            android:layout_marginBottom="@dimen/components_margin_small"
+            android:layout_margin="@dimen/components_margin_small"
             android:textColor="@color/colorPrimary"
             android:text="@string/button_restaurant_call"
-            app:icon="@drawable/ic_phone"
-            app:iconTint="@color/colorPrimary"/>
+            android:drawableTop="@drawable/ic_phone"/>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/fragment_restaurant_button_like"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/components_margin_small"
-            android:layout_marginBottom="@dimen/components_margin_small"
+            android:layout_margin="@dimen/components_margin_small"
             android:textColor="@color/colorPrimary"
             android:text="@string/button_restaurant_like"
-            app:icon="@drawable/ic_like"
-            app:iconTint="@color/colorPrimary"/>
+            android:drawableTop="@drawable/ic_like"/>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/fragment_restaurant_button_website"
-            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/components_margin_small"
-            android:layout_marginBottom="@dimen/components_margin_small"
+            android:layout_margin="@dimen/components_margin_small"
             android:textColor="@color/colorPrimary"
             android:text="@string/button_restaurant_website"
-            app:icon="@drawable/ic_website"
-            app:iconTint="@color/colorPrimary"/>
+            android:drawableTop="@drawable/ic_website"/>
 
     </LinearLayout>
 

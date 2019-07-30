@@ -84,7 +84,10 @@ data class Restaurant (
      */
 
     fun addDetails(apiRestaurant: GooglePlacesDetailsResponse.Result){
-        this.phoneNumber=apiRestaurant.internationalPhoneNumber
+        this.phoneNumber=
+                if(apiRestaurant.internationalPhoneNumber!=null)
+                    apiRestaurant.internationalPhoneNumber.replace(" ", "")
+                else null
         this.webUrl=apiRestaurant.website
         if(apiRestaurant.openingHours!=null&&apiRestaurant.openingHours.periods!=null) {
             for(item in apiRestaurant.openingHours.periods){
