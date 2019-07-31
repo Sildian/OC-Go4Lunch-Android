@@ -8,8 +8,6 @@ import org.junit.Test
 
 import org.junit.Assert.*
 import org.mockito.Mockito
-import java.text.DateFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
 class RestaurantTest {

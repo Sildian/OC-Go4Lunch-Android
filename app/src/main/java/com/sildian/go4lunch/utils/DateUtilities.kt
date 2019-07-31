@@ -36,7 +36,7 @@ class DateUtilities {
 
             var outputItem: String? = null
 
-            if (!inputItem.isEmpty()) {
+            if (inputItem.isNotEmpty()) {
 
                 val simpleInputFormat = SimpleDateFormat(inputFormat)
                 val simpleOutputFormat = SimpleDateFormat(outputFormat)

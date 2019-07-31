@@ -129,29 +129,20 @@ public class APIStreams {
         /*Runs the query to get details from GooglePlacesDetails API*/
 
         return streamGetRestaurantDetails(context, restaurant.getPlaceId())
-                .map(new Function<GooglePlacesDetailsResponse, Restaurant>(){
-                    @Override
-                    public Restaurant apply(GooglePlacesDetailsResponse response) throws Exception {
-                        restaurant.addDetails(response.getResult());
-                        return restaurant;
-                    }
+                .map(response -> {
+                    restaurant.addDetails(response.getResult());
+                    return restaurant;
                 })
 
                 /*Then runs the query to get extra details from HerePlaces API*/
 
-                .flatMap(new Function<Restaurant, Observable<Restaurant>>(){
-                    @Override
-                    public Observable<Restaurant> apply(Restaurant restaurant) throws Exception {
-                        return streamGetRestaurantExtraDetails(context, restaurant.getLocation(), radius, restaurant.getName())
-                                .map(new Function<HerePlacesResponse, Restaurant>(){
-                                    @Override
-                                    public Restaurant apply(HerePlacesResponse response) throws Exception {
-                                        restaurant.addExtraDetails(response.getResults().getItems().get(0));
-                                        return restaurant;
-                                    }
-                                });
-                    }
-                });
+                .flatMap((Function<Restaurant, Observable<Restaurant>>) restaurantWithDetails ->
+                        streamGetRestaurantExtraDetails(context, restaurantWithDetails.getLocation(),
+                                radius, restaurantWithDetails.getName())
+                        .map(response -> {
+                            restaurantWithDetails.addExtraDetails(response.getResults().getItems().get(0));
+                            return restaurantWithDetails;
+                        }));
     }
 
     /**Gets a restaurant's main image

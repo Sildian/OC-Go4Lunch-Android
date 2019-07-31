@@ -14,6 +14,8 @@ import com.sildian.go4lunch.utils.api.APIStreams;
 
 import org.junit.Test;
 
+import java.util.Objects;
+
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 
@@ -66,7 +68,7 @@ public class APIStreamsTest{
         }
 
         GooglePlacesDetailsResponse response=testObserver.values().get(0);
-        assertEquals("Toyama", response.getResult().getName());
+        assertEquals("Toyama", Objects.requireNonNull(response.getResult()).getName());
     }
 
     @Test
@@ -93,7 +95,7 @@ public class APIStreamsTest{
         HerePlacesResponse response=testObserver.values().get(0);
         assertNotNull(response.getResults());
         assertNotNull(response.getResults().getItems());
-        assertEquals("Asian", response.getResults().getItems().get(0).getTags().get(0).getTitle());
+        assertEquals("Asian", Objects.requireNonNull(response.getResults().getItems().get(0).getTags()).get(0).getTitle());
     }
 
     @Test

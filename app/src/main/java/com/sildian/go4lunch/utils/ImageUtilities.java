@@ -9,6 +9,8 @@ import android.os.Build;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
+import java.util.Objects;
+
 /*************************************************************************************************
  * ImageUtilities
  * This class provides with static methods to monitor special images
@@ -25,7 +27,7 @@ public class ImageUtilities {
     public static BitmapDescriptor getBitmapDescriptor(Context context, int id) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             VectorDrawable vectorDrawable = (VectorDrawable) context.getDrawable(id);
-            int h = vectorDrawable.getIntrinsicHeight();
+            int h = Objects.requireNonNull(vectorDrawable).getIntrinsicHeight();
             int w = vectorDrawable.getIntrinsicWidth();
             vectorDrawable.setBounds(0, 0, w, h);
             Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);

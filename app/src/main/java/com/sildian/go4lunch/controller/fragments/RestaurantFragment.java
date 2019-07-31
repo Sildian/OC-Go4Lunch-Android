@@ -4,7 +4,6 @@ package com.sildian.go4lunch.controller.fragments;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -79,9 +78,11 @@ public class RestaurantFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.currentUser=getActivity().getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
-        this.restaurant=getActivity().getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_RESTAURANT);
-        updateUI();
+        if(getActivity().getIntent()!=null) {
+            this.currentUser = getActivity().getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
+            this.restaurant = getActivity().getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_RESTAURANT);
+            updateUI();
+        }
     }
 
     /**Updates UI components**/
@@ -102,13 +103,10 @@ public class RestaurantFragment extends Fragment {
     /**Initializes the call button**/
 
     private void initializeCallButton(){
-        this.callButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v.getTag()!=null){
-                    Intent callIntent=new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+v.getTag().toString()));
-                    startActivity(callIntent);
-                }
+        this.callButton.setOnClickListener(v -> {
+            if(v.getTag()!=null){
+                Intent callIntent=new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+v.getTag().toString()));
+                startActivity(callIntent);
             }
         });
     }
@@ -116,24 +114,16 @@ public class RestaurantFragment extends Fragment {
     /**Initializes the like button**/
 
     private void initializeLikeButton(){
-        this.likeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentUser.addLike(restaurant);
-            }
-        });
+        this.likeButton.setOnClickListener(v -> currentUser.addLike(restaurant));
     }
 
     /**Initializes the website button**/
 
     private void initializeWebsiteButton(){
-        this.websiteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v.getTag()!=null){
-                    Intent webIntent=new Intent(Intent.ACTION_VIEW, Uri.parse(v.getTag().toString()));
-                    startActivity(webIntent);
-                }
+        this.websiteButton.setOnClickListener(v -> {
+            if(v.getTag()!=null){
+                Intent webIntent=new Intent(Intent.ACTION_VIEW, Uri.parse(v.getTag().toString()));
+                startActivity(webIntent);
             }
         });
     }
@@ -141,12 +131,7 @@ public class RestaurantFragment extends Fragment {
     /**Initializes the lunch button**/
 
     private void initializeLunchButton(){
-        this.lunchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentUser.updateLunch(restaurant);
-            }
-        });
+        this.lunchButton.setOnClickListener(v -> currentUser.updateLunch(restaurant));
     }
 
     /**Disables a button and changes its UI**/

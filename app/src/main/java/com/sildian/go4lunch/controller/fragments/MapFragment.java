@@ -2,7 +2,6 @@ package com.sildian.go4lunch.controller.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -121,13 +120,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         this.bottomSheet.setState(BottomSheetBehavior.STATE_HIDDEN);
         if(marker.getTag()!=null){
             Restaurant restaurant=(Restaurant)marker.getTag();
-            this.restaurantNameText.setText(restaurant.getName());
-            this.restaurantStars.setRating(restaurant.getNbStars());
-            String distance=restaurant.getDistanceInMeters(userLocation)+" m";
-            this.restaurantDistanceText.setText(distance);
-            this.restaurantAddressText.setText(restaurant.getAddress());
-            this.restaurantButton.setTag(restaurant);
-            this.bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
+            updateBottomSheet(restaurant);
             return true;
         }else {
             return false;
@@ -174,12 +167,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     /**Initializes the location button**/
 
     private void initializeLocationButton(){
-        this.locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity mainActivity=(MainActivity) getActivity();
-                mainActivity.updateUserLocation();
-            }
+        this.locationButton.setOnClickListener(v -> {
+            MainActivity mainActivity=(MainActivity) getActivity();
+            mainActivity.updateUserLocation();
         });
     }
 
@@ -197,16 +187,27 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     /**Initializes the restaurant button**/
 
     private void initializeRestaurantButton(){
-        this.restaurantButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(v.getTag()!=null) {
-                    Intent restaurantActivityIntent = new Intent(getActivity(), RestaurantActivity.class);
-                    restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, currentUser);
-                    restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, (Restaurant) v.getTag());
-                    startActivity(restaurantActivityIntent);
-                }
+        this.restaurantButton.setOnClickListener(v -> {
+            if(v.getTag()!=null) {
+                Intent restaurantActivityIntent = new Intent(getActivity(), RestaurantActivity.class);
+                restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, currentUser);
+                restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, (Restaurant) v.getTag());
+                startActivity(restaurantActivityIntent);
             }
         });
+    }
+
+    /**Updates the bottomSheet with a restaurant's information
+     * @param restaurant : the restaurant
+     */
+
+    private void updateBottomSheet(Restaurant restaurant){
+        this.restaurantNameText.setText(restaurant.getName());
+        this.restaurantStars.setRating(restaurant.getNbStars());
+        String distance=restaurant.getDistanceInMeters(userLocation)+" m";
+        this.restaurantDistanceText.setText(distance);
+        this.restaurantAddressText.setText(restaurant.getAddress());
+        this.restaurantButton.setTag(restaurant);
+        this.bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 }

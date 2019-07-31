@@ -2,15 +2,11 @@ package com.sildian.go4lunch.controller.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,8 +19,6 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -86,7 +80,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar((Toolbar)findViewById(R.id.activity_main_toolbar));
+        setSupportActionBar(findViewById(R.id.activity_main_toolbar));
         Places.initialize(this, getString(R.string.google_maps_key));
         this.placesClient = Places.createClient(this);
         this.navigationBar=findViewById(R.id.activity_main_navigation_bar);
@@ -239,26 +233,19 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 /*Begins the location research*/
 
                 this.fusedLocationProviderClient.getLastLocation()
-                        .addOnSuccessListener(new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                                    fragment.onUserLocationReceived(userLocation);
+                        .addOnSuccessListener(location -> {
+                            if (location != null) {
+                                userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                                fragment.onUserLocationReceived(userLocation);
 
-                                    //TODO replace radius by a variable
-                                    //TODO reactivate this line
-                                    runGooglePlacesSearchQuery(userLocation, 1500);
-                                } else {
-                                    //TODO handle
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
+                                //TODO replace radius by a variable
+                                runGooglePlacesSearchQuery(userLocation, 1500);
+                            } else {
                                 //TODO handle
                             }
+                        })
+                        .addOnFailureListener(e -> {
+                            //TODO handle
                         });
 
             }else if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {

@@ -4,15 +4,9 @@ package com.sildian.go4lunch.controller.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
@@ -26,7 +20,6 @@ import com.sildian.go4lunch.view.RestaurantAdapter;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**************************************************************************************************
  * ListFragment
@@ -72,23 +65,20 @@ public class ListFragment extends BaseFragment {
 
     private void initializeRestaurantsView(){
 
-        /**Initializes the different items to create the RecyclerView**/
+        /*Initializes the different items to create the RecyclerView*/
 
         this.restaurantAdapter=new RestaurantAdapter(this.placesClient, this.restaurants, this.userLocation);
         this.restaurantsView.setAdapter(this.restaurantAdapter);
         this.restaurantsView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        /**Initializes the item click support**/
+        /*Initializes the item click support*/
 
         ItemClickSupport.addTo(this.restaurantsView, R.layout.list_restaurant_item)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Intent restaurantActivityIntent=new Intent(getActivity(), RestaurantActivity.class);
-                        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, currentUser);
-                        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, restaurants.get(position));
-                        startActivity(restaurantActivityIntent);
-                    }
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    Intent restaurantActivityIntent=new Intent(getActivity(), RestaurantActivity.class);
+                    restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, currentUser);
+                    restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, restaurants.get(position));
+                    startActivity(restaurantActivityIntent);
                 });
     }
 }

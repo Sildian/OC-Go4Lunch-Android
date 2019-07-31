@@ -42,8 +42,7 @@ data class Restaurant (
     constructor(apiRestaurant: GooglePlacesSearchResponse.Result):
             this(apiRestaurant.placeId.toString(),
                     apiRestaurant.name.toString(),
-                    if(apiRestaurant.geometry!=null&&apiRestaurant.geometry.location!=null
-                            &&apiRestaurant.geometry.location.lat!=null&&apiRestaurant.geometry.location.lng!=null)
+                    if(apiRestaurant.geometry?.location?.lat != null &&apiRestaurant.geometry.location.lng!=null)
                         LatLng(apiRestaurant.geometry.location.lat.toDouble(), apiRestaurant.geometry.location.lng.toDouble())
                     else LatLng(0.0, 0.0) ,
                     apiRestaurant.vicinity.toString(),
@@ -62,7 +61,7 @@ data class Restaurant (
         parcel.writeString(this.name)
         parcel.writeParcelable(this.location, flags)
         parcel.writeString(this.address)
-        parcel.writeDouble(if(this.score!=null)this.score.toDouble() else 0.0) //TODO change 0.0
+        parcel.writeDouble(if(this.score!=null)this.score.toDouble() else 0.0)
     }
 
     override fun describeContents(): Int {
@@ -107,7 +106,7 @@ data class Restaurant (
      */
 
     fun addExtraDetails(apiRestaurant: HerePlacesResponse.Result.Item){
-        if(apiRestaurant.tags!=null&&apiRestaurant.tags.size>0){
+        if(apiRestaurant.tags!=null&& apiRestaurant.tags.isNotEmpty()){
             this.cuisineType=
                     if(apiRestaurant.tags.size>1)apiRestaurant.tags[1].title
                     else apiRestaurant.tags[0].title

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.firebase.FirebaseLinkWorkmate;
@@ -40,11 +39,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
         final String imageUrl=user.getPhotoUrl()!=null?user.getPhotoUrl().toString():null;
         FirebaseLinkWorkmate.createWorkmate(firebaseId, name, imageUrl)
                 .addOnFailureListener(this)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        currentUser=new Workmate(firebaseId, name, imageUrl);
-                    }
-                });
+                .addOnSuccessListener(aVoid -> currentUser=new Workmate(firebaseId, name, imageUrl));
     }
 }
