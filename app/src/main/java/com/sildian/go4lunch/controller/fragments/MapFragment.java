@@ -49,6 +49,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     @BindView(R.id.fragment_map_restaurant_description) LinearLayout restaurantDescriptionLayout;
     @BindView(R.id.fragment_map_text_restaurant_name) TextView restaurantNameText;
     @BindView(R.id.fragment_map_restaurant_stars) RatingBar restaurantStars;
+    @BindView(R.id.fragment_map_text_restaurant_distance) TextView restaurantDistanceText;
     @BindView(R.id.fragment_map_text_restaurant_address) TextView restaurantAddressText;
     @BindView(R.id.fragment_map_button_restaurant) Button restaurantButton;
     private BottomSheetBehavior bottomSheet;
@@ -122,6 +123,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
             Restaurant restaurant=(Restaurant)marker.getTag();
             this.restaurantNameText.setText(restaurant.getName());
             this.restaurantStars.setRating(restaurant.getNbStars());
+            String distance=restaurant.getDistanceInMeters(userLocation)+" m";
+            this.restaurantDistanceText.setText(distance);
             this.restaurantAddressText.setText(restaurant.getAddress());
             this.restaurantButton.setTag(restaurant);
             this.bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);

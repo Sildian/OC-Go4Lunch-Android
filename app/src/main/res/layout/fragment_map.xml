@@ -58,6 +58,14 @@
                 android:numStars="3"
                 android:rating="0" />
 
+            <TextView
+                android:id="@+id/fragment_map_text_restaurant_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/components_margin_small"
+                android:textSize="@dimen/text_size_title"
+                android:text="Distance"/>
+
         </LinearLayout>
 
         <TextView
@@ -65,6 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/components_margin_small"
+            android:textSize="@dimen/text_size_body"
             android:text="Address"/>
 
         <com.google.android.material.button.MaterialButton
