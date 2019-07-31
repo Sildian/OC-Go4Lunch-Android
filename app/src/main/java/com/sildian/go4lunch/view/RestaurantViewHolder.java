@@ -38,7 +38,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.list_restaurant_item_address) TextView addressText;
     @BindView(R.id.list_restaurant_item_opening_hours) TextView openingHoursText;
     @BindView(R.id.list_restaurant_item_distance) TextView distanceText;
-    @BindView(R.id.list_restaurant_item_workmates_icon) ImageView workmatesIcon;
     @BindView(R.id.list_restaurant_item_nb_workmates) TextView nbWorkmatesText;
     @BindView(R.id.list_restaurant_item_stars) RatingBar starsRatingBar;
     @BindView(R.id.list_restaurant_item_image) ImageView imageView;
@@ -69,7 +68,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.openingHoursText.setText("");
         String distance=restaurant.getDistanceInMeters(userLocation)+" m";
         this.distanceText.setText(distance);
-        this.workmatesIcon.setVisibility(restaurant.getLunchWorkmates().size()>0?View.VISIBLE:View.INVISIBLE);
         this.nbWorkmatesText.setVisibility(restaurant.getLunchWorkmates().size()>0?View.VISIBLE:View.INVISIBLE);
         this.nbWorkmatesText.setText(String.valueOf(restaurant.getLunchWorkmates().size()));
         this.starsRatingBar.setRating(restaurant.getNbStars());

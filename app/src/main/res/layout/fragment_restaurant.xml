@@ -11,6 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/image_large_min_height"
+        android:contentDescription="@string/template_text_image"
         app:layout_constraintBottom_toTopOf="@+id/fragment_restaurant_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"
-                android:text="Name"/>
+                android:text="@string/template_text_name"/>
 
             <RatingBar
                 android:id="@+id/fragment_restaurant_stars"
@@ -63,7 +64,7 @@
             android:layout_margin="@dimen/components_margin_small"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_body"
-            android:text="Cuisine type"/>
+            android:text="@string/template_text_cuisine_type"/>
 
         <TextView
             android:id="@+id/fragment_restaurant_address"
@@ -72,7 +73,7 @@
             android:layout_margin="@dimen/components_margin_small"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_body"
-            android:text="Address"/>
+            android:text="@string/template_text_address"/>
 
     </LinearLayout>
 
@@ -82,6 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/components_margin_large"
         android:clickable="true"
+        android:focusable="true"
         android:tint="@color/colorPrimary"
         app:backgroundTint="@android:color/white"
         app:layout_constraintBottom_toTopOf="@id/fragment_restaurant_description"

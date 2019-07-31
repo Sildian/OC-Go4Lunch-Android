@@ -45,7 +45,7 @@
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_size_title"
                 android:textStyle="bold"
-                android:text="Name"/>
+                android:text="@string/template_text_name"/>
 
             <RatingBar
                 android:id="@+id/fragment_map_restaurant_stars"
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/components_margin_small"
                 android:textSize="@dimen/text_size_title"
-                android:text="Distance"/>
+                android:text="@string/template_text_distance"/>
 
         </LinearLayout>
 
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/components_margin_small"
             android:textSize="@dimen/text_size_body"
-            android:text="Address"/>
+            android:text="@string/template_text_address"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fragment_map_button_restaurant"

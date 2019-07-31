@@ -21,4 +21,13 @@
     <string name="button_restaurant_website">Site web</string>
     <string name="button_restaurant_more_details">Plus</string>
 
+    <!--Text previews for layout templates -->
+    <string name="template_text_name">Nom</string>
+    <string name="template_text_distance">Distance</string>
+    <string name="template_text_address">Adresse</string>
+    <string name="template_text_cuisine_type">Cuisine</string>
+    <string name="template_text_opening_hours">Horaires d\'ouverture</string>
+    <string name="template_text_number">Nb</string>
+    <string name="template_text_image">Image</string>
+
 </resources>

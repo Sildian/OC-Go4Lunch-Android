@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:id="@+id/list_restaurant_item_part1"
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/components_margin_small"
-            android:text="Name"
+            android:text="@string/template_text_name"
             android:textColor="@android:color/black"
             android:textSize="@dimen/text_size_title"
             android:textStyle="bold" />
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/components_margin_small"
-            android:text="Cuisine type"
+            android:text="@string/template_text_cuisine_type"
             android:textSize="@dimen/text_size_body" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/components_margin_small"
-            android:text="Address"
+            android:text="@string/template_text_address"
             android:textSize="@dimen/text_size_body" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/components_margin_small"
-            android:text="Opening hours"
+            android:text="@string/template_text_opening_hours"
             android:textSize="@dimen/text_size_body"
             android:textStyle="italic" />
 
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_margin="@dimen/components_margin_small"
-            android:text="Distance"
+            android:text="@string/template_text_distance"
             android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/text_size_title" />
 
@@ -74,18 +74,13 @@
             android:layout_margin="@dimen/components_margin_small"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/list_restaurant_item_workmates_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_person" />
-
             <TextView
                 android:id="@+id/list_restaurant_item_nb_workmates"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:text="Nb"
+                android:drawableStart="@drawable/ic_person"
+                android:text="@string/template_text_number"
                 android:textSize="@dimen/text_size_body" />
 
         </LinearLayout>
@@ -108,6 +103,7 @@
         android:layout_width="@dimen/image_width"
         android:layout_height="@dimen/image_width"
         android:layout_margin="@dimen/components_margin_small"
+        android:contentDescription="@string/template_text_image"
         tools:srcCompat="@tools:sample/avatars[12]" />
 
 </LinearLayout>
