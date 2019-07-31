@@ -27,7 +27,6 @@ data class Restaurant (
         val score:Double?)                          //The score given by Google's users
     : Parcelable
 {
-    var firebaseId:String?=null                     //The id given by Firebase after it is stored
     var phoneNumber:String?=null                    //The phone number
     var webUrl:String?=null                         //The web url
     var openingHours=arrayListOf<Period>()          //The opening hours for each day of the week

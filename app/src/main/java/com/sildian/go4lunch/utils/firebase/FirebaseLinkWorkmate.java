@@ -4,6 +4,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.sildian.go4lunch.model.firebase.FirebaseWorkmate;
 
 /*************************************************************************************************
@@ -31,8 +32,8 @@ public class FirebaseLinkWorkmate {
      */
 
     public static Task<Void> createWorkmate(String firebaseId, String name, String imageUrl) {
-        FirebaseWorkmate workmate = new FirebaseWorkmate(firebaseId, name, imageUrl);
-        return FirebaseLinkWorkmate.getWorkmateCollection().document(firebaseId).set(workmate);
+        FirebaseWorkmate workmate = new FirebaseWorkmate(name, imageUrl);
+        return getWorkmateCollection().document(firebaseId).set(workmate);
     }
 
     /**Gets a workmate from Firebase
@@ -41,7 +42,13 @@ public class FirebaseLinkWorkmate {
      */
 
     public static Task<DocumentSnapshot> getWorkmate(String firebaseId){
-        return FirebaseLinkWorkmate.getWorkmateCollection().document(firebaseId).get();
+        return getWorkmateCollection().document(firebaseId).get();
+    }
+
+    /**Gets all workmates from Firebase**/
+
+    public static Query getAllWorkmates(){
+        return getWorkmateCollection().orderBy("name").limit(50);
     }
 
     /**Deletes a workmate in Firebase
@@ -50,6 +57,6 @@ public class FirebaseLinkWorkmate {
      */
 
     public static Task<Void> deleteWorkmate(String firebaseId) {
-        return FirebaseLinkWorkmate.getWorkmateCollection().document(firebaseId).delete();
+        return getWorkmateCollection().document(firebaseId).delete();
     }
 }
