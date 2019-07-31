@@ -31,7 +31,7 @@ public class FirebaseLinkRestaurant {
      */
 
     public static Task<Void> createRestaurant(String placeId, String name, int nbLikes){
-        FirebaseRestaurant restaurant = new FirebaseRestaurant(name, nbLikes);
+        FirebaseRestaurant restaurant = new FirebaseRestaurant(placeId, name, nbLikes);
         return getRestaurantCollection().document(placeId).set(restaurant);
     }
 

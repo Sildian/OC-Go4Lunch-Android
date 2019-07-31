@@ -24,6 +24,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
+import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.api.APIStreams;
@@ -114,7 +115,14 @@ public class RestaurantFragment extends Fragment {
     /**Initializes the like button**/
 
     private void initializeLikeButton(){
-        this.likeButton.setOnClickListener(v -> currentUser.addLike(restaurant));
+        this.likeButton.setOnClickListener(v -> {
+            if(this.currentUser.addLike(this.restaurant)) {
+                RestaurantActivity activity = (RestaurantActivity) getActivity();
+                activity.createRestaurantInFirebase(this.restaurant);
+                activity.createLikeInFirebase(this.restaurant, this.currentUser);
+                disableButton(this.likeButton);
+            }
+        });
     }
 
     /**Initializes the website button**/
@@ -131,7 +139,13 @@ public class RestaurantFragment extends Fragment {
     /**Initializes the lunch button**/
 
     private void initializeLunchButton(){
-        this.lunchButton.setOnClickListener(v -> currentUser.updateLunch(restaurant));
+        this.lunchButton.setOnClickListener(v -> {
+            if(this.currentUser.updateLunch(this.restaurant)) {
+                RestaurantActivity activity = (RestaurantActivity) getActivity();
+                activity.createRestaurantInFirebase(this.restaurant);
+                activity.createLunchInFirebase(this.restaurant, this.currentUser);
+            }
+        });
     }
 
     /**Disables a button and changes its UI**/

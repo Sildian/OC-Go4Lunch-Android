@@ -32,7 +32,7 @@ public class FirebaseLinkWorkmate {
      */
 
     public static Task<Void> createWorkmate(String firebaseId, String name, String imageUrl) {
-        FirebaseWorkmate workmate = new FirebaseWorkmate(name, imageUrl);
+        FirebaseWorkmate workmate = new FirebaseWorkmate(firebaseId, name, imageUrl);
         return getWorkmateCollection().document(firebaseId).set(workmate);
     }
 

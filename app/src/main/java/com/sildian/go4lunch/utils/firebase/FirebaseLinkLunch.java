@@ -35,9 +35,9 @@ public class FirebaseLinkLunch {
      */
 
     public static Task<Void> createLunch(Date date, FirebaseRestaurant restaurant, FirebaseWorkmate workmate){
-        String id=date.toString()+restaurant+workmate;
+        String firebaseId=date.toString()+restaurant.getPlaceId()+workmate.getFirebaseId();
         FirebaseLunch lunch=new FirebaseLunch(date, restaurant, workmate);
-        return getLunchCollection().document(id).set(lunch);
+        return getLunchCollection().document(firebaseId).set(lunch);
     }
 
     /**Gets all lunchs related to a date and a restaurant
@@ -61,14 +61,11 @@ public class FirebaseLinkLunch {
     }
 
     /**Deletes a lunch related to the given date, restaurant and workmate
-     * @param date : the date
-     * @param restaurant : the restaurant
-     * @param workmate : the workmate
+     * @param firebaseId : the id
      * @return the resulted task
      */
 
-    public static Task<Void> deleteLunch(Date date, FirebaseRestaurant restaurant, FirebaseWorkmate workmate) {
-        String id=date.toString()+restaurant+workmate;
-        return getLunchCollection().document(id).delete();
+    public static Task<Void> deleteLunch(String firebaseId) {
+        return getLunchCollection().document(firebaseId).delete();
     }
 }

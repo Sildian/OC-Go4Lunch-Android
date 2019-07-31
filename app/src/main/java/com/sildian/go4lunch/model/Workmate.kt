@@ -45,37 +45,47 @@ data class Workmate(
 
     /**Adds a restaurant to the list of liked restaurants
      * @Param restaurant : the liked restaurant
+     * @Return true if a like was added, false otherwise
      */
 
-    fun addLike(restaurant:Restaurant){
+    fun addLike(restaurant:Restaurant):Boolean{
         if(!this.likes.contains(restaurant)){
             this.likes.add(restaurant)
             restaurant.increaseNbLikes()
+            return true
         }
+        else return false
     }
 
     /**Updates the restaurant where the workmate eats today
      * @Param restaurant : the restaurant where the workmate eats today
+     * @Return true if a new lunch is created, false otherwise
      */
 
-    fun updateLunch(restaurant:Restaurant?){
-
-        /*If lunchRestaurant is not null, then indicates to the restaurant that the workmate doesn't eat here anymore*/
+    fun updateLunch(restaurant:Restaurant?):Boolean{
 
         var rest:Restaurant?=this.lunchRestaurant
-        if(rest!=null){
-            rest.updateLunch(this, false)
+
+        if(restaurant!=null&&(rest==null||!rest.placeId.equals(restaurant.placeId))) {
+
+            /*indicates to the restaurant that the workmate doesn't eat here anymore*/
+
+            if(rest!=null) {
+                rest.updateLunch(this, false)
+            }
+
+            /*Updates lunchRestaurant*/
+
+            this.lunchRestaurant = restaurant
+
+            /*At last, indicates to the new restaurant that the workmate eats here*/
+
+            rest = this.lunchRestaurant
+            if (rest != null) {
+                rest.updateLunch(this, true)
+            }
+            return true
         }
-
-        /*Updates lunchRestaurant*/
-
-        this.lunchRestaurant=restaurant
-
-        /*At last, indicates to the new restaurant that the workmate eats here*/
-
-        rest=this.lunchRestaurant
-        if(rest!=null){
-            rest.updateLunch(this, true)
-        }
+        else return false
     }
 }
