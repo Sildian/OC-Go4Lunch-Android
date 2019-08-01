@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesRestaurant;
@@ -42,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
         Workmate workmate=new Workmate(firebaseId, name, imageUrl);
         FirebaseQueriesWorkmate.createWorkmate(workmate)
                 .addOnFailureListener(this)
-                .addOnSuccessListener(aVoid -> currentUser=new Workmate(firebaseId, name, imageUrl));
+                .addOnSuccessListener(aVoid -> this.currentUser=new Workmate(firebaseId, name, imageUrl));
     }
 
     /**Creates a restaurant in Firebase
@@ -52,6 +54,16 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
     public void createOrUpdateRestaurantInFirebase(Restaurant restaurant){
         FirebaseQueriesRestaurant.createOrUpdateRestaurant(restaurant)
                 .addOnFailureListener(this);
+    }
+
+    /**Gets a workmate from Firebase
+     * @param firebaseId : the firebase id
+     */
+
+    public void getWorkmateFromFirebase(String firebaseId){
+        FirebaseQueriesWorkmate.getWorkmate(firebaseId)
+                .addOnFailureListener(this)
+                .addOnSuccessListener(documentSnapshot -> this.currentUser = documentSnapshot.toObject(Workmate.class));
     }
 
     /**Updates a workmate's likes in Firebase

@@ -33,6 +33,10 @@ data class Restaurant (
     var cuisineType:String?=null                    //The cuisine type
     var nbLikes:Int=0                               //The number of likes given by the workmates
 
+    /**Empty constructor allowing to create a new instance from Firebase result**/
+
+    constructor():this("", "", LatLng(0.0, 0.0), "", null)
+
     /**Constructor called to build a Restaurant from Google Places API's result
      * @Param apiRestaurant :  : the result received from the api
      */
@@ -193,5 +197,7 @@ data class Restaurant (
 
     /**This nested class provides with periods allowing to know the opening hours for each day of the week**/
 
-    data class Period (val day:Int, val openTime:String, val closeTime:String)
+    data class Period (val day:Int, val openTime:String, val closeTime:String){
+        constructor():this(0, "", "")
+    }
 }

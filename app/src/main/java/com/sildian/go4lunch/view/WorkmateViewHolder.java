@@ -11,6 +11,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Workmate;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -81,32 +84,56 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder{
 
         /*Populates the string depending on the id*/
 
-        /*switch(this.id) {
+        switch(this.id) {
 
             case ID_WORKMATE:
-                if (workmate.getLunchRestaurant() == null) {
+
+                /*Gets the date*/
+
+                Calendar calendar=Calendar.getInstance();
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                Date date=calendar.getTime();
+
+                /*Checks if a lunch already exists today, and gets its id in the list*/
+
+                int id=-1;
+                for(Workmate.Lunch lunch:workmate.getLunches()){
+                    if(lunch.getDate().equals(date)){
+                        id=workmate.getLunches().indexOf(lunch);
+                    }
+                }
+
+                /*Populates the string depending on the id*/
+
+                if (id==-1) {
                     nameAndAction = workmate.getName() + " " +
                             this.itemView.getResources().getString(R.string.text_workmate_name_and_action_workmate_off);
                 } else {
                     this.workmateNameAndAction.setTextColor(this.itemView.getResources().getColor(android.R.color.black));
                     nameAndAction = workmate.getName() + " " +
                             this.itemView.getResources().getString(R.string.text_workmate_name_and_action_workmate_on) + " " +
-                            workmate.getLunchRestaurant().getRestaurant().getName();
+                            workmate.getLunches().get(id).getRestaurant().getName();
                 }
                 break;
 
             case ID_RESTAURANT:
+
+                /*Populates the string with the appropriated item*/
+
                 nameAndAction = workmate.getName() + " " +
                         this.itemView.getResources().getString(R.string.text_workmate_name_and_action_restaurant);
                 break;
 
             default:
-                nameAndAction="";
+                nameAndAction=workmate.getName();
                 break;
-        }*/
+        }
 
         /*Then populates the text*/
 
-        //this.workmateNameAndAction.setText(nameAndAction);
+        this.workmateNameAndAction.setText(nameAndAction);
     }
 }

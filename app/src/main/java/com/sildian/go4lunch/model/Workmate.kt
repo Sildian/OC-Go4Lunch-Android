@@ -18,6 +18,10 @@ data class Workmate(
     val likes=arrayListOf<Restaurant>()                     //The list of liked restaurants
     val lunches=arrayListOf<Lunch>()                         //The list of restaurants where a workmate eats
 
+    /**Empty constructor allowing to create a new instance from Firebase result**/
+
+    constructor():this("", "", "")
+
     /**Constructor (Parcelable)**/
 
     constructor(parcel: Parcel):this(parcel.readString(), parcel.readString(), parcel.readString())
@@ -103,5 +107,7 @@ data class Workmate(
 
     /**This nested class provides with data grouping a date and a restaurant for each lunch**/
 
-    data class Lunch(val date: Date, val restaurant:Restaurant)
+    data class Lunch(val date: Date, val restaurant:Restaurant){
+        constructor():this(Calendar.getInstance().time, Restaurant())
+    }
 }

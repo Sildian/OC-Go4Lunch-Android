@@ -28,6 +28,7 @@ import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.fragments.BaseFragment;
 import com.sildian.go4lunch.controller.fragments.ListFragment;
 import com.sildian.go4lunch.controller.fragments.MapFragment;
+import com.sildian.go4lunch.controller.fragments.WorkmateFragment;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
@@ -87,16 +88,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         this.navigationBar.setOnNavigationItemSelectedListener(this);
         this.fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
         this.restaurants=new ArrayList<>();
-
-        //TODO Improve this
-
-        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
-        if(user==null) {
-            startLoginActivity();
-        }else{
-            this.currentUser=new Workmate(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString());
-            initializeMapAndLocation();
-        }
+        initLogin();
     }
 
     @Override
@@ -157,6 +149,18 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         updateUserLocation();
     }
 
+    /**Initializes user login**/
+
+    private void initLogin(){
+        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+        if(user==null) {
+            startLoginActivity();
+        }else{
+            getWorkmateFromFirebase(user.getUid());
+            initializeMapAndLocation();
+        }
+    }
+
     /**Logs a user in Firebase**/
 
     private void startLoginActivity(){
@@ -214,6 +218,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 this.fragment = new ListFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
             case R.id.menu_navigation_workmates:
+                this.fragment=new WorkmateFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
         }
         getSupportFragmentManager().beginTransaction()

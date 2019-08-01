@@ -5,9 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Workmate;
 
@@ -18,19 +19,18 @@ import java.util.List;
  * Monitors the workmates data within a recycler view
  ***********************************************************************************************/
 
-public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder> {
+public class WorkmateAdapter extends FirestoreRecyclerAdapter<Workmate, WorkmateViewHolder> {
 
     /**Data**/
 
     private int id;                                         //The id of the view defines its behavior
-    private List<Workmate> workmates;                       //The list of workmates
     private RequestManager glide;                           //Glide manager to display the images
 
     /**Constructor**/
 
-    public WorkmateAdapter(int id, List<Workmate> workmates, RequestManager glide){
+    public WorkmateAdapter(@NonNull FirestoreRecyclerOptions<Workmate> options, int id, RequestManager glide){
+        super(options);
         this.id=id;
-        this.workmates=workmates;
         this.glide=glide;
     }
 
@@ -45,17 +45,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position, @NonNull List<Object> payloads) {
-        holder.update(this.workmates.get(position), this.glide);
-    }
-
-    @Override
-    public int getItemCount() {
-        return this.workmates.size();
+    protected void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position, @NonNull Workmate workmate) {
+        holder.update(workmate, this.glide);
     }
 }
