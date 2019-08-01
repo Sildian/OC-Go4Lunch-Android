@@ -144,6 +144,7 @@ public class RestaurantFragment extends Fragment {
                 RestaurantActivity activity = (RestaurantActivity) getActivity();
                 activity.createRestaurantInFirebase(this.restaurant);
                 activity.createLunchInFirebase(this.restaurant, this.currentUser);
+                disableLunchButton();
             }
         });
     }
@@ -155,6 +156,14 @@ public class RestaurantFragment extends Fragment {
         button.setTextColor(getResources().getColor(android.R.color.darker_gray));
         button.getCompoundDrawables()[1].mutate().setColorFilter
                 (new PorterDuffColorFilter(getResources().getColor(android.R.color.darker_gray), PorterDuff.Mode.SRC_IN));
+    }
+
+    /**Disables the lunch button and changes its UI**/
+
+    private void disableLunchButton(){
+        this.lunchButton.setEnabled(false);
+        this.lunchButton.getDrawable().mutate().setColorFilter
+                (new PorterDuffColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN));
     }
 
     /**Runs a query to get all details about a restaurant from Google and Here APIs, and update the related fields

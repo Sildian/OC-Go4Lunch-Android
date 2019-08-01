@@ -13,6 +13,9 @@
     <string name="text_restaurant_opening_hours_unknown">Unknown opening hours</string>
     <string name="text_restaurant_opening_hours_closed">Closed</string>
     <string name="text_restaurant_opening_hours_open">Opens</string>
+    <string name="text_workmate_name_and_action_workmate_on">eats at</string>
+    <string name="text_workmate_name_and_action_workmate_off">hasn\'t decided yet</string>
+    <string name="text_workmate_name_and_action_restaurant">is joining</string>
 
     <!--Text displayed within Buttons -->
     <string name="button_restaurant_call">Call</string>
