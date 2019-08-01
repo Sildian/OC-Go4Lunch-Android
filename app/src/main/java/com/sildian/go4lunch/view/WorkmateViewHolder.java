@@ -81,7 +81,7 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder{
 
         /*Populates the string depending on the id*/
 
-        switch(this.id) {
+        /*switch(this.id) {
 
             case ID_WORKMATE:
                 if (workmate.getLunchRestaurant() == null) {
@@ -91,7 +91,7 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder{
                     this.workmateNameAndAction.setTextColor(this.itemView.getResources().getColor(android.R.color.black));
                     nameAndAction = workmate.getName() + " " +
                             this.itemView.getResources().getString(R.string.text_workmate_name_and_action_workmate_on) + " " +
-                            workmate.getLunchRestaurant().getName();
+                            workmate.getLunchRestaurant().getRestaurant().getName();
                 }
                 break;
 
@@ -103,10 +103,10 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder{
             default:
                 nameAndAction="";
                 break;
-        }
+        }*/
 
         /*Then populates the text*/
 
-        this.workmateNameAndAction.setText(nameAndAction);
+        //this.workmateNameAndAction.setText(nameAndAction);
     }
 }

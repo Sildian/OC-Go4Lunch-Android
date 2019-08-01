@@ -2,6 +2,7 @@ package com.sildian.go4lunch.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.*
 
 /*************************************************************************************************
  * Workmate
@@ -15,7 +16,7 @@ data class Workmate(
     :Parcelable
 {
     val likes=arrayListOf<Restaurant>()                     //The list of liked restaurants
-    var lunchRestaurant:Restaurant?=null;private set        //The restaurant where the workmate eats today
+    val lunches=arrayListOf<Lunch>()                         //The list of restaurants where a workmate eats
 
     /**Constructor (Parcelable)**/
 
@@ -62,30 +63,45 @@ data class Workmate(
      * @Return true if a new lunch is created, false otherwise
      */
 
-    fun updateLunch(restaurant:Restaurant?):Boolean{
+    fun updateLunch(restaurant:Restaurant):Boolean{
 
-        var rest:Restaurant?=this.lunchRestaurant
+        /*Gets the date and creates a LunchRestaurant*/
 
-        if(restaurant!=null&&(rest==null||!rest.placeId.equals(restaurant.placeId))) {
+        val calendar=Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val date=calendar.time
+        val lunch= Lunch(date, restaurant)
 
-            /*indicates to the restaurant that the workmate doesn't eat here anymore*/
+        /*If the lunch is not already contained in the lunches...*/
 
-            if(rest!=null) {
-                rest.updateLunch(this, false)
+        if(!this.lunches.contains(lunch)) {
+
+            /*If a lunch already exists for the current date, then removes it*/
+
+            var idToRemove:Int?=null
+            for(item in this.lunches){
+                if(item.date.equals(date)){
+                    idToRemove=this.lunches.indexOf(item)
+                }
+            }
+            if(idToRemove!=null) {
+                this.lunches.removeAt(idToRemove)
             }
 
-            /*Updates lunchRestaurant*/
+            /*Then adds the new lunch*/
 
-            this.lunchRestaurant = restaurant
+            this.lunches.add(lunch)
 
-            /*At last, indicates to the new restaurant that the workmate eats here*/
-
-            rest = this.lunchRestaurant
-            if (rest != null) {
-                rest.updateLunch(this, true)
-            }
             return true
         }
+
         else return false
     }
+
+    /**This nested class provides with data grouping a date and a restaurant for each lunch**/
+
+    data class Lunch(val date: Date, val restaurant:Restaurant)
 }

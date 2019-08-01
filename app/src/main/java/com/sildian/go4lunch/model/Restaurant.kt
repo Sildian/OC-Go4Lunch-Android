@@ -32,7 +32,6 @@ data class Restaurant (
     var openingHours=arrayListOf<Period>()          //The opening hours for each day of the week
     var cuisineType:String?=null                    //The cuisine type
     var nbLikes:Int=0                               //The number of likes given by the workmates
-    val lunchWorkmates=arrayListOf<Workmate>()      //The workmates to eat in this restaurant today
 
     /**Constructor called to build a Restaurant from Google Places API's result
      * @Param apiRestaurant :  : the result received from the api
@@ -192,19 +191,7 @@ data class Restaurant (
         this.nbLikes++
     }
 
-    /**Updates the list of workmates to eat to the restaurant today
-     * @Param workmate : the workmate to add or remove
-     * @Param eatsHere : indicates whether the workmate eats to the restaurant or not
-     */
-
-    fun updateLunch(workmate:Workmate, eatsHere:Boolean){
-        when{
-            !this.lunchWorkmates.contains(workmate)&&eatsHere->this.lunchWorkmates.add(workmate)
-            this.lunchWorkmates.contains(workmate)&&!eatsHere->this.lunchWorkmates.remove(workmate)
-        }
-    }
-
     /**This nested class provides with periods allowing to know the opening hours for each day of the week**/
 
-    class Period (val day:Int, val openTime:String, val closeTime:String)
+    data class Period (val day:Int, val openTime:String, val closeTime:String)
 }

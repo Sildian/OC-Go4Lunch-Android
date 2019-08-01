@@ -158,22 +158,4 @@ class RestaurantTest {
         restaurant.increaseNbLikes()
         assertEquals(1, restaurant.nbLikes)
     }
-
-    @Test
-    fun given_addMauriceJody_when_updateLunch_then_checkLunchWorkmatesContainsMauriceJody() {
-        val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
-        val workmate=Workmate("W1", "Maurice Jody", null)
-        restaurant.updateLunch(workmate, true)
-        assertEquals("Maurice Jody", restaurant.lunchWorkmates[0].name)
-        assertTrue(restaurant.lunchWorkmates.contains(workmate))
-    }
-
-    @Test
-    fun given_addAndRemoveMauriceJody_when_updateLunch_then_checkLunchWorkmatesDoesNotContainMauriceJody() {
-        val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
-        val workmate=Workmate("W1", "Maurice Jody", null)
-        restaurant.updateLunch(workmate, true)
-        restaurant.updateLunch(workmate, false)
-        assertFalse(restaurant.lunchWorkmates.contains(workmate))
-    }
 }

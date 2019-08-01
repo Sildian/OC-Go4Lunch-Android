@@ -68,8 +68,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.openingHoursText.setText("");
         String distance=restaurant.getDistanceInMeters(userLocation)+" m";
         this.distanceText.setText(distance);
-        this.nbWorkmatesText.setVisibility(restaurant.getLunchWorkmates().size()>0?View.VISIBLE:View.INVISIBLE);
-        this.nbWorkmatesText.setText(String.valueOf(restaurant.getLunchWorkmates().size()));
+        //this.nbWorkmatesText.setVisibility(restaurant.getLunchWorkmates().size()>0?View.VISIBLE:View.INVISIBLE);
+        //this.nbWorkmatesText.setText(String.valueOf(restaurant.getLunchWorkmates().size()));
         this.starsRatingBar.setRating(restaurant.getNbStars());
         APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
         runRestaurantAllDetailsQuery(restaurant);

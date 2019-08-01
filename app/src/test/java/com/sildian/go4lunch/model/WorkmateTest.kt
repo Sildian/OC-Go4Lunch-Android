@@ -18,17 +18,17 @@ class WorkmateTest {
     }
 
     @Test
-    fun given_MiamMiam_when_updateLunch_then_checkLunchRestaurantIsMiamMiamAndContainsMauriceJody() {
+    fun given_MiamMiam_and_SuperPizza_when_updateLunch_then_checkLunchRestaurantIsSuperPizza() {
+
         val workmate = Workmate("W1", "Maurice Jody", null)
-        val restaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
+        val restaurant = Restaurant("R1", "Miam miam", LatLng(40.0, -5.0), "1 rue Miam", 2.5)
+        val secondRestaurant = Restaurant("R2", "Super pizza", LatLng(42.0, -3.0), "1 rue Pizza", 3.5)
         workmate.updateLunch(restaurant)
-        assertNotNull(workmate.lunchRestaurant)
-        val workmateRestaurant:Restaurant?=workmate.lunchRestaurant
-        if (workmateRestaurant != null) {
-            assertEquals("Miam miam", workmateRestaurant.name)
-        }
-        assertEquals(restaurant, workmate.lunchRestaurant)
-        assertEquals("Maurice Jody", restaurant.lunchWorkmates[0].name)
-        assertTrue(restaurant.lunchWorkmates.contains(workmate))
+        workmate.updateLunch(secondRestaurant)
+        assertEquals(1, workmate.lunches.size)
+
+        val workmateRestaurant: Restaurant = workmate.lunches[0].restaurant
+        assertEquals("Super pizza", workmateRestaurant.name)
+        assertEquals(secondRestaurant, workmateRestaurant)
     }
 }

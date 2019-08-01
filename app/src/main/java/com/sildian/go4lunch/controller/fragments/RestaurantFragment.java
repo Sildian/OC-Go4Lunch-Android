@@ -118,8 +118,8 @@ public class RestaurantFragment extends Fragment {
         this.likeButton.setOnClickListener(v -> {
             if(this.currentUser.addLike(this.restaurant)) {
                 RestaurantActivity activity = (RestaurantActivity) getActivity();
-                activity.createRestaurantInFirebase(this.restaurant);
-                activity.createLikeInFirebase(this.restaurant, this.currentUser);
+                activity.createOrUpdateRestaurantInFirebase(this.restaurant);
+                activity.updateWorkmateLikesInFirebase(this.currentUser);
                 disableButton(this.likeButton);
             }
         });
@@ -142,8 +142,8 @@ public class RestaurantFragment extends Fragment {
         this.lunchButton.setOnClickListener(v -> {
             if(this.currentUser.updateLunch(this.restaurant)) {
                 RestaurantActivity activity = (RestaurantActivity) getActivity();
-                activity.createRestaurantInFirebase(this.restaurant);
-                activity.createLunchInFirebase(this.restaurant, this.currentUser);
+                activity.createOrUpdateRestaurantInFirebase(this.restaurant);
+                activity.updateWorkmateLunchesInFirebase(this.currentUser);
                 disableLunchButton();
             }
         });
