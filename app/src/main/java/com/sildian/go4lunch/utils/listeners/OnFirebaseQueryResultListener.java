@@ -12,5 +12,7 @@ import java.util.List;
 
 public interface OnFirebaseQueryResultListener {
 
+    void onGetWorkmateResult(Workmate workmate);
+
     void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates);
 }

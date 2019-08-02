@@ -34,8 +34,11 @@ import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.api.APIStreams;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesLunch;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
+import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
 import com.sildian.go4lunch.view.WorkmateAdapter;
 import com.sildian.go4lunch.view.WorkmateViewHolder;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,7 +50,7 @@ import io.reactivex.observers.DisposableObserver;
  * Shows a restaurant's information
  *************************************************************************************************/
 
-public class RestaurantFragment extends Fragment {
+public class RestaurantFragment extends Fragment implements OnPlaceQueryResultListener {
 
     /**Data**/
 
@@ -95,6 +98,24 @@ public class RestaurantFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onGetGooglePlacesSearchResult(List<Restaurant> restaurants) {
+
+    }
+
+    @Override
+    public void onGetRestaurantAllDetailsResult(Restaurant restaurant) {
+        cuisineTypeText.setText(restaurant.getCuisineType());
+        callButton.setTag(restaurant.getPhoneNumber());
+        if(callButton.getTag()==null){
+            disableButton(callButton);
+        }
+        websiteButton.setTag(restaurant.getWebUrl());
+        if(websiteButton.getTag()==null){
+            disableButton(websiteButton);
+        }
+    }
+
     /**Initializes the view items**/
 
     private void initializeView(){
@@ -108,7 +129,8 @@ public class RestaurantFragment extends Fragment {
         initializeWebsiteButton();
         initializeLunchButton();
         initializeWorkmatesView();
-        runRestaurantAllDetailsQuery(this.restaurant);
+        RestaurantActivity activity=(RestaurantActivity) getActivity();
+        activity.runRestaurantAllDetailsQuery(this.restaurant, this);
     }
 
     /**Initializes the call button**/
@@ -195,38 +217,5 @@ public class RestaurantFragment extends Fragment {
         this.lunchButton.setEnabled(false);
         this.lunchButton.getDrawable().mutate().setColorFilter
                 (new PorterDuffColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN));
-    }
-
-    /**Runs a query to get all details about a restaurant from Google and Here APIs, and update the related fields
-     * @param restaurant : the restaurant
-     */
-
-    private void runRestaurantAllDetailsQuery(Restaurant restaurant){
-        //TODO change radius to value
-        this.disposable= APIStreams.streamGetRestaurantAllDetails(getActivity(), restaurant, 100)
-                .subscribeWith(new DisposableObserver<Restaurant>(){
-                    @Override
-                    public void onNext(Restaurant restaurantWithAllDetails) {
-                        cuisineTypeText.setText(restaurantWithAllDetails.getCuisineType());
-                        callButton.setTag(restaurantWithAllDetails.getPhoneNumber());
-                        if(callButton.getTag()==null){
-                            disableButton(callButton);
-                        }
-                        websiteButton.setTag(restaurantWithAllDetails.getWebUrl());
-                        if(websiteButton.getTag()==null){
-                            disableButton(websiteButton);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("TAG_API", e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
     }
 }

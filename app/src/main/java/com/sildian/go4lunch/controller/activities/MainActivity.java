@@ -33,6 +33,8 @@ import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.utils.api.APIStreams;
+import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
+import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +48,9 @@ import io.reactivex.observers.DisposableObserver;
  * Monitors the main user interactions
  *************************************************************************************************/
 
-public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BaseActivity
+        implements BottomNavigationView.OnNavigationItemSelectedListener,
+        OnFirebaseQueryResultListener, OnPlaceQueryResultListener {
 
     /**Request keys**/
 
@@ -68,7 +72,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     private FusedLocationProviderClient fusedLocationProviderClient;        //Allows to get the location
     private LatLng userLocation;                                            //The user's location
     private List<Restaurant> restaurants;                                   //The list of restaurants in the area
-    private Disposable disposable;                                          //The disposable which gets the response from the API
 
     /**UI Components**/
 
@@ -142,11 +145,27 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         }
     }
 
-    /**Initializes the map and the user's location**/
+    @Override
+    public void onGetWorkmateResult(Workmate workmate) {
+        this.currentUser=workmate;
+        this.fragment.updateCurrentUser(workmate);
+    }
 
-    private void initializeMapAndLocation(){
-        showFragment(R.id.menu_navigation_map);
-        updateUserLocation();
+    @Override
+    public void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates) {
+
+    }
+
+    @Override
+    public void onGetGooglePlacesSearchResult(List<Restaurant> restaurants) {
+        this.restaurants.clear();
+        this.restaurants.addAll(restaurants);
+        this.fragment.onRestaurantsReceived(restaurants);
+    }
+
+    @Override
+    public void onGetRestaurantAllDetailsResult(Restaurant restaurant) {
+
     }
 
     /**Initializes user login**/
@@ -156,8 +175,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         if(user==null) {
             startLoginActivity();
         }else{
-            getWorkmateFromFirebase(user.getUid());
-            initializeMapAndLocation();
+            getWorkmateFromFirebase(user.getUid(), this);
+            showFragment(R.id.menu_navigation_map);
         }
     }
 
@@ -187,8 +206,8 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
 
         if(resultCode == RESULT_OK) {
             Log.d("TAG_LOGIN", "Connected");
-            createWorkmateInFirebase(FirebaseAuth.getInstance().getCurrentUser());
-            initializeMapAndLocation();
+            createWorkmateInFirebase(FirebaseAuth.getInstance().getCurrentUser(), this);
+            showFragment(R.id.menu_navigation_map);
         }else {
             if (loginResponse == null) {
                 Log.d("TAG_LOGIN", "Canceled");
@@ -213,6 +232,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         switch(id){
             case R.id.menu_navigation_map:
                 this.fragment = new MapFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
+                updateUserLocation();
                 break;
             case R.id.menu_navigation_list:
                 this.fragment = new ListFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
@@ -244,7 +264,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                                 fragment.onUserLocationReceived(userLocation);
 
                                 //TODO replace radius by a variable
-                                runGooglePlacesSearchQuery(userLocation, 1500);
+                                runGooglePlacesSearchQuery(userLocation, 1500, this);
                             } else {
                                 //TODO handle
                             }
@@ -261,36 +281,5 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         }else{
             //TODO handle
         }
-    }
-
-    /**Runs a query to get the list of restaurants near a location and within a radius
-     * @param location : the location
-     * @param radius : the radius in meters
-     */
-
-    private void runGooglePlacesSearchQuery(LatLng location, long radius){
-        this.disposable= APIStreams.streamGetNearbyRestaurants(this, location, radius)
-                .subscribeWith(new DisposableObserver<GooglePlacesSearchResponse>(){
-            @Override
-            public void onNext(GooglePlacesSearchResponse response) {
-                if(response.getResults()!=null) {
-                    restaurants.clear();
-                    for (GooglePlacesSearchResponse.Result apiRestaurant : response.getResults()) {
-                        restaurants.add(new Restaurant(apiRestaurant));
-                    }
-                    fragment.onRestaurantsReceived(restaurants);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("TAG_API", e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
     }
 }

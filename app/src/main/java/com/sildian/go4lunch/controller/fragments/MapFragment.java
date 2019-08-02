@@ -42,7 +42,8 @@ import butterknife.BindView;
  * Shows the map and allows the user to find and select restaurants
  *************************************************************************************************/
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, OnFirebaseQueryResultListener {
+public class MapFragment extends BaseFragment
+        implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, OnFirebaseQueryResultListener {
 
     /**Bundle keys**/
 
@@ -132,6 +133,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         }else {
             return false;
         }
+    }
+
+    @Override
+    public void onGetWorkmateResult(Workmate workmate) {
+
     }
 
     @Override

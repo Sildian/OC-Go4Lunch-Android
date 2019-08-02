@@ -58,4 +58,10 @@ public abstract class BaseFragment extends Fragment {
         initializeView(savedInstanceState);
         return view;
     }
+
+    /**Updates the current user**/
+
+    public void updateCurrentUser(Workmate workmate){
+        this.currentUser=workmate;
+    }
 }

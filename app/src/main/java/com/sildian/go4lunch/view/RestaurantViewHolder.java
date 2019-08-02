@@ -18,6 +18,7 @@ import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.DateUtilities;
 import com.sildian.go4lunch.utils.api.APIStreams;
 import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
+import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
 
 import java.util.Calendar;
 import java.util.List;
@@ -25,14 +26,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 
 /************************************************************************************************
  * RestaurantViewHolder
  * Displays the items related to a restaurant in a RecyclerView
  ***********************************************************************************************/
 
-public class RestaurantViewHolder extends RecyclerView.ViewHolder implements OnFirebaseQueryResultListener {
+public class RestaurantViewHolder extends RecyclerView.ViewHolder
+        implements OnFirebaseQueryResultListener, OnPlaceQueryResultListener {
 
     /**UI components**/
 
@@ -49,7 +50,6 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements OnF
     /**Information**/
 
     private PlacesClient placesClient;                  //The placesClient allowing to use Google Places API
-    private Disposable disposable;                      //The disposable which gets the response from the API
 
     /**Constructor**/
 
@@ -63,11 +63,27 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements OnF
     /**Callbacks**/
 
     @Override
+    public void onGetWorkmateResult(Workmate workmate) {
+
+    }
+
+    @Override
     public void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates) {
         if(!workmates.isEmpty()){
             this.nbWorkmatesText.setVisibility(View.VISIBLE);
             this.nbWorkmatesText.setText(String.valueOf(workmates.size()));
         }
+    }
+
+    @Override
+    public void onGetGooglePlacesSearchResult(List<Restaurant> restaurants) {
+
+    }
+
+    @Override
+    public void onGetRestaurantAllDetailsResult(Restaurant restaurant) {
+        cuisineTypeText.setText(restaurant.getCuisineType());
+        updateOpeningHours(restaurant);
     }
 
     /**Updates with a restaurant
@@ -76,6 +92,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements OnF
      */
 
     public void update(Restaurant restaurant, LatLng userLocation){
+        MainActivity activity=(MainActivity) this.itemView.getContext();
         this.nameText.setText(restaurant.getName());
         this.cuisineTypeText.setText("");
         this.addressText.setText(restaurant.getAddress());
@@ -83,37 +100,10 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder implements OnF
         String distance=restaurant.getDistanceInMeters(userLocation)+" m";
         this.distanceText.setText(distance);
         this.nbWorkmatesText.setVisibility(View.INVISIBLE);
-        MainActivity activity=(MainActivity) this.itemView.getContext();
         activity.getWorkmatesEatingAtRestaurantFromFirebase(restaurant, this);
         this.starsRatingBar.setRating(restaurant.getNbStars());
         APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
-        runRestaurantAllDetailsQuery(restaurant);
-    }
-
-    /**Runs a query to get all details about a restaurant from Google and Here APIs, and update the related fields
-     * @param restaurant : the restaurant
-     */
-
-    private void runRestaurantAllDetailsQuery(Restaurant restaurant){
-        //TODO change radius to value
-        this.disposable= APIStreams.streamGetRestaurantAllDetails(this.itemView.getContext(), restaurant, 100)
-                .subscribeWith(new DisposableObserver<Restaurant>(){
-                    @Override
-                    public void onNext(Restaurant restaurantWithAllDetails) {
-                        cuisineTypeText.setText(restaurantWithAllDetails.getCuisineType());
-                        updateOpeningHours(restaurantWithAllDetails);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.d("TAG_API", e.getMessage());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        activity.runRestaurantAllDetailsQuery(restaurant, this);
     }
 
     /**Updates the opening hours
