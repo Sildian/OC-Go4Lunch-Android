@@ -6,17 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesLunch;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesRestaurant;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
+import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import javax.annotation.Nullable;
 
 /**************************************************************************************************
  * BaseActivity
@@ -78,6 +82,18 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
         FirebaseQueriesWorkmate.getWorkmate(firebaseId)
                 .addOnFailureListener(this)
                 .addOnSuccessListener(documentSnapshot -> this.currentUser = documentSnapshot.toObject(Workmate.class));
+    }
+
+    /**Gets workmates eating at a given restaurant today
+     * @param restaurant : the restaurant
+     * @param listener : the listener
+     */
+
+    public void getWorkmatesEatingAtRestaurantFromFirebase(Restaurant restaurant, OnFirebaseQueryResultListener listener){
+        FirebaseQueriesLunch.getWorkmatesEatingAtRestaurant(restaurant)
+                .addSnapshotListener((queryDocumentSnapshots, e) ->
+                        listener.onGetWorkmatesEatingAtRestaurantResult
+                                (restaurant, queryDocumentSnapshots.toObjects(Workmate.class)));
     }
 
     /**Updates a workmate's likes in Firebase

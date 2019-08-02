@@ -12,11 +12,15 @@ import com.google.android.gms.maps.model.LatLng;
 
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.controller.activities.MainActivity;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.DateUtilities;
 import com.sildian.go4lunch.utils.api.APIStreams;
+import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
 
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +32,7 @@ import io.reactivex.observers.DisposableObserver;
  * Displays the items related to a restaurant in a RecyclerView
  ***********************************************************************************************/
 
-public class RestaurantViewHolder extends RecyclerView.ViewHolder {
+public class RestaurantViewHolder extends RecyclerView.ViewHolder implements OnFirebaseQueryResultListener {
 
     /**UI components**/
 
@@ -56,6 +60,16 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.placesClient=placesClient;
     }
 
+    /**Callbacks**/
+
+    @Override
+    public void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates) {
+        if(!workmates.isEmpty()){
+            this.nbWorkmatesText.setVisibility(View.VISIBLE);
+            this.nbWorkmatesText.setText(String.valueOf(workmates.size()));
+        }
+    }
+
     /**Updates with a restaurant
      * @param restaurant : the restaurant
      * @param userLocation : the user location
@@ -68,8 +82,9 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder {
         this.openingHoursText.setText("");
         String distance=restaurant.getDistanceInMeters(userLocation)+" m";
         this.distanceText.setText(distance);
-        //this.nbWorkmatesText.setVisibility(restaurant.getLunchWorkmates().size()>0?View.VISIBLE:View.INVISIBLE);
-        //this.nbWorkmatesText.setText(String.valueOf(restaurant.getLunchWorkmates().size()));
+        this.nbWorkmatesText.setVisibility(View.INVISIBLE);
+        MainActivity activity=(MainActivity) this.itemView.getContext();
+        activity.getWorkmatesEatingAtRestaurantFromFirebase(restaurant, this);
         this.starsRatingBar.setRating(restaurant.getNbStars());
         APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
         runRestaurantAllDetailsQuery(restaurant);

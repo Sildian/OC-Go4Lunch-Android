@@ -11,22 +11,29 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
 import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.ImageUtilities;
+import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import butterknife.BindView;
 
@@ -35,7 +42,7 @@ import butterknife.BindView;
  * Shows the map and allows the user to find and select restaurants
  *************************************************************************************************/
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, OnFirebaseQueryResultListener {
 
     /**Bundle keys**/
 
@@ -127,6 +134,20 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         }
     }
 
+    @Override
+    public void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates) {
+        BitmapDescriptor icon;
+        if(workmates.isEmpty()){
+            icon=ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_off);
+        }else{
+            icon=ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_on);
+        }
+        this.map.addMarker(new MarkerOptions()
+                .position(new LatLng(restaurant.getLocationLat(), restaurant.getLocationLng()))
+                .icon(icon))
+                .setTag(restaurant);
+    }
+
     /**BaseFragment abstract methods**/
 
     @Override
@@ -155,11 +176,9 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
     public void onRestaurantsReceived(List<Restaurant> restaurants) {
         this.restaurants=restaurants;
         if(this.map!=null) {
+            MainActivity activity=(MainActivity) getActivity();
             for (Restaurant restaurant : this.restaurants) {
-                this.map.addMarker(new MarkerOptions()
-                        .position(new LatLng(restaurant.getLocationLat(), restaurant.getLocationLng()))
-                        .icon(ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_off)))
-                .setTag(restaurant);
+                activity.getWorkmatesEatingAtRestaurantFromFirebase(restaurant, this);
             }
         }
     }
