@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -20,14 +21,21 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.Query;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
 import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.api.APIStreams;
+import com.sildian.go4lunch.utils.firebase.FirebaseQueriesLunch;
+import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
+import com.sildian.go4lunch.view.WorkmateAdapter;
+import com.sildian.go4lunch.view.WorkmateViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +68,7 @@ public class RestaurantFragment extends Fragment {
     @BindView(R.id.fragment_restaurant_button_website) Button websiteButton;
     @BindView(R.id.fragment_restaurant_button_lunch) FloatingActionButton lunchButton;
     @BindView(R.id.fragment_restaurant_workmates) RecyclerView workmatesView;
+    private WorkmateAdapter workmateAdapter;
 
     /**Constructor**/
 
@@ -82,13 +91,13 @@ public class RestaurantFragment extends Fragment {
         if(getActivity().getIntent()!=null) {
             this.currentUser = getActivity().getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
             this.restaurant = getActivity().getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_RESTAURANT);
-            updateUI();
+            initializeView();
         }
     }
 
-    /**Updates UI components**/
+    /**Initializes the view items**/
 
-    private void updateUI(){
+    private void initializeView(){
         APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
         this.nameText.setText(this.restaurant.getName());
         this.starsRatingBar.setRating(restaurant.getNbStars());
@@ -98,6 +107,7 @@ public class RestaurantFragment extends Fragment {
         initializeLikeButton();
         initializeWebsiteButton();
         initializeLunchButton();
+        initializeWorkmatesView();
         runRestaurantAllDetailsQuery(this.restaurant);
     }
 
@@ -142,11 +152,32 @@ public class RestaurantFragment extends Fragment {
         this.lunchButton.setOnClickListener(v -> {
             if(this.currentUser.updateLunch(this.restaurant)) {
                 RestaurantActivity activity = (RestaurantActivity) getActivity();
+                activity.deleteLunchInFirebase(this.currentUser);
                 activity.createOrUpdateRestaurantInFirebase(this.restaurant);
                 activity.updateWorkmateLunchesInFirebase(this.currentUser);
+                activity.createLunchInFirebase(this.restaurant, this.currentUser);
                 disableLunchButton();
             }
         });
+    }
+
+    /**Initializes the workmates view**/
+
+    private void initializeWorkmatesView(){
+        this.workmateAdapter=new WorkmateAdapter(
+                generateOptionsForAdapter(FirebaseQueriesLunch.getWorkmatesEatingAtRestaurant(this.restaurant)),
+                WorkmateViewHolder.ID_RESTAURANT, Glide.with(this));
+        this.workmatesView.setAdapter(this.workmateAdapter);
+        this.workmatesView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    /**Creates options for FirebaseAdapter**/
+
+    private FirestoreRecyclerOptions<Workmate> generateOptionsForAdapter(Query query){
+        return new FirestoreRecyclerOptions.Builder<Workmate>()
+                .setQuery(query, Workmate.class)
+                .setLifecycleOwner(this)
+                .build();
     }
 
     /**Disables a button and changes its UI**/

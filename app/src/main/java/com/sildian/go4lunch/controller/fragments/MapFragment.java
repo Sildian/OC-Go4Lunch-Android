@@ -190,7 +190,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         this.restaurantButton.setOnClickListener(v -> {
             if(v.getTag()!=null) {
                 Intent restaurantActivityIntent = new Intent(getActivity(), RestaurantActivity.class);
-                restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, currentUser);
+                restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
                 restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, (Restaurant) v.getTag());
                 startActivity(restaurantActivityIntent);
             }

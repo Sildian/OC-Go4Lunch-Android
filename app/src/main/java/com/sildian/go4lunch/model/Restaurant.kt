@@ -60,6 +60,17 @@ data class Restaurant (
             this(parcel.readString(), parcel.readString(), parcel.readDouble(), parcel.readDouble(),
                     parcel.readString(), parcel.readDouble())
 
+    /**Overrides equals so the only criteria is the placeId**/
+
+    override fun equals(other: Any?): Boolean {
+        if(other!=null&&other.javaClass==Restaurant::class.java){
+            val secondRestaurant=other as Restaurant
+            return secondRestaurant.placeId.equals(this.placeId)
+        }else {
+            return false
+        }
+    }
+
     /**Parcelable**/
 
     override fun writeToParcel(parcel:Parcel, flags: Int) {

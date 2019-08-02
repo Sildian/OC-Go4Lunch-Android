@@ -8,6 +8,8 @@ import com.google.firebase.firestore.Query;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /*************************************************************************************************
@@ -43,8 +45,7 @@ public class FirebaseQueriesWorkmate {
 
     public static Query getAllWorkmates(){
         return getWorkmateCollection()
-                .orderBy("name")
-                .limit(50);
+                .orderBy("name");
     }
 
     /**Updates likes**/

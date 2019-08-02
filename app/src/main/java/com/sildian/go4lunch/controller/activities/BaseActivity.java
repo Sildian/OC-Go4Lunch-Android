@@ -11,8 +11,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
+import com.sildian.go4lunch.utils.firebase.FirebaseQueriesLunch;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesRestaurant;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**************************************************************************************************
  * BaseActivity
@@ -56,6 +60,16 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
                 .addOnFailureListener(this);
     }
 
+    /**Creates a lunch in Firebase
+     * @param restaurant : the restaurant
+     * @param workmate : the workmate
+     */
+
+    public void createLunchInFirebase(Restaurant restaurant, Workmate workmate){
+        FirebaseQueriesLunch.createLunch(restaurant, workmate)
+                .addOnFailureListener(this);
+    }
+
     /**Gets a workmate from Firebase
      * @param firebaseId : the firebase id
      */
@@ -82,5 +96,31 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
     public void updateWorkmateLunchesInFirebase(Workmate workmate){
         FirebaseQueriesWorkmate.updateLunches(workmate.getFirebaseId(), workmate.getLunches())
                 .addOnFailureListener(this);
+    }
+
+    /**Deletes a lunch in Firebase
+     * @param workmate : the workmate
+     */
+
+    public void deleteLunchInFirebase(Workmate workmate){
+
+        Calendar calendar= Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date date=calendar.getTime();
+
+        int id=-1;
+        for(Workmate.Lunch lunch:workmate.getLunches()){
+            if(lunch.getDate().equals(date)){
+                id=workmate.getLunches().indexOf(lunch);
+            }
+        }
+
+        if(id!=-1) {
+            FirebaseQueriesLunch.deleteLunch(workmate.getLunches().get(id).getRestaurant(), workmate)
+                    .addOnFailureListener(this);
+        }
     }
 }

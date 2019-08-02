@@ -48,6 +48,17 @@ data class Workmate(
         }
     }
 
+    /**Overrides equals so the only criteria is the firebaseId**/
+
+    override fun equals(other: Any?): Boolean {
+        if(other!=null&&other.javaClass==Workmate::class.java){
+            val secondWorkmate=other as Workmate
+            return secondWorkmate.firebaseId.equals(this.firebaseId)
+        }else {
+            return false
+        }
+    }
+
     /**Adds a restaurant to the list of liked restaurants
      * @Param restaurant : the liked restaurant
      * @Return true if a like was added, false otherwise
