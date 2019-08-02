@@ -38,6 +38,8 @@ import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
 import com.sildian.go4lunch.view.WorkmateAdapter;
 import com.sildian.go4lunch.view.WorkmateViewHolder;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -147,6 +149,11 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
     /**Initializes the like button**/
 
     private void initializeLikeButton(){
+
+        if(this.currentUser.getLikes().contains(this.restaurant)){
+            disableButton(this.likeButton);
+        }
+
         this.likeButton.setOnClickListener(v -> {
             if(this.currentUser.addLike(this.restaurant)) {
                 RestaurantActivity activity = (RestaurantActivity) getActivity();
@@ -171,6 +178,19 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
     /**Initializes the lunch button**/
 
     private void initializeLunchButton(){
+
+        Calendar calendar= Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Date date=calendar.getTime();
+        Workmate.Lunch lunch= new Workmate.Lunch(date, this.restaurant);
+
+        if(this.currentUser.getLunches().contains(lunch)){
+            disableLunchButton();
+        }
+
         this.lunchButton.setOnClickListener(v -> {
             if(this.currentUser.updateLunch(this.restaurant)) {
                 RestaurantActivity activity = (RestaurantActivity) getActivity();

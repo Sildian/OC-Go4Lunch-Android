@@ -24,7 +24,10 @@ data class Workmate(
 
     /**Constructor (Parcelable)**/
 
-    constructor(parcel: Parcel):this(parcel.readString(), parcel.readString(), parcel.readString())
+    constructor(parcel: Parcel):this(parcel.readString(), parcel.readString(), parcel.readString()){
+        this.likes.addAll(parcel.createTypedArray(Restaurant.CREATOR))
+        this.lunches.addAll(parcel.createTypedArray(Lunch.CREATOR))
+    }
 
     /**Parcelable**/
 
@@ -32,6 +35,8 @@ data class Workmate(
         parcel.writeString(this.firebaseId)
         parcel.writeString(this.name)
         parcel.writeString(this.imageUrl)
+        parcel.writeTypedArray(this.likes.toTypedArray(), flags)
+        parcel.writeTypedArray(this.lunches.toTypedArray(), flags)
     }
 
     override fun describeContents():Int{
@@ -118,7 +123,37 @@ data class Workmate(
 
     /**This nested class provides with data grouping a date and a restaurant for each lunch**/
 
-    data class Lunch(val date: Date, val restaurant:Restaurant){
+    data class Lunch(val date: Date, val restaurant:Restaurant):Parcelable{
+
+        /**Empty constructor allowing to create a new instance from Firebase result**/
+
         constructor():this(Calendar.getInstance().time, Restaurant())
+
+        /**Constructor (Parcelable)**/
+
+        constructor(parcel: Parcel): this(
+                Date(parcel.readLong()),
+                parcel.readParcelable(Restaurant::class.java.classLoader))
+
+        /**Parcelable**/
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeLong(this.date.time)
+            parcel.writeParcelable(this.restaurant, flags)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR:Parcelable.Creator<Lunch>{
+            override fun createFromParcel(parcel: Parcel): Lunch {
+                return Lunch(parcel)
+            }
+
+            override fun newArray(size: Int): Array<Lunch?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
 }
