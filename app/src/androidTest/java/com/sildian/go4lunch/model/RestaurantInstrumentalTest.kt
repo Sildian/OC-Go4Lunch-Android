@@ -10,7 +10,8 @@ class RestaurantInstrumentalTest{
     @Test
     fun given_Miam_when_createFromParcel_then_checkResultIsMiam(){
 
-        val firstRestaurant=Restaurant("R1","Miam miam", LatLng(40.0, -5.0), "1 rue Miam",2.5)
+        val firstRestaurant=Restaurant(
+                "R1","Miam miam", 40.0, -5.0, "1 rue Miam",2.5)
         val parcel: Parcel = Parcel.obtain()
         firstRestaurant.writeToParcel(parcel, firstRestaurant.describeContents())
         parcel.setDataPosition(0)

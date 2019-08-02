@@ -22,7 +22,8 @@ import kotlin.math.sin
 data class Restaurant (
         val placeId:String,                         //The place id returned by Google Places API
         val name:String,                            //The name
-        val location: LatLng,                       //The location
+        val locationLat:Double,                     //The location latitude
+        val locationLng:Double,                     //The location longitude
         val address:String,                         //The address
         val score:Double?)                          //The score given by Google's users
     : Parcelable
@@ -35,7 +36,7 @@ data class Restaurant (
 
     /**Empty constructor allowing to create a new instance from Firebase result**/
 
-    constructor():this("", "", LatLng(0.0, 0.0), "", null)
+    constructor():this("", "", 0.0, 0.0, "", null)
 
     /**Constructor called to build a Restaurant from Google Places API's result
      * @Param apiRestaurant :  : the result received from the api
@@ -44,16 +45,19 @@ data class Restaurant (
     constructor(apiRestaurant: GooglePlacesSearchResponse.Result):
             this(apiRestaurant.placeId.toString(),
                     apiRestaurant.name.toString(),
-                    if(apiRestaurant.geometry?.location?.lat != null &&apiRestaurant.geometry.location.lng!=null)
-                        LatLng(apiRestaurant.geometry.location.lat.toDouble(), apiRestaurant.geometry.location.lng.toDouble())
-                    else LatLng(0.0, 0.0) ,
+                    if(apiRestaurant.geometry?.location?.lat != null)
+                        apiRestaurant.geometry.location.lat.toDouble()
+                    else 0.0,
+                    if(apiRestaurant.geometry?.location?.lng != null)
+                        apiRestaurant.geometry.location.lng.toDouble()
+                    else 0.0,
                     apiRestaurant.vicinity.toString(),
                     apiRestaurant.rating)
 
     /**Constructor (Parcelable)**/
 
     constructor(parcel: Parcel):
-            this(parcel.readString(), parcel.readString(), parcel.readParcelable(LatLng::class.java.classLoader),
+            this(parcel.readString(), parcel.readString(), parcel.readDouble(), parcel.readDouble(),
                     parcel.readString(), parcel.readDouble())
 
     /**Parcelable**/
@@ -61,7 +65,8 @@ data class Restaurant (
     override fun writeToParcel(parcel:Parcel, flags: Int) {
         parcel.writeString(this.placeId)
         parcel.writeString(this.name)
-        parcel.writeParcelable(this.location, flags)
+        parcel.writeDouble(this.locationLat)
+        parcel.writeDouble(this.locationLng)
         parcel.writeString(this.address)
         parcel.writeDouble(if(this.score!=null)this.score.toDouble() else 0.0)
     }
@@ -122,9 +127,9 @@ data class Restaurant (
 
     fun getDistanceInMeters(userLocation:LatLng):Int{
         val earthRadius=6371.0
-        val arg1:Double= sin(Math.toRadians(this.location.latitude)) * sin(Math.toRadians(userLocation.latitude))
-        val arg2:Double= cos(Math.toRadians(this.location.latitude)) * cos(Math.toRadians(userLocation.latitude)) *
-                cos(Math.toRadians(userLocation.longitude-this.location.longitude))
+        val arg1:Double= sin(Math.toRadians(this.locationLat)) * sin(Math.toRadians(userLocation.latitude))
+        val arg2:Double= cos(Math.toRadians(this.locationLat)) * cos(Math.toRadians(userLocation.latitude)) *
+                cos(Math.toRadians(userLocation.longitude-this.locationLng))
         val distanceInKMeters:Double=earthRadius* acos(arg1+arg2)
         return (distanceInKMeters*1000).toInt()
     }

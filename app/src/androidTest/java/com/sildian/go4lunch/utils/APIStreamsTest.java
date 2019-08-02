@@ -106,7 +106,7 @@ public class APIStreamsTest{
         LatLng location=new LatLng(48.94556, 2.151771);
         long radius=100;
 
-        Restaurant restaurant=new Restaurant(placeId, "Toyama", location, "Fake address", 5.0);
+        Restaurant restaurant=new Restaurant(placeId, "Toyama", location.latitude, location.longitude, "Fake address", 5.0);
 
         Observable<Restaurant> observable= APIStreams.streamGetRestaurantAllDetails(context, restaurant, radius);
         TestObserver<Restaurant> testObserver=new TestObserver<>();

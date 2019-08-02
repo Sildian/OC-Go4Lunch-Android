@@ -157,7 +157,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, Goo
         if(this.map!=null) {
             for (Restaurant restaurant : this.restaurants) {
                 this.map.addMarker(new MarkerOptions()
-                        .position(restaurant.getLocation())
+                        .position(new LatLng(restaurant.getLocationLat(), restaurant.getLocationLng()))
                         .icon(ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_off)))
                 .setTag(restaurant);
             }

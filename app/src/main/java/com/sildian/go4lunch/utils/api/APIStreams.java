@@ -137,7 +137,8 @@ public class APIStreams {
                 /*Then runs the query to get extra details from HerePlaces API*/
 
                 .flatMap((Function<Restaurant, Observable<Restaurant>>) restaurantWithDetails ->
-                        streamGetRestaurantExtraDetails(context, restaurantWithDetails.getLocation(),
+                        streamGetRestaurantExtraDetails(context,
+                                new LatLng(restaurantWithDetails.getLocationLat(), restaurantWithDetails.getLocationLng()),
                                 radius, restaurantWithDetails.getName())
                         .map(response -> {
                             restaurantWithDetails.addExtraDetails(response.getResults().getItems().get(0));
