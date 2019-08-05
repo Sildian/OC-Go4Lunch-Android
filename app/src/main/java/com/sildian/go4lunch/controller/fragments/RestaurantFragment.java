@@ -76,7 +76,11 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
     @BindView(R.id.fragment_restaurant_workmates) RecyclerView workmatesView;
     private WorkmateAdapter workmateAdapter;
 
-    /**Constructor**/
+    /**Constructors**/
+
+    public RestaurantFragment(){
+
+    }
 
     public RestaurantFragment(PlacesClient placesClient) {
         this.placesClient=placesClient;

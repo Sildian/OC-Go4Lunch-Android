@@ -42,7 +42,11 @@ public abstract class BaseFragment extends Fragment {
     public abstract void onUserLocationReceived(LatLng userLocation);           //Handles the user's location result
     public abstract void onRestaurantsReceived(List<Restaurant> restaurants);   //Handles the restaurants result
 
-    /**Constructor**/
+    /**Constructors**/
+
+    public BaseFragment(){
+
+    }
 
     public BaseFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
         this.placesClient=placesClient;

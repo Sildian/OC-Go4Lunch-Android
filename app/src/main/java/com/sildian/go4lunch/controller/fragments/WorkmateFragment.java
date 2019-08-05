@@ -37,7 +37,11 @@ public class WorkmateFragment extends BaseFragment{
     @BindView(R.id.fragment_workmate_workmates) RecyclerView workmatesView;
     private WorkmateAdapter workmateAdapter;
 
-    /**Constructor**/
+    /**Constructors**/
+
+    public WorkmateFragment(){
+        super();
+    }
 
     public WorkmateFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
         super(placesClient, userLocation, currentUser, restaurants);

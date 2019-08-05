@@ -30,7 +30,11 @@ public class ListFragment extends BaseFragment {
     @BindView(R.id.fragment_list_restaurants) RecyclerView restaurantsView;
     private RestaurantAdapter restaurantAdapter;
 
-    /**Constructor**/
+    /**Constructors**/
+
+    public ListFragment(){
+        super();
+    }
 
     public ListFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
         super(placesClient, userLocation, currentUser, restaurants);

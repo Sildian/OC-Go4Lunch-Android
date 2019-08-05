@@ -62,7 +62,11 @@ public class MapFragment extends BaseFragment
     private BottomSheetBehavior bottomSheet;
     private GoogleMap map;
 
-    /**Constructor**/
+    /**Constructors**/
+
+    public MapFragment(){
+        super();
+    }
 
     public MapFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
         super(placesClient, userLocation, currentUser, restaurants);
