@@ -15,9 +15,12 @@ import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
+import com.sildian.go4lunch.view.ItemClickSupport;
 import com.sildian.go4lunch.view.WorkmateAdapter;
 import com.sildian.go4lunch.view.WorkmateViewHolder;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,11 +68,39 @@ public class WorkmateFragment extends BaseFragment{
     /**Initializes the workmates view**/
 
     private void initializeWorkmatesView(){
+
+        /*Initializes the different items to create the RecyclerView*/
+
         this.workmateAdapter=new WorkmateAdapter(
                 generateOptionsForAdapter(FirebaseQueriesWorkmate.getAllWorkmates()),
                 WorkmateViewHolder.ID_WORKMATE, Glide.with(this));
         this.workmatesView.setAdapter(this.workmateAdapter);
         this.workmatesView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        /*Initializes the item click support*/
+
+        ItemClickSupport.addTo(this.workmatesView, R.layout.list_workmate_item)
+                .setOnItemClickListener((recyclerView, position, v) -> {
+
+                    Workmate workmate=this.workmateAdapter.getItem(position);
+                    Calendar calendar= Calendar.getInstance();
+                    calendar.set(Calendar.HOUR_OF_DAY, 0);
+                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.MILLISECOND, 0);
+                    Date date=calendar.getTime();
+
+                    int id=-1;
+                    for(Workmate.Lunch lunch:workmate.getLunches()){
+                        if(lunch.getDate().equals(date)){
+                            id=workmate.getLunches().indexOf(lunch);
+                        }
+                    }
+
+                    if(id!=-1) {
+                        startRestaurantActivity(workmate.getLunches().get(id).getRestaurant());
+                    }
+                });
     }
 
     /**Creates options for FirebaseAdapter**/
