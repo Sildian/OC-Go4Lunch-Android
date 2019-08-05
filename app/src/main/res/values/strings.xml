@@ -23,6 +23,9 @@
     <string name="button_restaurant_website">Website</string>
     <string name="button_restaurant_more_details">More details</string>
 
+    <!--Text hints -->
+    <string name="hint_search_restaurant">Search restaurants</string>
+
     <!--Text previews for layout templates -->
     <string name="template_text_name">Name</string>
     <string name="template_text_distance">Distance</string>

@@ -62,6 +62,36 @@ public class APIStreams {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**Gets restaurants near a location and within a radius, specifying the name
+     * @param context : context
+     * @param location : the location
+     * @param radius : the radius in meters
+     * @param restaurantName : the name of the restaurant
+     * @return a response containing the places
+     */
+
+    public static Observable<GooglePlacesSearchResponse> streamGetNearbyRestaurants(
+            Context context, LatLng location, long radius, String restaurantName){
+
+        /*Prepares Retrofit queries*/
+
+        GooglePlacesAPIQueries apiQueries=GooglePlacesAPIQueries.retrofit.create(GooglePlacesAPIQueries.class);
+
+        /*Prepares the query's parameters*/
+
+        String queryLocation=location.latitude+","+location.longitude;
+        String queryRadius=String.valueOf(radius);
+        String queryPlaceType="restaurant";
+        String queryApiKey=context.getString(R.string.google_api_key);
+
+        /*Runs the query and returns the response*/
+
+        return apiQueries.getNearbyPlaces(queryLocation, queryRadius, queryPlaceType, restaurantName, queryApiKey)
+                .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
     /**Gets detail information about a restaurant
      * @param context : context
      * @param placeId : the Google place id

@@ -172,6 +172,40 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
                 });
     }
 
+    /**Runs a query to get the list of restaurants near a location and within a radius from Google Places API,
+     * specifying the restaurant's name
+     * @param location : the location
+     * @param radius : the radius in meters
+     * @param restaurantName : the restaurant's name
+     * @param listener : the listener
+     */
+
+    public void runGooglePlacesSearchQuery(LatLng location, long radius, String restaurantName, OnPlaceQueryResultListener listener){
+        this.disposable= APIStreams.streamGetNearbyRestaurants(this, location, radius, restaurantName)
+                .subscribeWith(new DisposableObserver<GooglePlacesSearchResponse>(){
+                    @Override
+                    public void onNext(GooglePlacesSearchResponse response) {
+                        if(response.getResults()!=null) {
+                            List<Restaurant> restaurants=new ArrayList<>();
+                            for (GooglePlacesSearchResponse.Result apiRestaurant : response.getResults()) {
+                                restaurants.add(new Restaurant(apiRestaurant));
+                            }
+                            listener.onGetGooglePlacesSearchResult(restaurants);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("TAG_API", e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     /**Runs a query to get all details about a restaurant from Google and Here APIs
      * @param restaurant : the restaurant
      * @param listener : the listener

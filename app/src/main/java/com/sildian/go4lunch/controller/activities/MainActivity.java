@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SearchView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -83,28 +85,32 @@ public class MainActivity extends BaseActivity
         setSupportActionBar(findViewById(R.id.activity_main_toolbar));
         Places.initialize(this, getString(R.string.google_maps_key));
         this.placesClient = Places.createClient(this);
-        this.navigationBar=findViewById(R.id.activity_main_navigation_bar);
+        this.navigationBar = findViewById(R.id.activity_main_navigation_bar);
         this.navigationBar.setOnNavigationItemSelectedListener(this);
-        this.fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(this);
-        this.restaurants=new ArrayList<>();
+        this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        this.restaurants = new ArrayList<>();
         initLogin();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent.getAction().equals(Intent.ACTION_SEARCH)) {
+            String keyWord=intent.getStringExtra(SearchManager.QUERY);
+            Log.d("TAG_MENU", "Search : "+keyWord);
+
+            //TODO change radius to variable
+            runGooglePlacesSearchQuery(this.userLocation, 1500, keyWord, this);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_toolbar_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            //TODO replace by an actions
-            case R.id.menu_toolbar_search:
-                Log.i("TAG_MENU", "Search");
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

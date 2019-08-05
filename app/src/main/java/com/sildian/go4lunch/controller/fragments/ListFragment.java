@@ -59,7 +59,9 @@ public class ListFragment extends BaseFragment {
 
     @Override
     public void onRestaurantsReceived(List<Restaurant> restaurants) {
-
+        this.restaurants.clear();
+        this.restaurants.addAll(restaurants);
+        this.restaurantAdapter.notifyDataSetChanged();
     }
 
     /**Initializes the restaurants view**/

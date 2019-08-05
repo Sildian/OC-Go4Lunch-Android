@@ -176,16 +176,15 @@ public class MapFragment extends BaseFragment
     @Override
     public void onUserLocationReceived(LatLng userLocation) {
         this.userLocation=userLocation;
-        if(this.map!=null) {
-            this.map.addMarker(new MarkerOptions().position(this.userLocation));
-            this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(this.userLocation, 15));
-        }
+        showUserLocation();
     }
 
     @Override
     public void onRestaurantsReceived(List<Restaurant> restaurants) {
         this.restaurants=restaurants;
         if(this.map!=null) {
+            this.map.clear();
+            showUserLocation();
             MainActivity activity=(MainActivity) getActivity();
             for (Restaurant restaurant : this.restaurants) {
                 activity.getWorkmatesEatingAtRestaurantFromFirebase(restaurant, this);
@@ -235,5 +234,14 @@ public class MapFragment extends BaseFragment
         this.restaurantAddressText.setText(restaurant.getAddress());
         this.restaurantButton.setTag(restaurant);
         this.bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
+
+    /**Shows the user's location on the map**/
+
+    private void showUserLocation(){
+        if(this.map!=null) {
+            this.map.addMarker(new MarkerOptions().position(this.userLocation));
+            this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(this.userLocation, 15));
+        }
     }
 }
