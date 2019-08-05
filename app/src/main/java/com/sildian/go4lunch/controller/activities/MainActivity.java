@@ -18,11 +18,19 @@ import android.widget.SearchView;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,7 +61,8 @@ public class MainActivity extends BaseActivity
 
     public static final int KEY_REQUEST_LOGIN=101;
     public static final int KEY_REQUEST_RESTAURANT=102;
-    public static final int KEY_REQUEST_PERMISSION_LOCATION=201;
+    public static final int KEY_REQUEST_AUTOCOMPLETE=201;
+    public static final int KEY_REQUEST_PERMISSION_LOCATION=301;
 
     /**Bundle keys**/
 
@@ -93,24 +102,39 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        if(intent.getAction().equals(Intent.ACTION_SEARCH)) {
-            String keyWord=intent.getStringExtra(SearchManager.QUERY);
-            Log.d("TAG_MENU", "Search : "+keyWord);
-
-            //TODO change radius to variable
-            runGooglePlacesSearchQuery(this.userLocation, 1500, keyWord, this);
-        }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_toolbar_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_toolbar_search:
+
+                /*Prepares bounds to restrict the research*/
+
+                RectangularBounds locationRestriction=RectangularBounds.newInstance(
+                        new LatLng(this.userLocation.latitude-0.01, this.userLocation.longitude-0.01),
+                        new LatLng(this.userLocation.latitude+0.01, this.userLocation.longitude+0.01));
+
+                /*Prepares the fields to be retrieved*/
+
+                List<Place.Field> fields = Arrays.asList(
+                        Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.RATING);
+
+                /*Runs the autocomplete intent*/
+
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                        .setHint(getString(R.string.hint_search_restaurant))
+                        .setLocationRestriction(locationRestriction)
+                        .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                        .build(this);
+                startActivityForResult(intent, KEY_REQUEST_AUTOCOMPLETE);
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -123,12 +147,41 @@ public class MainActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode){
+
             case KEY_REQUEST_LOGIN:
                 handleLoginResult(resultCode, data);
                 break;
+
             case KEY_REQUEST_RESTAURANT:
                 if(data!=null) {
                     this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
+                }
+                break;
+
+            case KEY_REQUEST_AUTOCOMPLETE:
+
+                if (resultCode == RESULT_OK&&data!=null) {
+
+                    /*Gets the place information*/
+
+                    Place place = Autocomplete.getPlaceFromIntent(data);
+                    Log.d("TAG_API", place.getName());
+                    Restaurant restaurant=new Restaurant(
+                            place.getId(), place.getName(), place.getLatLng().latitude, place.getLatLng().longitude,
+                            place.getAddress(), place.getRating());
+
+                    /*Updates the restaurants list and the fragment*/
+
+                    this.restaurants.clear();
+                    this.restaurants.add(restaurant);
+                    this.fragment.onRestaurantsReceived(this.restaurants);
+
+                } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                    // TODO: Handle the error.
+                    Status status = Autocomplete.getStatusFromIntent(data);
+                    Log.d("TAG_API", status.getStatusMessage());
+                } else if (resultCode == RESULT_CANCELED) {
+                    //TODO Handle (user canceled)
                 }
                 break;
         }
