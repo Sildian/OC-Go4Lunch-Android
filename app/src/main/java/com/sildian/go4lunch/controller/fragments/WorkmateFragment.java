@@ -83,22 +83,9 @@ public class WorkmateFragment extends BaseFragment{
                 .setOnItemClickListener((recyclerView, position, v) -> {
 
                     Workmate workmate=this.workmateAdapter.getItem(position);
-                    Calendar calendar= Calendar.getInstance();
-                    calendar.set(Calendar.HOUR_OF_DAY, 0);
-                    calendar.set(Calendar.MINUTE, 0);
-                    calendar.set(Calendar.SECOND, 0);
-                    calendar.set(Calendar.MILLISECOND, 0);
-                    Date date=calendar.getTime();
-
-                    int id=-1;
-                    for(Workmate.Lunch lunch:workmate.getLunches()){
-                        if(lunch.getDate().equals(date)){
-                            id=workmate.getLunches().indexOf(lunch);
-                        }
-                    }
-
-                    if(id!=-1) {
-                        startRestaurantActivity(workmate.getLunches().get(id).getRestaurant());
+                    Restaurant restaurant=workmate.getChosenRestaurantoday();
+                    if(restaurant!=null) {
+                        startRestaurantActivity(restaurant);
                     }
                 });
     }

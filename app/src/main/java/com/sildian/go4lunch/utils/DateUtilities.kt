@@ -15,6 +15,17 @@ class DateUtilities {
 
     companion object {
 
+        /**Gets the date after setting time to 0**/
+
+        fun getDate():Date{
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+            return calendar.time
+        }
+
         /**Gets the local time format pattern
          * @return a String containing the local time format's pattern
          */

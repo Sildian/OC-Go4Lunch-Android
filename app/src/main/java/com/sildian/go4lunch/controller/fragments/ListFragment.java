@@ -1,7 +1,6 @@
 package com.sildian.go4lunch.controller.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,8 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
-import com.sildian.go4lunch.controller.activities.MainActivity;
-import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.view.ItemClickSupport;

@@ -31,6 +31,7 @@ import com.sildian.go4lunch.controller.activities.MainActivity;
 import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
+import com.sildian.go4lunch.utils.DateUtilities;
 import com.sildian.go4lunch.utils.api.APIStreams;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesLunch;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
@@ -180,12 +181,7 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
 
     private void initializeLunchButton(){
 
-        Calendar calendar= Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        Date date=calendar.getTime();
+        Date date= DateUtilities.Companion.getDate();
         Workmate.Lunch lunch= new Workmate.Lunch(date, this.restaurant);
 
         if(this.currentUser.getLunches().contains(lunch)){

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 
 import java.util.Calendar;
@@ -88,35 +89,21 @@ public class WorkmateViewHolder extends RecyclerView.ViewHolder{
 
             case ID_WORKMATE:
 
-                /*Gets the date*/
+                /*Populates the string depending on the chosen restaurant if it exists*/
 
-                Calendar calendar=Calendar.getInstance();
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-                Date date=calendar.getTime();
+                Restaurant restaurant=workmate.getChosenRestaurantoday();
 
-                /*Checks if a lunch already exists today, and gets its id in the list*/
-
-                int id=-1;
-                for(Workmate.Lunch lunch:workmate.getLunches()){
-                    if(lunch.getDate().equals(date)){
-                        id=workmate.getLunches().indexOf(lunch);
-                    }
-                }
-
-                /*Populates the string depending on the id*/
-
-                if (id==-1) {
+                if (restaurant==null) {
                     nameAndAction = workmate.getName() + " " +
                             this.itemView.getResources().getString(R.string.text_workmate_name_and_action_workmate_off);
                     this.itemView.setBackground(null);
+
                 } else {
+
                     this.workmateNameAndAction.setTextColor(this.itemView.getResources().getColor(android.R.color.black));
                     nameAndAction = workmate.getName() + " " +
                             this.itemView.getResources().getString(R.string.text_workmate_name_and_action_workmate_on) + " " +
-                            workmate.getLunches().get(id).getRestaurant().getName();
+                            restaurant.getName();
                 }
                 break;
 

@@ -31,17 +31,12 @@ import com.sildian.go4lunch.controller.fragments.MapFragment;
 import com.sildian.go4lunch.controller.fragments.WorkmateFragment;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
-import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
-import com.sildian.go4lunch.utils.api.APIStreams;
 import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
 import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 
 /**************************************************************************************************
  * MainActivity

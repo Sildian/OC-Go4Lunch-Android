@@ -20,8 +20,6 @@ import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
 import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
@@ -135,23 +133,9 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
      */
 
     public void deleteLunchInFirebase(Workmate workmate){
-
-        Calendar calendar= Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        Date date=calendar.getTime();
-
-        int id=-1;
-        for(Workmate.Lunch lunch:workmate.getLunches()){
-            if(lunch.getDate().equals(date)){
-                id=workmate.getLunches().indexOf(lunch);
-            }
-        }
-
-        if(id!=-1) {
-            FirebaseQueriesLunch.deleteLunch(workmate.getLunches().get(id).getRestaurant(), workmate)
+        Restaurant restaurant=workmate.getChosenRestaurantoday();
+        if(restaurant!=null) {
+            FirebaseQueriesLunch.deleteLunch(restaurant, workmate)
                     .addOnFailureListener(this);
         }
     }

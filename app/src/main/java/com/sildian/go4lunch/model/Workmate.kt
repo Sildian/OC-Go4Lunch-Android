@@ -2,6 +2,7 @@ package com.sildian.go4lunch.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.sildian.go4lunch.utils.DateUtilities
 import java.util.*
 
 /*************************************************************************************************
@@ -87,12 +88,7 @@ data class Workmate(
 
         /*Gets the date and creates a LunchRestaurant*/
 
-        val calendar=Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        val date=calendar.time
+        val date=DateUtilities.getDate()
         val lunch= Lunch(date, restaurant)
 
         /*If the lunch is not already contained in the lunches...*/
@@ -119,6 +115,22 @@ data class Workmate(
         }
 
         else return false
+    }
+
+    /**Gets the restaurant where the workmate eats today
+     * @Return the restaurant if it exists, else return null
+     */
+
+    fun getChosenRestaurantoday():Restaurant?{
+
+        val date=DateUtilities.getDate()
+
+        for(item in this.lunches){
+            if(item.date.equals(date)){
+                return item.restaurant
+            }
+        }
+        return null
     }
 
     /**This nested class provides with data grouping a date and a restaurant for each lunch**/
