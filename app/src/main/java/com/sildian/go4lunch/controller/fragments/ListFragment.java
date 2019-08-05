@@ -75,10 +75,7 @@ public class ListFragment extends BaseFragment {
 
         ItemClickSupport.addTo(this.restaurantsView, R.layout.list_restaurant_item)
                 .setOnItemClickListener((recyclerView, position, v) -> {
-                    Intent restaurantActivityIntent=new Intent(getActivity(), RestaurantActivity.class);
-                    restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
-                    restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, this.restaurants.get(position));
-                    startActivity(restaurantActivityIntent);
+                    startRestaurantActivity(this.restaurants.get(position));
                 });
     }
 }

@@ -54,8 +54,9 @@ public class MainActivity extends BaseActivity
 
     /**Request keys**/
 
-    private static final int KEY_REQUEST_LOGIN=101;
-    private static final int KEY_REQUEST_PERMISSION_LOCATION=201;
+    public static final int KEY_REQUEST_LOGIN=101;
+    public static final int KEY_REQUEST_RESTAURANT=102;
+    public static final int KEY_REQUEST_PERMISSION_LOCATION=201;
 
     /**Bundle keys**/
 
@@ -123,6 +124,11 @@ public class MainActivity extends BaseActivity
         switch(requestCode){
             case KEY_REQUEST_LOGIN:
                 handleLoginResult(resultCode, data);
+                break;
+            case KEY_REQUEST_RESTAURANT:
+                if(data!=null) {
+                    this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
+                }
                 break;
         }
     }

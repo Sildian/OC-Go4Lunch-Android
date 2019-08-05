@@ -159,6 +159,7 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
                 RestaurantActivity activity = (RestaurantActivity) getActivity();
                 activity.createOrUpdateRestaurantInFirebase(this.restaurant);
                 activity.updateWorkmateLikesInFirebase(this.currentUser);
+                activity.updateCurrentUser(this.currentUser);
                 disableButton(this.likeButton);
             }
         });
@@ -192,14 +193,18 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
         }
 
         this.lunchButton.setOnClickListener(v -> {
+
+            RestaurantActivity activity = (RestaurantActivity) getActivity();
+            activity.deleteLunchInFirebase(this.currentUser);
+
             if(this.currentUser.updateLunch(this.restaurant)) {
-                RestaurantActivity activity = (RestaurantActivity) getActivity();
-                activity.deleteLunchInFirebase(this.currentUser);
                 activity.createOrUpdateRestaurantInFirebase(this.restaurant);
                 activity.updateWorkmateLunchesInFirebase(this.currentUser);
-                activity.createLunchInFirebase(this.restaurant, this.currentUser);
+                activity.updateCurrentUser(this.currentUser);
                 disableLunchButton();
             }
+
+            activity.createLunchInFirebase(this.restaurant, this.currentUser);
         });
     }
 

@@ -1,6 +1,7 @@
 package com.sildian.go4lunch.controller.activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.libraries.places.api.Places;
@@ -32,6 +33,9 @@ public class RestaurantActivity extends BaseActivity {
         Places.initialize(this, getString(R.string.google_maps_key));
         this.placesClient = Places.createClient(this);
         this.currentUser=getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
+        Intent resultIntent=new Intent();
+        resultIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
+        setResult(RESULT_OK, resultIntent);
         showFragment();
     }
 

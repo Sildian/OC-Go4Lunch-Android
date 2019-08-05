@@ -1,5 +1,6 @@
 package com.sildian.go4lunch.controller.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.sildian.go4lunch.controller.activities.MainActivity;
+import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 
@@ -59,9 +62,31 @@ public abstract class BaseFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case MainActivity.KEY_REQUEST_RESTAURANT:
+                if(data!=null){
+                    this.currentUser=data.getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
+                }
+        }
+    }
+
     /**Updates the current user**/
 
     public void updateCurrentUser(Workmate workmate){
         this.currentUser=workmate;
+    }
+
+    /**Starts the RestaurantActivity
+     * @param restaurant : the restaurant to display
+     */
+
+    protected void startRestaurantActivity(Restaurant restaurant){
+        Intent restaurantActivityIntent = new Intent(getActivity(), RestaurantActivity.class);
+        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
+        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, restaurant);
+        startActivityForResult(restaurantActivityIntent, MainActivity.KEY_REQUEST_RESTAURANT);
     }
 }

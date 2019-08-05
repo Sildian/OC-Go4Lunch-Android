@@ -48,6 +48,12 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
         //TODO Handle Firebase errors
     }
 
+    /**Updates the current user**/
+
+    public void updateCurrentUser(Workmate workmate){
+        this.currentUser=workmate;
+    }
+
     /**Creates a workmate in Firebase
      * @param user : the user information
      */
