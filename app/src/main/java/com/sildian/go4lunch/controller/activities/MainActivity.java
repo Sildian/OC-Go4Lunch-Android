@@ -68,9 +68,10 @@ public class MainActivity extends BaseActivity
     /**Request keys**/
 
     public static final int KEY_REQUEST_LOGIN=101;
-    public static final int KEY_REQUEST_RESTAURANT=102;
-    public static final int KEY_REQUEST_AUTOCOMPLETE=201;
-    public static final int KEY_REQUEST_PERMISSION_LOCATION=301;
+    public static final int KEY_REQUEST_AUTOCOMPLETE=102;
+    public static final int KEY_REQUEST_RESTAURANT=103;
+    public static final int KEY_REQUEST_SETTINGS=104;
+    public static final int KEY_REQUEST_PERMISSION_LOCATION=201;
 
     /**Bundle keys**/
 
@@ -179,12 +180,6 @@ public class MainActivity extends BaseActivity
                 handleLoginResult(resultCode, data);
                 break;
 
-            case KEY_REQUEST_RESTAURANT:
-                if(data!=null) {
-                    this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
-                }
-                break;
-
             case KEY_REQUEST_AUTOCOMPLETE:
 
                 if (resultCode == RESULT_OK&&data!=null) {
@@ -210,6 +205,15 @@ public class MainActivity extends BaseActivity
                 } else if (resultCode == RESULT_CANCELED) {
                     //TODO Handle (user canceled)
                 }
+                break;
+
+            case KEY_REQUEST_RESTAURANT:
+                if(data!=null) {
+                    this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
+                }
+                break;
+
+            case KEY_REQUEST_SETTINGS:
                 break;
         }
     }
@@ -349,7 +353,7 @@ public class MainActivity extends BaseActivity
     }
 
     /**Shows a fragment according to the id
-     * @param id : the fragment's id
+     * @param id : the menu id
      */
 
     private void showFragment(int id){
@@ -372,16 +376,24 @@ public class MainActivity extends BaseActivity
     }
 
     /**Handles the NavigationDrawerMenu action according to the id
-     * @param id : the fragment's id
+     * @param id : the menu id
      */
 
     private void handleNavigationDrawerAction(int id){
         switch(id){
             case R.id.menu_navigation_hidden_lunch:
+                if(this.currentUser.getChosenRestaurantoday()!=null) {
+                    startRestaurantActivity(this.currentUser.getChosenRestaurantoday());
+                }else{
+                    //TODO handle
+                }
                 break;
             case R.id.menu_navigation_hidden_settings:
+                startSettingsActivity();
                 break;
             case R.id.menu_navigation_hidden_logout:
+                FirebaseAuth.getInstance().signOut();
+                startLoginActivity();
                 break;
         }
     }
@@ -421,5 +433,24 @@ public class MainActivity extends BaseActivity
         }else{
             //TODO handle
         }
+    }
+
+    /**Starts the RestaurantActivity
+     * @param restaurant : the restaurant to display
+     */
+
+    protected void startRestaurantActivity(Restaurant restaurant){
+        Intent restaurantActivityIntent = new Intent(this, RestaurantActivity.class);
+        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
+        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, restaurant);
+        startActivityForResult(restaurantActivityIntent, KEY_REQUEST_RESTAURANT);
+    }
+
+    /**Starts the SettingsActivity**/
+
+    protected void startSettingsActivity(){
+        Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+        settingsActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
+        startActivityForResult(settingsActivityIntent, KEY_REQUEST_SETTINGS);
     }
 }

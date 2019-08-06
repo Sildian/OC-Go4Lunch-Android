@@ -73,6 +73,8 @@ public abstract class BaseFragment extends Fragment {
             case MainActivity.KEY_REQUEST_RESTAURANT:
                 if(data!=null){
                     this.currentUser=data.getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
+                    MainActivity activity=(MainActivity) getActivity();
+                    activity.updateCurrentUser(this.currentUser);
                 }
         }
     }

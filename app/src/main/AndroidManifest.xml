@@ -29,16 +29,18 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".controller.activities.RestaurantActivity"></activity>
+        <activity android:name=".controller.activities.SettingsActivity"
+            android:parentActivityName=".controller.activities.MainActivity">
 
-        <activity
-            android:name=".controller.activities.MainActivity">
+        </activity>
+        <activity android:name=".controller.activities.RestaurantActivity" />
+        <activity android:name=".controller.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

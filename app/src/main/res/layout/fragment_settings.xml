@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".controller.fragments.SettingsFragment"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fragment_settings_text_radius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/components_margin_small"
+            android:textSize="@dimen/text_size_title"
+            android:textColor="@android:color/black"
+            android:text="@string/text_settings_radius" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <SeekBar
+                android:id="@+id/fragment_settings_seek_bar_radius"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:layout_margin="@dimen/components_margin_small"
+                android:max="@integer/figure_max_radius"
+                android:progress="@integer/figure_default_radius" />
+
+            <TextView
+                android:id="@+id/fragment_settings_text_radius_progress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/components_margin_small"
+                android:textSize="@dimen/text_size_body"
+                android:text="@string/text_settings_default_radius" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/components_margin_small"
+        android:background="?android:attr/listDivider" />
+
+    <Switch
+        android:id="@+id/fragment_settings_switch_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/components_margin_small"
+        android:checked="true"
+        android:text="@string/text_settings_notifications"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_size_title" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/components_margin_small"
+        android:background="?android:attr/listDivider" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fragment_settings_button_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_margin="@dimen/components_margin_small"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/button_settings_reset"
+        app:iconTint="@color/colorPrimary"
+        app:icon="@drawable/ic_settings" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/components_margin_small"
+        android:background="?android:attr/listDivider" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fragment_settings_button_account_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_margin="@dimen/components_margin_small"
+        android:textColor="@android:color/holo_red_dark"
+        android:text="@string/button_settings_account_delete"
+        app:iconTint="@android:color/holo_red_dark"
+        app:icon="@drawable/ic_delete" />
+
+</LinearLayout>

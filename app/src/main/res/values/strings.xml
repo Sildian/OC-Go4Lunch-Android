@@ -23,12 +23,17 @@
     <string name="text_workmate_name_and_action_workmate_on">eats at</string>
     <string name="text_workmate_name_and_action_workmate_off">hasn\'t decided yet</string>
     <string name="text_workmate_name_and_action_restaurant">is joining</string>
+    <string name="text_settings_radius">Research radius</string>
+    <string name="text_settings_default_radius">1500 m</string>
+    <string name="text_settings_notifications">Activate daily notifications</string>
 
     <!-- Text displayed within Buttons -->
     <string name="button_restaurant_call">Call</string>
     <string name="button_restaurant_like">Like</string>
     <string name="button_restaurant_website">Website</string>
     <string name="button_restaurant_more_details">More details</string>
+    <string name="button_settings_reset">Reset settings</string>
+    <string name="button_settings_account_delete">Delete my account</string>
 
     <!-- Text hints -->
     <string name="hint_search_restaurant">Search restaurants</string>

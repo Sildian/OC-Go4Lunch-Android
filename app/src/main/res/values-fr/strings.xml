@@ -24,12 +24,17 @@
     <string name="text_workmate_name_and_action_workmate_on">mange chez</string>
     <string name="text_workmate_name_and_action_workmate_off">n\'a pas encore décidé</string>
     <string name="text_workmate_name_and_action_restaurant">mange ici</string>
+    <string name="text_settings_radius">Rayon de recherche</string>
+    <string name="text_settings_default_radius">1500 m</string>
+    <string name="text_settings_notifications">Activer les notifications quotidiennes</string>
 
     <!--Text displayed within Buttons -->
     <string name="button_restaurant_call">Appeler</string>
     <string name="button_restaurant_like">J\'aime</string>
     <string name="button_restaurant_website">Site web</string>
     <string name="button_restaurant_more_details">Plus</string>
+    <string name="button_settings_reset">Réinitialiser</string>
+    <string name="button_settings_account_delete">Supprimer mon compte</string>
 
     <!--Text hints -->
     <string name="hint_search_restaurant">Rechercher des restaurants</string>

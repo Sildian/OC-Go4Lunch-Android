@@ -105,9 +105,12 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
     public void getWorkmatesEatingAtRestaurantFromFirebase(Restaurant restaurant, OnFirebaseQueryResultListener listener){
         //TODO handle error
         FirebaseQueriesLunch.getWorkmatesEatingAtRestaurant(restaurant)
-                .addSnapshotListener((queryDocumentSnapshots, e) ->
+                .addSnapshotListener((queryDocumentSnapshots, e) ->{
+                    if(queryDocumentSnapshots!=null){
                         listener.onGetWorkmatesEatingAtRestaurantResult
-                                (restaurant, queryDocumentSnapshots.toObjects(Workmate.class)));
+                                (restaurant, queryDocumentSnapshots.toObjects(Workmate.class));
+                    }
+                });
     }
 
     /**Updates a workmate's likes in Firebase
