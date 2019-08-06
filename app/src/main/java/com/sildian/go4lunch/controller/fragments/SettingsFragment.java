@@ -14,6 +14,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.controller.activities.SettingsActivity;
+import com.sildian.go4lunch.model.Settings;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,10 +35,18 @@ public class SettingsFragment extends Fragment {
     @BindView(R.id.fragment_settings_button_reset) Button resetButton;
     @BindView(R.id.fragment_settings_button_account_delete) Button accountDeleteButton;
 
-    /**Constructor**/
+    /**Data**/
+
+    private Settings settings;                              //The user settings
+
+    /**Constructors**/
 
     public SettingsFragment() {
 
+    }
+
+    public SettingsFragment(Settings settings){
+        this.settings=settings;
     }
 
     /**Callbacks**/
@@ -45,13 +55,33 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_settings, container, false);
         ButterKnife.bind(this, view);
+        initializeValues();
         initializeRadiusItems();
         initializeResetButton();
         initializeAccountDeleteButton();
         return view;
     }
 
-    /**Initializes the radius items**/
+    /**Updates the settings**/
+
+    public void updateSettings(){
+        this.settings.setSearchRadius(this.radiusBar.getProgress());
+        this.settings.setNotificationsOn(this.notificationsSwitch.isChecked());
+        SettingsActivity activity=(SettingsActivity) getActivity();
+        activity.updateSettings(this.settings);
+    }
+
+    /**Initializes the item's values**/
+
+    private void initializeValues(){
+        int radiusValue=this.settings.getSearchRadius();
+        this.radiusBar.setProgress(radiusValue);
+        String radius=radiusValue+" m";
+        this.radiusText.setText(radius);
+        this.notificationsSwitch.setChecked(this.settings.getNotificationsOn());
+    }
+
+    /**Initializes the radius items behavior**/
 
     private void initializeRadiusItems(){
         this.radiusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

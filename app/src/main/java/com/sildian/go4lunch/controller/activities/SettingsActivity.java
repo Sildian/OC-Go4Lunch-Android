@@ -1,11 +1,9 @@
 package com.sildian.go4lunch.controller.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.sildian.go4lunch.R;
-import com.sildian.go4lunch.controller.fragments.RestaurantFragment;
 import com.sildian.go4lunch.controller.fragments.SettingsFragment;
 
 /**************************************************************************************************
@@ -13,7 +11,7 @@ import com.sildian.go4lunch.controller.fragments.SettingsFragment;
  * Allows the user to manage settings
  *************************************************************************************************/
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     /**Fragment**/
 
@@ -27,14 +25,56 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         setSupportActionBar(findViewById(R.id.activity_settings_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.currentUser=getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
+        this.settings=getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_SETTINGS);
         showFragment();
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishSave();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finishSave();
+        return true;
     }
 
     /**Shows the fragment**/
 
     private void showFragment(){
         this.fragment=(SettingsFragment)getSupportFragmentManager().findFragmentById(R.id.activity_settings_fragment);
-        this.fragment=new SettingsFragment();
+        this.fragment=new SettingsFragment(this.settings);
         getSupportFragmentManager().beginTransaction().add(R.id.activity_settings_fragment, this.fragment).commit();
+    }
+
+    /**Finishes the activity after saving the settings**/
+
+    private void finishSave(){
+        this.fragment.updateSettings();
+        setActivityResult(false);
+        finish();
+    }
+
+    /**Finishes the activity after logging out**/
+
+    private void finishLogout(){
+        setActivityResult(true);
+        finish();
+    }
+
+    /**Sets the activity result
+     * @param logout : true if the user is logging out
+     */
+
+    private void setActivityResult(boolean logout){
+        Intent resultIntent=new Intent();
+        resultIntent.putExtra(MainActivity.KEY_BUNDLE_SETTINGS, this.settings);
+        if(logout){
+            setResult(RESULT_CANCELED, resultIntent);
+        }else {
+            setResult(RESULT_OK, resultIntent);
+        }
     }
 }

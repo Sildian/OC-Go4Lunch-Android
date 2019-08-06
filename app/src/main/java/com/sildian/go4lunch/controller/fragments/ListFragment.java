@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.model.Settings;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.view.ItemClickSupport;
 import com.sildian.go4lunch.view.RestaurantAdapter;
@@ -36,8 +37,9 @@ public class ListFragment extends BaseFragment {
         super();
     }
 
-    public ListFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
-        super(placesClient, userLocation, currentUser, restaurants);
+    public ListFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser,
+                        Settings settings, List<Restaurant> restaurants) {
+        super(placesClient, userLocation, currentUser, settings, restaurants);
     }
 
     /**BaseFragment abstract methods**/

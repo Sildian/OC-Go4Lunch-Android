@@ -15,6 +15,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.controller.activities.MainActivity;
 import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.model.Settings;
 import com.sildian.go4lunch.model.Workmate;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public abstract class BaseFragment extends Fragment {
     protected PlacesClient placesClient;                                        //The placesClient allowing to use Google Places API
     protected LatLng userLocation;                                              //The user's location
     protected Workmate currentUser;                                             //The current user
+    protected Settings settings;                                                //The user settings
     protected List<Restaurant> restaurants;                                     //The list of restaurants in the area
 
     /**Abstract methods**/
@@ -48,10 +50,12 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
-    public BaseFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
+    public BaseFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser,
+                        Settings settings, List<Restaurant> restaurants) {
         this.placesClient=placesClient;
         this.userLocation=userLocation;
         this.currentUser=currentUser;
+        this.settings=settings;
         this.restaurants=restaurants;
     }
 

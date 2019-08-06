@@ -13,6 +13,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.Query;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
+import com.sildian.go4lunch.model.Settings;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
 import com.sildian.go4lunch.view.ItemClickSupport;
@@ -43,8 +44,9 @@ public class WorkmateFragment extends BaseFragment{
         super();
     }
 
-    public WorkmateFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
-        super(placesClient, userLocation, currentUser, restaurants);
+    public WorkmateFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser,
+                            Settings settings, List<Restaurant> restaurants) {
+        super(placesClient, userLocation, currentUser, settings, restaurants);
     }
 
     /**BaseFragment abstract methods**/
