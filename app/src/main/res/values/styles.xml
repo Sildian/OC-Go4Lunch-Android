@@ -21,6 +21,11 @@
         <item name="android:textSize">@dimen/text_size_menu_item</item>
     </style>
 
+    <!-- Navigation drawer theme -->
+    <style name="NavigationDrawerTheme" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
     <!-- Login theme -->
     <style name="LoginTheme" parent="AppTheme">
         <item name="android:background">@color/colorPrimaryLight</item>

@@ -7,6 +7,13 @@
     <string name="menu_map">Carte</string>
     <string name="menu_list">Liste Restos</string>
     <string name="menu_workmates">Collègues</string>
+    <string name="menu_your_lunch">Mon déj</string>
+    <string name="menu_settings">Mes paramètres</string>
+    <string name="menu_logout">Me déconnecter</string>
+
+    <!-- Navigation drawer -->
+    <string name="navigation_drawer_open">Ouverture du menu latéral</string>
+    <string name="navigation_drawer_close">Fermeture du menu latéral</string>
 
     <!-- Messages sent to the user -->
 

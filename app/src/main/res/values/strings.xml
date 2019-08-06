@@ -6,6 +6,13 @@
     <string name="menu_map">Map View</string>
     <string name="menu_list">List View</string>
     <string name="menu_workmates">Workmates</string>
+    <string name="menu_your_lunch">Your lunch</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_logout">Logout</string>
+
+    <!-- Navigation drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Messages sent to the user -->
 
@@ -17,16 +24,16 @@
     <string name="text_workmate_name_and_action_workmate_off">hasn\'t decided yet</string>
     <string name="text_workmate_name_and_action_restaurant">is joining</string>
 
-    <!--Text displayed within Buttons -->
+    <!-- Text displayed within Buttons -->
     <string name="button_restaurant_call">Call</string>
     <string name="button_restaurant_like">Like</string>
     <string name="button_restaurant_website">Website</string>
     <string name="button_restaurant_more_details">More details</string>
 
-    <!--Text hints -->
+    <!-- Text hints -->
     <string name="hint_search_restaurant">Search restaurants</string>
 
-    <!--Text previews for layout templates -->
+    <!-- Text previews for layout templates -->
     <string name="template_text_name">Name</string>
     <string name="template_text_distance">Distance</string>
     <string name="template_text_address">Address</string>

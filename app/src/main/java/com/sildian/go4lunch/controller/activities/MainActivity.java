@@ -2,10 +2,13 @@ package com.sildian.go4lunch.controller.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -13,8 +16,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.SearchView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -26,12 +33,12 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.sildian.go4lunch.R;
@@ -55,6 +62,7 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener,
+        NavigationView.OnNavigationItemSelectedListener,
         OnFirebaseQueryResultListener, OnPlaceQueryResultListener {
 
     /**Request keys**/
@@ -82,6 +90,9 @@ public class MainActivity extends BaseActivity
 
     /**UI Components**/
 
+    private Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationViewHidden;
     private BottomNavigationView navigationBar;
     private BaseFragment fragment;
 
@@ -91,11 +102,11 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar(findViewById(R.id.activity_main_toolbar));
+        initializeToolbar();
+        initializeNavigationDrawer();
+        initializeNavigationBar();
         Places.initialize(this, getString(R.string.google_maps_key));
         this.placesClient = Places.createClient(this);
-        this.navigationBar = findViewById(R.id.activity_main_navigation_bar);
-        this.navigationBar.setOnNavigationItemSelectedListener(this);
         this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         this.restaurants = new ArrayList<>();
         initLogin();
@@ -139,8 +150,24 @@ public class MainActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        showFragment(menuItem.getItemId());
+        switch(menuItem.getGroupId()){
+            case R.id.menu_navigation_group:
+                showFragment(menuItem.getItemId());
+                break;
+            case R.id.menu_navigation_hidden_group:
+                handleNavigationDrawerAction(menuItem.getItemId());
+                break;
+        }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -209,6 +236,7 @@ public class MainActivity extends BaseActivity
     public void onGetWorkmateResult(Workmate workmate) {
         this.currentUser=workmate;
         this.fragment.updateCurrentUser(workmate);
+        updateNavigationDrawerItems();
     }
 
     @Override
@@ -226,6 +254,43 @@ public class MainActivity extends BaseActivity
     @Override
     public void onGetRestaurantAllDetailsResult(Restaurant restaurant) {
 
+    }
+
+    /**Initializes the Toolbar**/
+
+    private void initializeToolbar(){
+        this.toolbar=findViewById(R.id.activity_main_toolbar);
+        setSupportActionBar(this.toolbar);
+    }
+
+    /**Initializes the NavigationDrawer**/
+
+    private void initializeNavigationDrawer(){
+        this.drawerLayout = findViewById(R.id.activity_main_drawer_layout);
+        ActionBarDrawerToggle toggle =
+                new ActionBarDrawerToggle(this, this.drawerLayout, this.toolbar,
+                        R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        this.drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        this.navigationViewHidden = findViewById(R.id.activity_main_navigation_view);
+        this.navigationViewHidden.setNavigationItemSelectedListener(this);
+    }
+
+    /**Initializes the NavigationBar**/
+
+    private void initializeNavigationBar(){
+        this.navigationBar = findViewById(R.id.activity_main_navigation_bar);
+        this.navigationBar.setOnNavigationItemSelectedListener(this);
+    }
+
+    /**Updates the navigation drawer items**/
+
+    private void updateNavigationDrawerItems(){
+        ImageView navigationDrawerUserImage=findViewById(R.id.navigation_hidden_header_user_image);
+        TextView navigationDrawerUserName=findViewById(R.id.navigation_hidden_header_user_name);
+        RequestManager glide= Glide.with(this);
+        glide.load(this.currentUser.getImageUrl()).apply(RequestOptions.circleCropTransform()).into(navigationDrawerUserImage);
+        navigationDrawerUserName.setText(this.currentUser.getName());
     }
 
     /**Initializes user login**/
@@ -304,6 +369,21 @@ public class MainActivity extends BaseActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_main_fragment, this.fragment)
                 .commit();
+    }
+
+    /**Handles the NavigationDrawerMenu action according to the id
+     * @param id : the fragment's id
+     */
+
+    private void handleNavigationDrawerAction(int id){
+        switch(id){
+            case R.id.menu_navigation_hidden_lunch:
+                break;
+            case R.id.menu_navigation_hidden_settings:
+                break;
+            case R.id.menu_navigation_hidden_logout:
+                break;
+        }
     }
 
     /**Gets the user's location and then searches the nearby restaurants**/
