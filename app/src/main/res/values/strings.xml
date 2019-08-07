@@ -14,8 +14,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <!-- Messages sent to the user -->
-
     <!-- Text displayed within TextViews -->
     <string name="text_restaurant_opening_hours_unknown">Unknown opening hours</string>
     <string name="text_restaurant_opening_hours_closed">Closed</string>
@@ -43,6 +41,9 @@
     <string name="dialog_negative_button_text">No</string>
     <string name="dialog_account_delete_title">Delete account</string>
     <string name="dialog_account_delete_message">You are going to delete your account and its data. Do you confirm?</string>
+
+    <!-- Text displayed within Notifications -->
+    <string name="notification_lunch_text">Your lunch at</string>
 
     <!-- Text previews for layout templates -->
     <string name="template_text_name">Name</string>

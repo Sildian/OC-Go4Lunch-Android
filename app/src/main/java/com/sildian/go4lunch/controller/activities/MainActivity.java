@@ -246,8 +246,8 @@ public class MainActivity extends BaseActivity
     @Override
     public void onGetWorkmateResult(Workmate workmate) {
         this.currentUser=workmate;
-        this.fragment.updateCurrentUser(workmate);
         updateNavigationDrawerItems();
+        showFragment(R.id.menu_navigation_map);
         updateUserLocation();
     }
 
@@ -313,7 +313,6 @@ public class MainActivity extends BaseActivity
             startLoginActivity();
         }else{
             getWorkmateFromFirebase(user.getUid(), this);
-            showFragment(R.id.menu_navigation_map);
         }
     }
 

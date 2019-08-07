@@ -15,8 +15,6 @@
     <string name="navigation_drawer_open">Ouverture du menu latéral</string>
     <string name="navigation_drawer_close">Fermeture du menu latéral</string>
 
-    <!-- Messages sent to the user -->
-
     <!-- Text displayed within TextViews -->
     <string name="text_restaurant_opening_hours_unknown">Horaires inconnus</string>
     <string name="text_restaurant_opening_hours_closed">Fermé</string>
@@ -44,6 +42,9 @@
     <string name="dialog_negative_button_text">Non</string>
     <string name="dialog_account_delete_title">Suppression de compte</string>
     <string name="dialog_account_delete_message">Vous êtes sur le point de supprimer votre compte et ses informations. Confirmez-vous la suppression?</string>
+
+    <!-- Text displayed within Notifications -->
+    <string name="notification_lunch_text">Votre déj chez</string>
 
     <!--Text previews for layout templates -->
     <string name="template_text_name">Nom</string>
