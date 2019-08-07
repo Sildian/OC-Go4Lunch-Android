@@ -1,7 +1,6 @@
 package com.sildian.go4lunch.controller.fragments;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -29,6 +28,10 @@ import butterknife.ButterKnife;
 
 public class SettingsFragment extends Fragment {
 
+    /*********************************************************************************************
+     * Members
+     ********************************************************************************************/
+
     /**UI components**/
 
     @BindView(R.id.fragment_settings_seek_bar_radius) SeekBar radiusBar;
@@ -41,7 +44,9 @@ public class SettingsFragment extends Fragment {
 
     private Workmate currentUser;                           //The current user
 
-    /**Constructors**/
+    /*********************************************************************************************
+     * Constructors
+     ********************************************************************************************/
 
     public SettingsFragment() {
 
@@ -51,7 +56,9 @@ public class SettingsFragment extends Fragment {
         this.currentUser=currentUser;
     }
 
-    /**Callbacks**/
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,16 +71,9 @@ public class SettingsFragment extends Fragment {
         return view;
     }
 
-    /**Updates the settings**/
-
-    public void updateSettings(){
-        this.currentUser.getSettings().setSearchRadius(this.radiusBar.getProgress());
-        this.currentUser.getSettings().setNotificationsOn(this.notificationsSwitch.isChecked());
-        SettingsActivity activity=(SettingsActivity) getActivity();
-        activity.updateCurrentUser(this.currentUser);
-    }
-
-    /**Initializes the item's values**/
+    /*********************************************************************************************
+     * Initializations
+     ********************************************************************************************/
 
     private void initializeValues(){
         int radiusValue=this.currentUser.getSettings().getSearchRadius();
@@ -82,8 +82,6 @@ public class SettingsFragment extends Fragment {
         this.radiusText.setText(radius);
         this.notificationsSwitch.setChecked(this.currentUser.getSettings().getNotificationsOn());
     }
-
-    /**Initializes the radius items behavior**/
 
     private void initializeRadiusItems(){
         this.radiusBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -105,8 +103,6 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    /**Initializes the resetButton**/
-
     private void initializeResetButton(){
         this.resetButton.setOnClickListener(v -> {
             int defaultRadius=getResources().getInteger(R.integer.figure_default_radius);
@@ -116,9 +112,10 @@ public class SettingsFragment extends Fragment {
         });
     }
 
-    /**Initializes the accountDeleteButton**/
-
     private void initializeAccountDeleteButton(){
+
+        /*Shows an alert dialog allowing to delete the user's account*/
+
         this.accountDeleteButton.setOnClickListener(v -> {
             AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
             dialog.setTitle(R.string.dialog_account_delete_title);
@@ -134,5 +131,16 @@ public class SettingsFragment extends Fragment {
             dialog.create();
             dialog.show();
         });
+    }
+
+    /*********************************************************************************************
+     * Update methods
+     ********************************************************************************************/
+
+    public void updateSettings(){
+        this.currentUser.getSettings().setSearchRadius(this.radiusBar.getProgress());
+        this.currentUser.getSettings().setNotificationsOn(this.notificationsSwitch.isChecked());
+        SettingsActivity activity=(SettingsActivity) getActivity();
+        activity.updateCurrentUser(this.currentUser);
     }
 }

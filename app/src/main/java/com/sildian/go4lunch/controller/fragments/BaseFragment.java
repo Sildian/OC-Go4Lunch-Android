@@ -28,21 +28,27 @@ import butterknife.ButterKnife;
 
 public abstract class BaseFragment extends Fragment {
 
-    /**Information**/
+    /*********************************************************************************************
+     * Members
+     ********************************************************************************************/
 
     protected PlacesClient placesClient;                                        //The placesClient allowing to use Google Places API
     protected LatLng userLocation;                                              //The user's location
     protected Workmate currentUser;                                             //The current user
     protected List<Restaurant> restaurants;                                     //The list of restaurants in the area
 
-    /**Abstract methods**/
+    /*********************************************************************************************
+     * Abstract methods
+     ********************************************************************************************/
 
     protected abstract int getFragmentLayout();                                 //Gets the fragment layout
     protected abstract void initializeView(Bundle SavedInstanceState);          //Initializes the view
     public abstract void onUserLocationReceived(LatLng userLocation);           //Handles the user's location result
     public abstract void onRestaurantsReceived(List<Restaurant> restaurants);   //Handles the restaurants result
 
-    /**Constructors**/
+    /*********************************************************************************************
+     * Constructors
+     ********************************************************************************************/
 
     public BaseFragment(){
 
@@ -55,7 +61,9 @@ public abstract class BaseFragment extends Fragment {
         this.restaurants=restaurants;
     }
 
-    /**Callbacks**/
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
 
     @Nullable
     @Override
@@ -72,18 +80,28 @@ public abstract class BaseFragment extends Fragment {
         switch(requestCode){
             case MainActivity.KEY_REQUEST_RESTAURANT:
                 if(data!=null){
-                    this.currentUser=data.getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
-                    MainActivity activity=(MainActivity) getActivity();
-                    activity.updateCurrentUser(this.currentUser);
+                    updateCurrentUser(data.getParcelableExtra(MainActivity.KEY_BUNDLE_USER));
                 }
         }
     }
 
-    /**Updates the current user**/
+    /*********************************************************************************************
+     * Updates
+     ********************************************************************************************/
 
-    public void updateCurrentUser(Workmate workmate){
+    /**Updates the current user
+     * @param workmate : the user's data
+     */
+
+    protected void updateCurrentUser(Workmate workmate){
         this.currentUser=workmate;
+        MainActivity activity=(MainActivity) getActivity();
+        activity.updateCurrentUser(this.currentUser);
     }
+
+    /*********************************************************************************************
+     * Starts activities
+     ********************************************************************************************/
 
     /**Starts the RestaurantActivity
      * @param restaurant : the restaurant to display

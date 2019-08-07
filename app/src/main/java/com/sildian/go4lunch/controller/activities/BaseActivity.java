@@ -34,12 +34,16 @@ import io.reactivex.observers.DisposableObserver;
 
 public abstract class BaseActivity extends AppCompatActivity implements OnFailureListener {
 
-    /**Data**/
+    /*********************************************************************************************
+     * Data
+     ********************************************************************************************/
 
     protected Workmate currentUser;         //The current user
     private Disposable disposable;          //The disposable which gets the response from the API
 
-    /**Callbacks**/
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
 
     @Override
     public void onFailure(@NonNull Exception e) {
@@ -47,14 +51,23 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
         //TODO Handle Firebase errors
     }
 
+    /*********************************************************************************************
+     * Update methods
+     ********************************************************************************************/
+
     /**Updates the current user**/
 
     public void updateCurrentUser(Workmate workmate){
         this.currentUser=workmate;
     }
 
+    /*********************************************************************************************
+     * Firebase queries
+     ********************************************************************************************/
+
     /**Creates a workmate in Firebase
      * @param user : the user information
+     * @param listener : the listener
      */
 
     public void createWorkmateInFirebase(FirebaseUser user, OnFirebaseQueryResultListener listener){
@@ -89,6 +102,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
 
     /**Gets a workmate from Firebase
      * @param firebaseId : the firebase id
+     * @param listener : the listener
      */
 
     public void getWorkmateFromFirebase(String firebaseId, OnFirebaseQueryResultListener listener){
@@ -163,6 +177,10 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
         }
     }
 
+    /*********************************************************************************************
+     * API queries
+     ********************************************************************************************/
+
     /**Runs a query to get the list of restaurants near a location and within a radius from Google Places API
      * @param location : the location
      * @param radius : the radius in meters
@@ -186,6 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
                     @Override
                     public void onError(Throwable e) {
                         Log.d("TAG_API", e.getMessage());
+                        //TODO handle
                     }
 
                     @Override
@@ -212,6 +231,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
                     @Override
                     public void onError(Throwable e) {
                         Log.d("TAG_API", e.getMessage());
+                        //TODO handle
                     }
 
                     @Override

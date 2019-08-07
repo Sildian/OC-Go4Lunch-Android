@@ -65,6 +65,10 @@ public class MainActivity extends BaseActivity
         NavigationView.OnNavigationItemSelectedListener,
         OnFirebaseQueryResultListener, OnPlaceQueryResultListener {
 
+    /*********************************************************************************************
+     * Static members
+     ********************************************************************************************/
+
     /**Request keys**/
 
     public static final int KEY_REQUEST_LOGIN=101;
@@ -82,6 +86,10 @@ public class MainActivity extends BaseActivity
 
     private static final String PERMISSION_LOCATION= Manifest.permission.ACCESS_FINE_LOCATION;
 
+    /*********************************************************************************************
+     * Members
+     ********************************************************************************************/
+
     /**Location and map management**/
 
     private PlacesClient placesClient;                                      //The placesClient allowing to use Google Places API
@@ -91,26 +99,26 @@ public class MainActivity extends BaseActivity
 
     /**UI Components**/
 
-    private Toolbar toolbar;
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationViewHidden;
-    private BottomNavigationView navigationBar;
-    private BaseFragment fragment;
+    private Toolbar toolbar;                                                //The top toolbar
+    private DrawerLayout drawerLayout;                                      //The drawer allowing to show the hidden navigation view
+    private NavigationView navigationViewHidden;                            //The hidden navigation view on the left
+    private BottomNavigationView navigationBar;                             //The bottom navigation bar
+    private BaseFragment fragment;                                          //The fragment
 
-    /**Callbacks**/
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.restaurants = new ArrayList<>();
         initializeToolbar();
         initializeNavigationDrawer();
         initializeNavigationBar();
-        Places.initialize(this, getString(R.string.google_maps_key));
-        this.placesClient = Places.createClient(this);
-        this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        this.restaurants = new ArrayList<>();
-        initLogin();
+        initializePlaces();
+        initializeLogin();
     }
 
     @Override
@@ -123,27 +131,7 @@ public class MainActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.menu_toolbar_search:
-
-                /*Prepares bounds to restrict the research*/
-
-                RectangularBounds locationRestriction=RectangularBounds.newInstance(
-                        new LatLng(this.userLocation.latitude-0.01, this.userLocation.longitude-0.01),
-                        new LatLng(this.userLocation.latitude+0.01, this.userLocation.longitude+0.01));
-
-                /*Prepares the fields to be retrieved*/
-
-                List<Place.Field> fields = Arrays.asList(
-                        Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.RATING);
-
-                /*Runs the autocomplete intent*/
-
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
-                        .setHint(getString(R.string.hint_search_restaurant))
-                        .setLocationRestriction(locationRestriction)
-                        .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                        .build(this);
-                startActivityForResult(intent, KEY_REQUEST_AUTOCOMPLETE);
-
+                startAutocompleteActivity();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -152,12 +140,12 @@ public class MainActivity extends BaseActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch(menuItem.getGroupId()){
-            case R.id.menu_navigation_group:
-                showFragment(menuItem.getItemId());
-                break;
             case R.id.menu_navigation_hidden_group:
                 handleNavigationDrawerAction(menuItem.getItemId());
                 break;
+            case R.id.menu_navigation_group:
+                showFragment(menuItem.getItemId());
+            break;
         }
         return true;
     }
@@ -175,52 +163,17 @@ public class MainActivity extends BaseActivity
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode){
-
             case KEY_REQUEST_LOGIN:
                 handleLoginResult(resultCode, data);
                 break;
-
             case KEY_REQUEST_AUTOCOMPLETE:
-
-                if (resultCode == RESULT_OK&&data!=null) {
-
-                    /*Gets the place information*/
-
-                    Place place = Autocomplete.getPlaceFromIntent(data);
-                    Log.d("TAG_API", place.getName());
-                    Restaurant restaurant=new Restaurant(
-                            place.getId(), place.getName(), place.getLatLng().latitude, place.getLatLng().longitude,
-                            place.getAddress(), place.getRating());
-
-                    /*Updates the restaurants list and the fragment*/
-
-                    this.restaurants.clear();
-                    this.restaurants.add(restaurant);
-                    this.fragment.onRestaurantsReceived(this.restaurants);
-
-                } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                    // TODO: Handle the error.
-                    Status status = Autocomplete.getStatusFromIntent(data);
-                    Log.d("TAG_API", status.getStatusMessage());
-                } else if (resultCode == RESULT_CANCELED) {
-                    //TODO Handle (user canceled)
-                }
+                handleAutocompleteResult(resultCode, data);
                 break;
-
             case KEY_REQUEST_RESTAURANT:
-                if(data!=null) {
-                    this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
-                }
+                handleRestaurantResult(resultCode, data);
                 break;
-
             case KEY_REQUEST_SETTINGS:
-                if(resultCode==RESULT_OK) {
-                    if (data != null) {
-                        this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
-                    }
-                }else if(resultCode==RESULT_CANCELED){
-                    initLogin();
-                }
+                handleSettingsResult(resultCode, data);
                 break;
         }
     }
@@ -268,14 +221,14 @@ public class MainActivity extends BaseActivity
 
     }
 
-    /**Initializes the Toolbar**/
+    /*********************************************************************************************
+     * Initializations
+     ********************************************************************************************/
 
     private void initializeToolbar(){
         this.toolbar=findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(this.toolbar);
     }
-
-    /**Initializes the NavigationDrawer**/
 
     private void initializeNavigationDrawer(){
         this.drawerLayout = findViewById(R.id.activity_main_drawer_layout);
@@ -288,14 +241,33 @@ public class MainActivity extends BaseActivity
         this.navigationViewHidden.setNavigationItemSelectedListener(this);
     }
 
-    /**Initializes the NavigationBar**/
-
     private void initializeNavigationBar(){
         this.navigationBar = findViewById(R.id.activity_main_navigation_bar);
         this.navigationBar.setOnNavigationItemSelectedListener(this);
     }
 
-    /**Updates the navigation drawer items**/
+    private void initializePlaces(){
+        Places.initialize(this, getString(R.string.google_maps_key));
+        this.placesClient = Places.createClient(this);
+        this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
+    private void initializeLogin(){
+
+        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+
+        /*If no user is connected, then starts the loginActivity. Else gets the user's data from Firebase*/
+
+        if(user==null) {
+            startLoginActivity();
+        }else{
+            getWorkmateFromFirebase(user.getUid(), this);
+        }
+    }
+
+    /*********************************************************************************************
+     * Update methods
+     ********************************************************************************************/
 
     private void updateNavigationDrawerItems(){
         ImageView navigationDrawerUserImage=findViewById(R.id.navigation_hidden_header_user_image);
@@ -305,18 +277,11 @@ public class MainActivity extends BaseActivity
         navigationDrawerUserName.setText(this.currentUser.getName());
     }
 
-    /**Initializes user login**/
+    /*********************************************************************************************
+     * Starts Activities
+     ********************************************************************************************/
 
-    private void initLogin(){
-        FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
-        if(user==null) {
-            startLoginActivity();
-        }else{
-            getWorkmateFromFirebase(user.getUid(), this);
-        }
-    }
-
-    /**Logs a user in Firebase**/
+    /**Starts an activity to log a user in Firebase**/
 
     private void startLoginActivity(){
         startActivityForResult(
@@ -331,6 +296,54 @@ public class MainActivity extends BaseActivity
                         .build(),
                 KEY_REQUEST_LOGIN);
     }
+
+    /**Starts an activity to search restaurants by filling a text**/
+
+    private void startAutocompleteActivity(){
+
+        /*Prepares bounds to restrict the research*/
+
+        RectangularBounds locationRestriction=RectangularBounds.newInstance(
+                new LatLng(this.userLocation.latitude-0.01, this.userLocation.longitude-0.01),
+                new LatLng(this.userLocation.latitude+0.01, this.userLocation.longitude+0.01));
+
+        /*Prepares the fields to be retrieved*/
+
+        List<Place.Field> fields = Arrays.asList(
+                Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.RATING);
+
+        /*Runs the autocomplete intent*/
+
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .setHint(getString(R.string.hint_search_restaurant))
+                .setLocationRestriction(locationRestriction)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .build(this);
+        startActivityForResult(intent, KEY_REQUEST_AUTOCOMPLETE);
+    }
+
+    /**Starts the RestaurantActivity
+     * @param restaurant : the restaurant to display
+     */
+
+    protected void startRestaurantActivity(Restaurant restaurant){
+        Intent restaurantActivityIntent = new Intent(this, RestaurantActivity.class);
+        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
+        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, restaurant);
+        startActivityForResult(restaurantActivityIntent, KEY_REQUEST_RESTAURANT);
+    }
+
+    /**Starts the SettingsActivity**/
+
+    protected void startSettingsActivity(){
+        Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
+        settingsActivityIntent.putExtra(KEY_BUNDLE_USER, this.currentUser);
+        startActivityForResult(settingsActivityIntent, KEY_REQUEST_SETTINGS);
+    }
+
+    /*********************************************************************************************
+     * Handles activities results
+     ********************************************************************************************/
 
     /**Handles the result when a user logs in Firebase**/
 
@@ -359,6 +372,65 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    /**Handles the result when a user search for a restaurant by filling a text**/
+
+    private void handleAutocompleteResult(int resultCode, Intent data){
+
+        if (resultCode == RESULT_OK&&data!=null) {
+
+            /*Gets the place information*/
+
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            Log.d("TAG_API", place.getName());
+            Restaurant restaurant=new Restaurant(
+                    place.getId(), place.getName(), place.getLatLng().latitude, place.getLatLng().longitude,
+                    place.getAddress(), place.getRating());
+
+            /*Updates the restaurants list and the fragment*/
+
+            this.restaurants.clear();
+            this.restaurants.add(restaurant);
+            this.fragment.onRestaurantsReceived(this.restaurants);
+
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            // TODO: Handle the error.
+            Status status = Autocomplete.getStatusFromIntent(data);
+            Log.d("TAG_API", status.getStatusMessage());
+        } else if (resultCode == RESULT_CANCELED) {
+            //TODO Handle (user canceled)
+        }
+    }
+
+    /**Handles the result from RestaurantActivity**/
+
+    private void handleRestaurantResult(int resultCode, Intent data){
+        if(data!=null) {
+            this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
+        }
+    }
+
+    /**Handles the result from SettingsActivity**/
+
+    private void handleSettingsResult(int resultCode, Intent data){
+
+        /*If result ok, then updates the current user data*/
+
+        if(resultCode==RESULT_OK) {
+            if (data != null) {
+                this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
+            }
+
+            /*Else, assumes that the user just deleted its account, then restarts login*/
+
+        }else if(resultCode==RESULT_CANCELED){
+            initializeLogin();
+        }
+    }
+
+    /*********************************************************************************************
+     * Fragments management
+     ********************************************************************************************/
+
     /**Shows a fragment according to the id
      * @param id : the menu id
      */
@@ -384,6 +456,10 @@ public class MainActivity extends BaseActivity
                 .commit();
     }
 
+    /*********************************************************************************************
+     * Navigation management
+     ********************************************************************************************/
+
     /**Handles the NavigationDrawerMenu action according to the id
      * @param id : the menu id
      */
@@ -407,7 +483,9 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    /**Gets the user's location and then searches the nearby restaurants**/
+    /*********************************************************************************************
+     * Location management
+     ********************************************************************************************/
 
     public void updateUserLocation() {
 
@@ -440,24 +518,5 @@ public class MainActivity extends BaseActivity
         }else{
             //TODO handle
         }
-    }
-
-    /**Starts the RestaurantActivity
-     * @param restaurant : the restaurant to display
-     */
-
-    protected void startRestaurantActivity(Restaurant restaurant){
-        Intent restaurantActivityIntent = new Intent(this, RestaurantActivity.class);
-        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
-        restaurantActivityIntent.putExtra(MainActivity.KEY_BUNDLE_RESTAURANT, restaurant);
-        startActivityForResult(restaurantActivityIntent, KEY_REQUEST_RESTAURANT);
-    }
-
-    /**Starts the SettingsActivity**/
-
-    protected void startSettingsActivity(){
-        Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
-        settingsActivityIntent.putExtra(KEY_BUNDLE_USER, this.currentUser);
-        startActivityForResult(settingsActivityIntent, KEY_REQUEST_SETTINGS);
     }
 }

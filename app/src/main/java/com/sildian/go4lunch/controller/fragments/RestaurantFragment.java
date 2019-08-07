@@ -55,6 +55,10 @@ import io.reactivex.observers.DisposableObserver;
 
 public class RestaurantFragment extends Fragment implements OnPlaceQueryResultListener {
 
+    /*********************************************************************************************
+     * Members
+     ********************************************************************************************/
+
     /**Data**/
 
     private PlacesClient placesClient;                  //The placesClient allowing to use Google Places API
@@ -76,7 +80,9 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
     @BindView(R.id.fragment_restaurant_workmates) RecyclerView workmatesView;
     private WorkmateAdapter workmateAdapter;
 
-    /**Constructors**/
+    /*********************************************************************************************
+     * Constructors
+     ********************************************************************************************/
 
     public RestaurantFragment(){
 
@@ -86,7 +92,9 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
         this.placesClient=placesClient;
     }
 
-    /**Callbacks**/
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -112,18 +120,12 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
 
     @Override
     public void onGetRestaurantAllDetailsResult(Restaurant restaurant) {
-        cuisineTypeText.setText(restaurant.getCuisineType());
-        callButton.setTag(restaurant.getPhoneNumber());
-        if(callButton.getTag()==null){
-            disableButton(callButton);
-        }
-        websiteButton.setTag(restaurant.getWebUrl());
-        if(websiteButton.getTag()==null){
-            disableButton(websiteButton);
-        }
+        updateRestaurantDetails(restaurant);
     }
 
-    /**Initializes the view items**/
+    /*********************************************************************************************
+     * Initializations
+     ********************************************************************************************/
 
     private void initializeView(){
         APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
@@ -140,8 +142,6 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
         activity.runRestaurantAllDetailsQuery(this.restaurant, this);
     }
 
-    /**Initializes the call button**/
-
     private void initializeCallButton(){
         this.callButton.setOnClickListener(v -> {
             if(v.getTag()!=null){
@@ -150,8 +150,6 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
             }
         });
     }
-
-    /**Initializes the like button**/
 
     private void initializeLikeButton(){
 
@@ -170,8 +168,6 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
         });
     }
 
-    /**Initializes the website button**/
-
     private void initializeWebsiteButton(){
         this.websiteButton.setOnClickListener(v -> {
             if(v.getTag()!=null){
@@ -180,8 +176,6 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
             }
         });
     }
-
-    /**Initializes the lunch button**/
 
     private void initializeLunchButton(){
 
@@ -208,8 +202,6 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
         });
     }
 
-    /**Initializes the workmates view**/
-
     private void initializeWorkmatesView(){
         this.workmateAdapter=new WorkmateAdapter(
                 generateOptionsForAdapter(FirebaseQueriesLunch.getWorkmatesEatingAtRestaurant(this.restaurant)),
@@ -218,16 +210,21 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
         this.workmatesView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
-    /**Creates options for FirebaseAdapter**/
+    /*********************************************************************************************
+     * UI Update methods
+     ********************************************************************************************/
 
-    private FirestoreRecyclerOptions<Workmate> generateOptionsForAdapter(Query query){
-        return new FirestoreRecyclerOptions.Builder<Workmate>()
-                .setQuery(query, Workmate.class)
-                .setLifecycleOwner(this)
-                .build();
+    private void updateRestaurantDetails(Restaurant restaurant){
+        this.cuisineTypeText.setText(restaurant.getCuisineType());
+        this.callButton.setTag(restaurant.getPhoneNumber());
+        if(callButton.getTag()==null){
+            disableButton(this.callButton);
+        }
+        this.websiteButton.setTag(restaurant.getWebUrl());
+        if(this.websiteButton.getTag()==null){
+            disableButton(this.websiteButton);
+        }
     }
-
-    /**Disables a button and changes its UI**/
 
     private void disableButton(Button button){
         button.setEnabled(false);
@@ -236,11 +233,20 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
                 (new PorterDuffColorFilter(getResources().getColor(android.R.color.darker_gray), PorterDuff.Mode.SRC_IN));
     }
 
-    /**Disables the lunch button and changes its UI**/
-
     private void disableLunchButton(){
         this.lunchButton.setEnabled(false);
         this.lunchButton.getDrawable().mutate().setColorFilter
                 (new PorterDuffColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN));
+    }
+
+    /*********************************************************************************************
+     * Firebase management
+     ********************************************************************************************/
+
+    private FirestoreRecyclerOptions<Workmate> generateOptionsForAdapter(Query query){
+        return new FirestoreRecyclerOptions.Builder<Workmate>()
+                .setQuery(query, Workmate.class)
+                .setLifecycleOwner(this)
+                .build();
     }
 }

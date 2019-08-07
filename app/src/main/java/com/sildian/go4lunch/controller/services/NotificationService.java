@@ -109,7 +109,7 @@ public class NotificationService extends FirebaseMessagingService {
         notificationManagerCompat.notify(NOTIFICATION_ID, notificationBuilder.build());
     }
 
-    /**Sets the restaurant intent*/
+    /**Sets the restaurant intent to be opened when the user clicks on the notification*/
 
     protected PendingIntent setRestaurantIntent(){
         Intent restaurantActivityIntent = new Intent(this, RestaurantActivity.class);

@@ -30,12 +30,16 @@ import butterknife.BindView;
 
 public class WorkmateFragment extends BaseFragment{
 
-    /**UI Components**/
+    /*********************************************************************************************
+     * UI Components
+     ********************************************************************************************/
 
     @BindView(R.id.fragment_workmate_workmates) RecyclerView workmatesView;
     private WorkmateAdapter workmateAdapter;
 
-    /**Constructors**/
+    /*********************************************************************************************
+     * Constructors
+     ********************************************************************************************/
 
     public WorkmateFragment(){
         super();
@@ -45,7 +49,9 @@ public class WorkmateFragment extends BaseFragment{
         super(placesClient, userLocation, currentUser, restaurants);
     }
 
-    /**BaseFragment abstract methods**/
+    /*********************************************************************************************
+     * BaseFragment methods
+     ********************************************************************************************/
 
     @Override
     protected int getFragmentLayout() {
@@ -67,7 +73,9 @@ public class WorkmateFragment extends BaseFragment{
 
     }
 
-    /**Initializes the workmates view**/
+    /*********************************************************************************************
+     * Initializations
+     ********************************************************************************************/
 
     private void initializeWorkmatesView(){
 
@@ -92,7 +100,9 @@ public class WorkmateFragment extends BaseFragment{
                 });
     }
 
-    /**Creates options for FirebaseAdapter**/
+    /*********************************************************************************************
+     * Firebase management
+     ********************************************************************************************/
 
     private FirestoreRecyclerOptions<Workmate> generateOptionsForAdapter(Query query){
         return new FirestoreRecyclerOptions.Builder<Workmate>()

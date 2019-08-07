@@ -211,7 +211,9 @@ data class Restaurant (
         this.nbLikes++
     }
 
-    /**This nested class provides with periods allowing to know the opening hours for each day of the week**/
+    /*********************************************************************************************
+    This nested class provides with periods allowing to know the opening hours for each day of the week
+     *********************************************************************************************/
 
     data class Period (val day:Int, val openTime:String, val closeTime:String){
         constructor():this(0, "", "")

@@ -1,7 +1,6 @@
 package com.sildian.go4lunch.model
 
 import android.os.Parcel
-import com.google.android.gms.maps.model.LatLng
 import org.junit.Assert.*
 import org.junit.Test
 

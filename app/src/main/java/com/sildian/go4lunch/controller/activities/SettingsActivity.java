@@ -13,11 +13,17 @@ import com.sildian.go4lunch.controller.fragments.SettingsFragment;
 
 public class SettingsActivity extends BaseActivity {
 
+    /*********************************************************************************************
+     * Members
+     ********************************************************************************************/
+
     /**Fragment**/
 
-    private SettingsFragment fragment;
+    private SettingsFragment fragment;          //The fragment
 
-    /**Callbacks**/
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +46,19 @@ public class SettingsActivity extends BaseActivity {
         return true;
     }
 
-    /**Shows the fragment**/
+    /*********************************************************************************************
+     * Fragments management
+     ********************************************************************************************/
 
     private void showFragment(){
         this.fragment=(SettingsFragment)getSupportFragmentManager().findFragmentById(R.id.activity_settings_fragment);
         this.fragment=new SettingsFragment(this.currentUser);
         getSupportFragmentManager().beginTransaction().add(R.id.activity_settings_fragment, this.fragment).commit();
     }
+
+    /*********************************************************************************************
+     * Activity result management
+     ********************************************************************************************/
 
     /**Finishes the activity after saving the settings**/
 

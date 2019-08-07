@@ -41,9 +41,17 @@ import butterknife.BindView;
 public class MapFragment extends BaseFragment
         implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, OnFirebaseQueryResultListener {
 
+    /*********************************************************************************************
+     * Static members
+     ********************************************************************************************/
+
     /**Bundle keys**/
 
     private static final String KEY_BUNDLE_MAPVIEW = "KEY_BUNDLE_MAPVIEW";
+
+    /*********************************************************************************************
+     * Members
+     ********************************************************************************************/
 
     /**UI Components**/
 
@@ -56,9 +64,14 @@ public class MapFragment extends BaseFragment
     @BindView(R.id.fragment_map_text_restaurant_address) TextView restaurantAddressText;
     @BindView(R.id.fragment_map_button_restaurant) Button restaurantButton;
     private BottomSheetBehavior bottomSheet;
+
+    /**Map management**/
+
     private GoogleMap map;
 
-    /**Constructors**/
+    /*********************************************************************************************
+     * Constructors
+     ********************************************************************************************/
 
     public MapFragment(){
         super();
@@ -68,7 +81,9 @@ public class MapFragment extends BaseFragment
         super(placesClient, userLocation, currentUser, restaurants);
     }
 
-    /**Callbacks**/
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
 
     @Override
     public void onSaveInstanceState(@NotNull Bundle outState) {
@@ -142,19 +157,12 @@ public class MapFragment extends BaseFragment
 
     @Override
     public void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates) {
-        BitmapDescriptor icon;
-        if(workmates.isEmpty()){
-            icon=ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_off);
-        }else{
-            icon=ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_on);
-        }
-        this.map.addMarker(new MarkerOptions()
-                .position(new LatLng(restaurant.getLocationLat(), restaurant.getLocationLng()))
-                .icon(icon))
-                .setTag(restaurant);
+        showRestaurantLocation(restaurant, !workmates.isEmpty());
     }
 
-    /**BaseFragment abstract methods**/
+    /*********************************************************************************************
+     * BaseFragment methods
+     ********************************************************************************************/
 
     @Override
     protected int getFragmentLayout() {
@@ -188,7 +196,9 @@ public class MapFragment extends BaseFragment
         }
     }
 
-    /**Initializes the location button**/
+    /*********************************************************************************************
+     * initializations
+     ********************************************************************************************/
 
     private void initializeLocationButton(){
         this.locationButton.setOnClickListener(v -> {
@@ -196,8 +206,6 @@ public class MapFragment extends BaseFragment
             mainActivity.updateUserLocation();
         });
     }
-
-    /**Initializes the map view**/
 
     private void initializeMapView(Bundle savedInstanceState){
         Bundle mapViewBundle = null;
@@ -208,8 +216,6 @@ public class MapFragment extends BaseFragment
         this.mapView.getMapAsync(this);
     }
 
-    /**Initializes the restaurant button**/
-
     private void initializeRestaurantButton(){
         this.restaurantButton.setOnClickListener(v -> {
             if(v.getTag()!=null) {
@@ -217,6 +223,10 @@ public class MapFragment extends BaseFragment
             }
         });
     }
+
+    /*********************************************************************************************
+     * Update methods
+     ********************************************************************************************/
 
     /**Updates the bottomSheet with a restaurant's information
      * @param restaurant : the restaurant
@@ -232,6 +242,10 @@ public class MapFragment extends BaseFragment
         this.bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
+    /*********************************************************************************************
+     * Map management
+     ********************************************************************************************/
+
     /**Shows the user's location on the map**/
 
     private void showUserLocation(){
@@ -239,5 +253,29 @@ public class MapFragment extends BaseFragment
             this.map.addMarker(new MarkerOptions().position(this.userLocation));
             this.map.moveCamera(CameraUpdateFactory.newLatLngZoom(this.userLocation, 15));
         }
+    }
+
+    /**Shows a restaurant's location on the map
+     * @param restaurant : the restaurant
+     * @param workmatesEatHere : true if at least one workmate eats at this restaurant today
+     */
+
+    private void showRestaurantLocation(Restaurant restaurant, boolean workmatesEatHere){
+
+        /*Sets a different icon whether workmates eat here today or not*/
+
+        BitmapDescriptor icon;
+        if(!workmatesEatHere){
+            icon=ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_off);
+        }else{
+            icon=ImageUtilities.getBitmapDescriptor(getActivity(), R.drawable.ic_restaurant_location_on);
+        }
+
+        /*Then shows the location*/
+
+        this.map.addMarker(new MarkerOptions()
+                .position(new LatLng(restaurant.getLocationLat(), restaurant.getLocationLng()))
+                .icon(icon))
+                .setTag(restaurant);
     }
 }

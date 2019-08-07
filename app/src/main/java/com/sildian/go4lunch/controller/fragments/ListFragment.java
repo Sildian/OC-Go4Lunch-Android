@@ -25,12 +25,16 @@ import butterknife.BindView;
 
 public class ListFragment extends BaseFragment {
 
-    /**UI components**/
+    /*********************************************************************************************
+     * UI components
+     ********************************************************************************************/
 
     @BindView(R.id.fragment_list_restaurants) RecyclerView restaurantsView;
     private RestaurantAdapter restaurantAdapter;
 
-    /**Constructors**/
+    /*********************************************************************************************
+     * Constructors
+     ********************************************************************************************/
 
     public ListFragment(){
         super();
@@ -40,7 +44,9 @@ public class ListFragment extends BaseFragment {
         super(placesClient, userLocation, currentUser, restaurants);
     }
 
-    /**BaseFragment abstract methods**/
+    /*********************************************************************************************
+     * BaseFragment methods
+     ********************************************************************************************/
 
     @Override
     protected int getFragmentLayout() {
@@ -64,7 +70,9 @@ public class ListFragment extends BaseFragment {
         this.restaurantAdapter.notifyDataSetChanged();
     }
 
-    /**Initializes the restaurants view**/
+    /*********************************************************************************************
+     * Initializations
+     ********************************************************************************************/
 
     private void initializeRestaurantsView(){
 

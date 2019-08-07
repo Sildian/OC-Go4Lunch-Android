@@ -1,6 +1,5 @@
 package com.sildian.go4lunch.view;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;

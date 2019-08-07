@@ -16,30 +16,50 @@ import com.sildian.go4lunch.controller.fragments.RestaurantFragment;
 
 public class RestaurantActivity extends BaseActivity {
 
+    /*********************************************************************************************
+     * Members
+     ********************************************************************************************/
+
     /**Data**/
 
-    private PlacesClient placesClient;                  //The placesClient allowing to use Google Places API
+    private PlacesClient placesClient;      //The placesClient allowing to use Google Places API
 
-    /**UI Components**/
+    /**Fragment**/
 
-    private RestaurantFragment fragment;
+    private RestaurantFragment fragment;    //The fragment
 
-    /**Callbacks**/
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
-        Places.initialize(this, getString(R.string.google_maps_key));
-        this.placesClient = Places.createClient(this);
         this.currentUser=getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
-        Intent resultIntent=new Intent();
-        resultIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
-        setResult(RESULT_OK, resultIntent);
+        initializePlaces();
+        initializeResultIntent();
         showFragment();
     }
 
-    /**Shows the fragment**/
+    /*********************************************************************************************
+     * Initializations
+     ********************************************************************************************/
+
+    private void initializePlaces(){
+        Places.initialize(this, getString(R.string.google_maps_key));
+        this.placesClient = Places.createClient(this);
+    }
+
+    private void initializeResultIntent(){
+        Intent resultIntent=new Intent();
+        resultIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
+        setResult(RESULT_OK, resultIntent);
+    }
+
+    /*********************************************************************************************
+     * Fragment management
+     ********************************************************************************************/
 
     private void showFragment(){
         this.fragment=(RestaurantFragment)getSupportFragmentManager().findFragmentById(R.id.activity_restaurant_fragment);

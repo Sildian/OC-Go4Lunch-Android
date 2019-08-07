@@ -136,7 +136,9 @@ data class Workmate(
         return null
     }
 
-    /**This nested class provides with data grouping a date and a restaurant for each lunch**/
+    /*********************************************************************************************
+    This nested class provides with data grouping a date and a restaurant for each lunch
+     *********************************************************************************************/
 
     data class Lunch(val date: Date, val restaurant:Restaurant):Parcelable{
 
@@ -172,7 +174,9 @@ data class Workmate(
         }
     }
 
-    /**This nested class registers the user settings**/
+    /*********************************************************************************************
+    This nested class registers the user's settings
+     *********************************************************************************************/
 
     data class Settings (
             var searchRadius:Int=1500,                      //The radius where a research is restricted from a given location

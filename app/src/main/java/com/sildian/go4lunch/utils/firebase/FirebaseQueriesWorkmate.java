@@ -8,8 +8,6 @@ import com.google.firebase.firestore.Query;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /*************************************************************************************************
