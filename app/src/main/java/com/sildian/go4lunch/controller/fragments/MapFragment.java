@@ -1,6 +1,5 @@
 package com.sildian.go4lunch.controller.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,14 +17,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
+
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.MainActivity;
-import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
-import com.sildian.go4lunch.model.Settings;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.ImageUtilities;
 import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
@@ -69,9 +64,8 @@ public class MapFragment extends BaseFragment
         super();
     }
 
-    public MapFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser,
-                       Settings settings, List<Restaurant> restaurants) {
-        super(placesClient, userLocation, currentUser, settings, restaurants);
+    public MapFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
+        super(placesClient, userLocation, currentUser, restaurants);
     }
 
     /**Callbacks**/

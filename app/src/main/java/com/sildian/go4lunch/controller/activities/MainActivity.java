@@ -47,7 +47,6 @@ import com.sildian.go4lunch.controller.fragments.ListFragment;
 import com.sildian.go4lunch.controller.fragments.MapFragment;
 import com.sildian.go4lunch.controller.fragments.WorkmateFragment;
 import com.sildian.go4lunch.model.Restaurant;
-import com.sildian.go4lunch.model.Settings;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
 import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
@@ -77,7 +76,6 @@ public class MainActivity extends BaseActivity
     /**Bundle keys**/
 
     public static final String KEY_BUNDLE_USER="KEY_BUNDLE_USER";
-    public static final String KEY_BUNDLE_SETTINGS="KEY_BUNDLE_SETTINGS";
     public static final String KEY_BUNDLE_RESTAURANT="KEY_BUNDLE_RESTAURANT";
 
     /**Location permission**/
@@ -112,7 +110,6 @@ public class MainActivity extends BaseActivity
         this.placesClient = Places.createClient(this);
         this.fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         this.restaurants = new ArrayList<>();
-        this.settings=new Settings();           //TODO remove this
         initLogin();
     }
 
@@ -218,7 +215,7 @@ public class MainActivity extends BaseActivity
 
             case KEY_REQUEST_SETTINGS:
                 if(data!=null){
-                    this.settings=data.getParcelableExtra(KEY_BUNDLE_SETTINGS);
+                    this.currentUser=data.getParcelableExtra(KEY_BUNDLE_USER);
                 }
                 break;
         }
@@ -246,8 +243,8 @@ public class MainActivity extends BaseActivity
     public void onGetWorkmateResult(Workmate workmate) {
         this.currentUser=workmate;
         this.fragment.updateCurrentUser(workmate);
-        this.settings=new Settings();
         updateNavigationDrawerItems();
+        updateUserLocation();
     }
 
     @Override
@@ -367,14 +364,16 @@ public class MainActivity extends BaseActivity
         this.fragment=(BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
         switch(id){
             case R.id.menu_navigation_map:
-                this.fragment = new MapFragment(this.placesClient, this.userLocation, this.currentUser, this.settings, this.restaurants);
-                updateUserLocation();
+                this.fragment = new MapFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
+                if (this.currentUser != null) {
+                    updateUserLocation();
+                }
                 break;
             case R.id.menu_navigation_list:
-                this.fragment = new ListFragment(this.placesClient, this.userLocation, this.currentUser, this.settings, this.restaurants);
+                this.fragment = new ListFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
             case R.id.menu_navigation_workmates:
-                this.fragment=new WorkmateFragment(this.placesClient, this.userLocation, this.currentUser, this.settings, this.restaurants);
+                this.fragment=new WorkmateFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
         }
         getSupportFragmentManager().beginTransaction()
@@ -421,7 +420,7 @@ public class MainActivity extends BaseActivity
                             if (location != null) {
                                 this.userLocation = new LatLng(location.getLatitude(), location.getLongitude());
                                 this.fragment.onUserLocationReceived(this.userLocation);
-                                runGooglePlacesSearchQuery(this.userLocation, this.settings.getSearchRadius(), this);
+                                runGooglePlacesSearchQuery(this.userLocation, this.currentUser.getSettings().getSearchRadius(), this);
                             } else {
                                 //TODO handle
                             }
@@ -456,7 +455,6 @@ public class MainActivity extends BaseActivity
     protected void startSettingsActivity(){
         Intent settingsActivityIntent = new Intent(this, SettingsActivity.class);
         settingsActivityIntent.putExtra(KEY_BUNDLE_USER, this.currentUser);
-        settingsActivityIntent.putExtra(KEY_BUNDLE_SETTINGS, this.settings);
         startActivityForResult(settingsActivityIntent, KEY_REQUEST_SETTINGS);
     }
 }

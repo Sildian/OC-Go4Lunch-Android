@@ -60,6 +60,12 @@ public class FirebaseQueriesWorkmate {
         return getWorkmateCollection().document(firebaseId).update("lunches", lunches);
     }
 
+    /**Updates settings**/
+
+    public static Task<Void> updateSettings(String firebaseId, Workmate.Settings settings){
+        return getWorkmateCollection().document(firebaseId).update("settings", settings);
+    }
+
     /**Deletes a workmate**/
 
     public static Task<Void> deleteWorkmate(String firebaseId) {

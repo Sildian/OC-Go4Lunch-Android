@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.activities.SettingsActivity;
-import com.sildian.go4lunch.model.Settings;
+import com.sildian.go4lunch.model.Workmate;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +37,7 @@ public class SettingsFragment extends Fragment {
 
     /**Data**/
 
-    private Settings settings;                              //The user settings
+    private Workmate currentUser;                           //The current user
 
     /**Constructors**/
 
@@ -45,8 +45,8 @@ public class SettingsFragment extends Fragment {
 
     }
 
-    public SettingsFragment(Settings settings){
-        this.settings=settings;
+    public SettingsFragment(Workmate currentUser){
+        this.currentUser=currentUser;
     }
 
     /**Callbacks**/
@@ -65,20 +65,20 @@ public class SettingsFragment extends Fragment {
     /**Updates the settings**/
 
     public void updateSettings(){
-        this.settings.setSearchRadius(this.radiusBar.getProgress());
-        this.settings.setNotificationsOn(this.notificationsSwitch.isChecked());
+        this.currentUser.getSettings().setSearchRadius(this.radiusBar.getProgress());
+        this.currentUser.getSettings().setNotificationsOn(this.notificationsSwitch.isChecked());
         SettingsActivity activity=(SettingsActivity) getActivity();
-        activity.updateSettings(this.settings);
+        activity.updateCurrentUser(this.currentUser);
     }
 
     /**Initializes the item's values**/
 
     private void initializeValues(){
-        int radiusValue=this.settings.getSearchRadius();
+        int radiusValue=this.currentUser.getSettings().getSearchRadius();
         this.radiusBar.setProgress(radiusValue);
         String radius=radiusValue+" m";
         this.radiusText.setText(radius);
-        this.notificationsSwitch.setChecked(this.settings.getNotificationsOn());
+        this.notificationsSwitch.setChecked(this.currentUser.getSettings().getNotificationsOn());
     }
 
     /**Initializes the radius items behavior**/

@@ -26,7 +26,6 @@ public class SettingsActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.activity_settings_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.currentUser=getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
-        this.settings=getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_SETTINGS);
         showFragment();
     }
 
@@ -45,7 +44,7 @@ public class SettingsActivity extends BaseActivity {
 
     private void showFragment(){
         this.fragment=(SettingsFragment)getSupportFragmentManager().findFragmentById(R.id.activity_settings_fragment);
-        this.fragment=new SettingsFragment(this.settings);
+        this.fragment=new SettingsFragment(this.currentUser);
         getSupportFragmentManager().beginTransaction().add(R.id.activity_settings_fragment, this.fragment).commit();
     }
 
@@ -53,6 +52,7 @@ public class SettingsActivity extends BaseActivity {
 
     private void finishSave(){
         this.fragment.updateSettings();
+        updateWorkmateSettingsInFirebase(this.currentUser);
         setActivityResult(false);
         finish();
     }
@@ -70,7 +70,7 @@ public class SettingsActivity extends BaseActivity {
 
     private void setActivityResult(boolean logout){
         Intent resultIntent=new Intent();
-        resultIntent.putExtra(MainActivity.KEY_BUNDLE_SETTINGS, this.settings);
+        resultIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
         if(logout){
             setResult(RESULT_CANCELED, resultIntent);
         }else {

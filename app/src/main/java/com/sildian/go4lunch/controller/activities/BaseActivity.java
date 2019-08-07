@@ -10,7 +10,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.sildian.go4lunch.model.Restaurant;
-import com.sildian.go4lunch.model.Settings;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.utils.api.APIStreams;
@@ -37,7 +36,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
     /**Data**/
 
     protected Workmate currentUser;         //The current user
-    protected Settings settings;            //The user settings
     private Disposable disposable;          //The disposable which gets the response from the API
 
     /**Callbacks**/
@@ -52,12 +50,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
 
     public void updateCurrentUser(Workmate workmate){
         this.currentUser=workmate;
-    }
-
-    /**Updates the settings**/
-
-    public void updateSettings(Settings settings){
-        this.settings=settings;
     }
 
     /**Creates a workmate in Firebase
@@ -136,6 +128,15 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
 
     public void updateWorkmateLunchesInFirebase(Workmate workmate){
         FirebaseQueriesWorkmate.updateLunches(workmate.getFirebaseId(), workmate.getLunches())
+                .addOnFailureListener(this);
+    }
+
+    /**Updates a workmate's settings in Firebase
+     * @param workmate : the workmate
+     */
+
+    public void updateWorkmateSettingsInFirebase(Workmate workmate){
+        FirebaseQueriesWorkmate.updateSettings(workmate.getFirebaseId(), workmate.getSettings())
                 .addOnFailureListener(this);
     }
 

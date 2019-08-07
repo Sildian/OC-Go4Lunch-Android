@@ -17,7 +17,8 @@ data class Workmate(
     :Parcelable
 {
     val likes=arrayListOf<Restaurant>()                     //The list of liked restaurants
-    val lunches=arrayListOf<Lunch>()                         //The list of restaurants where a workmate eats
+    val lunches=arrayListOf<Lunch>()                        //The list of restaurants where a workmate eats
+    var settings=Settings()                                 //The user settings
 
     /**Empty constructor allowing to create a new instance from Firebase result**/
 
@@ -28,6 +29,7 @@ data class Workmate(
     constructor(parcel: Parcel):this(parcel.readString(), parcel.readString(), parcel.readString()){
         this.likes.addAll(parcel.createTypedArray(Restaurant.CREATOR))
         this.lunches.addAll(parcel.createTypedArray(Lunch.CREATOR))
+        this.settings=parcel.readParcelable(Settings::class.java.classLoader)
     }
 
     /**Parcelable**/
@@ -38,6 +40,7 @@ data class Workmate(
         parcel.writeString(this.imageUrl)
         parcel.writeTypedArray(this.likes.toTypedArray(), flags)
         parcel.writeTypedArray(this.lunches.toTypedArray(), flags)
+        parcel.writeParcelable(this.settings, flags)
     }
 
     override fun describeContents():Int{
@@ -164,6 +167,48 @@ data class Workmate(
             }
 
             override fun newArray(size: Int): Array<Lunch?> {
+                return arrayOfNulls(size)
+            }
+        }
+    }
+
+    /**This nested class registers the user settings**/
+
+    data class Settings (
+            var searchRadius:Int=1500,                      //The radius where a research is restricted from a given location
+            var notificationsOn:Boolean=true)               //Activates or not daily notifications from Firebase
+        : Parcelable{
+
+        /**Constructor (parcelable)**/
+
+        constructor(parcel: Parcel):this(){
+            this.searchRadius=parcel.readInt()
+            val notifications=parcel.readInt()
+            this.notificationsOn=notifications>0
+        }
+
+        /**Parcelable**/
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeInt(this.searchRadius)
+            if(this.notificationsOn){
+                parcel.writeInt(1)
+            }
+            else{
+                parcel.writeInt(0)
+            }
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR:Parcelable.Creator<Settings>{
+            override fun createFromParcel(parcel: Parcel): Settings {
+                return Settings(parcel)
+            }
+
+            override fun newArray(size: Int): Array<Settings?> {
                 return arrayOfNulls(size)
             }
         }

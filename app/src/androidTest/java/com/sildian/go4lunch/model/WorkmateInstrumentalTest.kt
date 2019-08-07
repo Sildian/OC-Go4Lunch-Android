@@ -14,6 +14,8 @@ class WorkmateInstrumentalTest{
                 "R1","Miam miam", 40.0, -5.0, "1 rue Miam",2.5)
         firstWorkmate.addLike(restaurant)
         firstWorkmate.updateLunch(restaurant)
+        firstWorkmate.settings.searchRadius=500
+        firstWorkmate.settings.notificationsOn=false
 
         val parcel: Parcel = Parcel.obtain()
         firstWorkmate.writeToParcel(parcel, firstWorkmate.describeContents())
@@ -25,5 +27,7 @@ class WorkmateInstrumentalTest{
         assertEquals(firstWorkmate, secondWorkmate)
         assertEquals(firstWorkmate.likes[0], secondWorkmate.likes[0])
         assertEquals(firstWorkmate.lunches[0], secondWorkmate.lunches[0])
+        assertEquals(500, secondWorkmate.settings.searchRadius)
+        assertFalse(secondWorkmate.settings.notificationsOn)
     }
 }

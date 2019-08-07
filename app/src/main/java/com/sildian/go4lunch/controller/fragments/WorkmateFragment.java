@@ -13,15 +13,12 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.Query;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
-import com.sildian.go4lunch.model.Settings;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
 import com.sildian.go4lunch.view.ItemClickSupport;
 import com.sildian.go4lunch.view.WorkmateAdapter;
 import com.sildian.go4lunch.view.WorkmateViewHolder;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,9 +41,8 @@ public class WorkmateFragment extends BaseFragment{
         super();
     }
 
-    public WorkmateFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser,
-                            Settings settings, List<Restaurant> restaurants) {
-        super(placesClient, userLocation, currentUser, settings, restaurants);
+    public WorkmateFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
+        super(placesClient, userLocation, currentUser, restaurants);
     }
 
     /**BaseFragment abstract methods**/
