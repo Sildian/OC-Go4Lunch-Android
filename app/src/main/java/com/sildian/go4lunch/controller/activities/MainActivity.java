@@ -214,8 +214,12 @@ public class MainActivity extends BaseActivity
                 break;
 
             case KEY_REQUEST_SETTINGS:
-                if(data!=null){
-                    this.currentUser=data.getParcelableExtra(KEY_BUNDLE_USER);
+                if(resultCode==RESULT_OK) {
+                    if (data != null) {
+                        this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
+                    }
+                }else if(resultCode==RESULT_CANCELED){
+                    initLogin();
                 }
                 break;
         }

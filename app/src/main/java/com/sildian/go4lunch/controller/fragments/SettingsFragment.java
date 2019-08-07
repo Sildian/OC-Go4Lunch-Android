@@ -1,8 +1,10 @@
 package com.sildian.go4lunch.controller.fragments;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -117,6 +119,20 @@ public class SettingsFragment extends Fragment {
     /**Initializes the accountDeleteButton**/
 
     private void initializeAccountDeleteButton(){
+        this.accountDeleteButton.setOnClickListener(v -> {
+            AlertDialog.Builder dialog=new AlertDialog.Builder(getContext());
+            dialog.setTitle(R.string.dialog_account_delete_title);
+            dialog.setMessage(R.string.dialog_account_delete_message);
+            dialog.setIcon(R.drawable.ic_delete);
+            dialog.setNegativeButton(R.string.dialog_negative_button_text, (dialogNo, which) -> {
 
+            });
+            dialog.setPositiveButton(R.string.dialog_positive_button_text, (dialogYes, which) -> {
+                SettingsActivity activity = (SettingsActivity) getActivity();
+                activity.finishDeleteAccount();
+            });
+            dialog.create();
+            dialog.show();
+        });
     }
 }

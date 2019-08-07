@@ -38,6 +38,12 @@
     <!-- Text hints -->
     <string name="hint_search_restaurant">Search restaurants</string>
 
+    <!-- Text displayed within Dialogs -->
+    <string name="dialog_positive_button_text">Yes</string>
+    <string name="dialog_negative_button_text">No</string>
+    <string name="dialog_account_delete_title">Delete account</string>
+    <string name="dialog_account_delete_message">You are going to delete your account and its data. Do you confirm?</string>
+
     <!-- Text previews for layout templates -->
     <string name="template_text_name">Name</string>
     <string name="template_text_distance">Distance</string>

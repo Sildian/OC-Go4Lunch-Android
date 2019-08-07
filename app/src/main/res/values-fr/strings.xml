@@ -39,6 +39,12 @@
     <!--Text hints -->
     <string name="hint_search_restaurant">Rechercher des restaurants</string>
 
+    <!-- Text displayed within Dialogs -->
+    <string name="dialog_positive_button_text">Oui</string>
+    <string name="dialog_negative_button_text">Non</string>
+    <string name="dialog_account_delete_title">Suppression de compte</string>
+    <string name="dialog_account_delete_message">Vous êtes sur le point de supprimer votre compte et ses informations. Confirmez-vous la suppression?</string>
+
     <!--Text previews for layout templates -->
     <string name="template_text_name">Nom</string>
     <string name="template_text_distance">Distance</string>

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.sildian.go4lunch.model.Restaurant;
@@ -138,6 +139,16 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
     public void updateWorkmateSettingsInFirebase(Workmate workmate){
         FirebaseQueriesWorkmate.updateSettings(workmate.getFirebaseId(), workmate.getSettings())
                 .addOnFailureListener(this);
+    }
+
+    /**Deletes the user's account and its data in Firebase**/
+
+    public void deleteCurrentUserAccount(){
+        FirebaseQueriesWorkmate.deleteWorkmate(this.currentUser.getFirebaseId())
+                .addOnFailureListener(this);
+        FirebaseAuth.getInstance().getCurrentUser().delete()
+                .addOnFailureListener(this);
+        FirebaseAuth.getInstance().signOut();
     }
 
     /**Deletes a lunch in Firebase

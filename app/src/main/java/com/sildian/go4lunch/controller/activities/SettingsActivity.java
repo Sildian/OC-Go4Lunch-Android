@@ -53,28 +53,25 @@ public class SettingsActivity extends BaseActivity {
     private void finishSave(){
         this.fragment.updateSettings();
         updateWorkmateSettingsInFirebase(this.currentUser);
-        setActivityResult(false);
+        setActivityResult(RESULT_OK);
         finish();
     }
 
-    /**Finishes the activity after logging out**/
+    /**Finishes the activity after deleting the user's account**/
 
-    private void finishLogout(){
-        setActivityResult(true);
+    public void finishDeleteAccount(){
+        deleteCurrentUserAccount();
+        setActivityResult(RESULT_CANCELED);
         finish();
     }
 
     /**Sets the activity result
-     * @param logout : true if the user is logging out
+     * @param resultCode : the resultCode
      */
 
-    private void setActivityResult(boolean logout){
+    private void setActivityResult(int resultCode){
         Intent resultIntent=new Intent();
         resultIntent.putExtra(MainActivity.KEY_BUNDLE_USER, this.currentUser);
-        if(logout){
-            setResult(RESULT_CANCELED, resultIntent);
-        }else {
-            setResult(RESULT_OK, resultIntent);
-        }
+        setResult(resultCode, resultIntent);
     }
 }
