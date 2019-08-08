@@ -193,7 +193,8 @@ public class MainActivity extends BaseActivity
                             updateUserLocation();
                             break;
                         case PackageManager.PERMISSION_DENIED:
-                            //TODO Handle
+                            showDialog(getString(R.string.dialog_location_permission_title),
+                                    getString(R.string.dialog_location_permission_message));
                             break;
                     }
                 }
@@ -384,7 +385,6 @@ public class MainActivity extends BaseActivity
 
         if(resultCode == RESULT_OK) {
 
-            Log.d("TAG_LOGIN", "Connected");
             FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
             String text=getString(R.string.toast_login_success)+" "+user.getDisplayName()+".";
             Toast.makeText(this, text, Toast.LENGTH_LONG).show();
@@ -395,19 +395,14 @@ public class MainActivity extends BaseActivity
         }else {
 
             if (loginResponse == null) {
-                Log.d("TAG_LOGIN", "Canceled");
                 Toast.makeText(this, R.string.toast_login_canceled, Toast.LENGTH_LONG).show();
             }else if(loginResponse.getError()==null){
-                Log.d("TAG_LOGIN", "Unknown error");
                 Toast.makeText(this, R.string.toast_login_unknown_error, Toast.LENGTH_LONG).show();
             }else if (loginResponse.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                Log.d("TAG_LOGIN", "No network");
                 Toast.makeText(this, R.string.toast_login_no_network, Toast.LENGTH_LONG).show();
             }else if (loginResponse.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                Log.d("TAG_LOGIN", "Unknown error");
                 Toast.makeText(this, R.string.toast_login_unknown_error, Toast.LENGTH_LONG).show();
             }else{
-                Log.d("TAG_LOGIN", "Unknown error");
                 Toast.makeText(this, R.string.toast_login_unknown_error, Toast.LENGTH_LONG).show();
             }
             finish();
@@ -418,36 +413,46 @@ public class MainActivity extends BaseActivity
 
     private void handleAutocompleteResult(int resultCode, Intent data){
 
-        if (resultCode == RESULT_OK&&data!=null) {
+        if (resultCode == RESULT_OK) {
 
-            /*Gets the place information*/
+            if(data!=null) {
 
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            Log.d("TAG_API", place.getName());
-            Restaurant restaurant=new Restaurant(
-                    place.getId(), place.getName(), place.getLatLng().latitude, place.getLatLng().longitude,
-                    place.getAddress(), place.getRating());
+                /*Gets the place information*/
 
-            /*Updates the restaurants list and the fragment*/
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Restaurant restaurant = new Restaurant(
+                        place.getId(), place.getName(), place.getLatLng().latitude, place.getLatLng().longitude,
+                        place.getAddress(), place.getRating());
 
-            this.restaurants.clear();
-            this.restaurants.add(restaurant);
-            this.fragment.onRestaurantsReceived(this.restaurants);
+                /*Updates the restaurants list and the fragment*/
+
+                this.restaurants.clear();
+                this.restaurants.add(restaurant);
+                this.fragment.onRestaurantsReceived(this.restaurants);
+
+            }else{
+                showDialog(getString(R.string.dialog_api_no_restaurant_found_title),
+                        getString(R.string.dialog_api_no_restaurant_found_message));
+            }
 
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-            // TODO: Handle the error.
             Status status = Autocomplete.getStatusFromIntent(data);
             Log.d("TAG_API", status.getStatusMessage());
+            showDialog(getString(R.string.dialog_api_error_title),
+                    getString(R.string.dialog_api_error_message));
+
         } else if (resultCode == RESULT_CANCELED) {
-            //TODO Handle (user canceled)
+
         }
     }
 
     /**Handles the result from RestaurantActivity**/
 
     private void handleRestaurantResult(int resultCode, Intent data){
-        if(data!=null) {
-            this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
+        if(resultCode==RESULT_OK) {
+            if (data != null) {
+                this.currentUser = data.getParcelableExtra(KEY_BUNDLE_USER);
+            }
         }
     }
 
@@ -478,21 +483,26 @@ public class MainActivity extends BaseActivity
      */
 
     private void showFragment(int id){
+
         this.fragment=(BaseFragment)getSupportFragmentManager().findFragmentById(R.id.activity_main_fragment);
         switch(id){
+
             case R.id.menu_navigation_map:
                 this.fragment = new MapFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 if (this.currentUser != null) {
                     updateUserLocation();
                 }
                 break;
+
             case R.id.menu_navigation_list:
                 this.fragment = new ListFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
+
             case R.id.menu_navigation_workmates:
                 this.fragment=new WorkmateFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
         }
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_main_fragment, this.fragment)
                 .commit();
@@ -507,17 +517,21 @@ public class MainActivity extends BaseActivity
      */
 
     private void handleNavigationDrawerAction(int id){
+
         switch(id){
+
             case R.id.menu_navigation_hidden_lunch:
                 if(this.currentUser.getChosenRestaurantoday()!=null) {
                     startRestaurantActivity(this.currentUser.getChosenRestaurantoday());
                 }else{
-                    //TODO handle
+                    Toast.makeText(this, R.string.toast_navigation_my_lunch_null, Toast.LENGTH_LONG).show();
                 }
                 break;
+
             case R.id.menu_navigation_hidden_settings:
                 startSettingsActivity();
                 break;
+
             case R.id.menu_navigation_hidden_logout:
                 FirebaseAuth.getInstance().signOut();
                 startLoginActivity();
@@ -545,20 +559,25 @@ public class MainActivity extends BaseActivity
                                 this.fragment.onUserLocationReceived(this.userLocation);
                                 runGooglePlacesSearchQuery(this.userLocation, this.currentUser.getSettings().getSearchRadius(), this);
                             } else {
-                                //TODO handle
+                                showDialog(getString(R.string.dialog_location_error_title),
+                                        getString(R.string.dialog_location_error_message));
                             }
                         })
                         .addOnFailureListener(e -> {
-                            //TODO handle
+                            Log.d("TAG_LOCATION", e.getMessage());
+                            showDialog(getString(R.string.dialog_location_error_title),
+                                    getString(R.string.dialog_location_error_message));
                         });
 
             }else if (ActivityCompat.shouldShowRequestPermissionRationale(this, PERMISSION_LOCATION)) {
-                //TODO handle
+                showDialog(getString(R.string.dialog_location_permission_title),
+                        getString(R.string.dialog_location_permission_message));
             }else{
                 ActivityCompat.requestPermissions(this, new String[]{PERMISSION_LOCATION}, KEY_REQUEST_PERMISSION_LOCATION);
             }
         }else{
-            //TODO handle
+            showDialog(getString(R.string.dialog_location_error_title),
+                    getString(R.string.dialog_location_error_message));
         }
     }
 }

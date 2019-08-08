@@ -128,12 +128,14 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
      */
 
     public void getWorkmatesEatingAtRestaurantFromFirebase(Restaurant restaurant, OnFirebaseQueryResultListener listener){
-        //TODO handle error
         FirebaseQueriesLunch.getWorkmatesEatingAtRestaurant(restaurant)
                 .addSnapshotListener((queryDocumentSnapshots, e) ->{
                     if(queryDocumentSnapshots!=null){
                         listener.onGetWorkmatesEatingAtRestaurantResult
                                 (restaurant, queryDocumentSnapshots.toObjects(Workmate.class));
+                    }
+                    if(e!=null){
+                        onFailure(e);
                     }
                 });
     }
@@ -276,11 +278,11 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
      * Dialogs management
      ********************************************************************************************/
 
-    private void showDialog(String title, String message){
+    protected void showDialog(String title, String message){
         AlertDialog.Builder dialog=new AlertDialog.Builder(this);
         dialog.setTitle(title);
         dialog.setMessage(message);
-        dialog.setNeutralButton("OK", (dialogNeutral, which) -> {
+        dialog.setNeutralButton(R.string.dialog_neutral_button_text, (dialogNeutral, which) -> {
 
         });
         dialog.create();

@@ -49,12 +49,17 @@
     <string name="dialog_api_no_restaurant_found_message">Aucun restaurant correspondant à vos critère n\'a été trouvé dans la zone.</string>
     <string name="dialog_account_delete_title">Suppression de compte</string>
     <string name="dialog_account_delete_message">Vous êtes sur le point de supprimer votre compte et ses informations. Confirmez-vous la suppression?</string>
+    <string name="dialog_location_error_title">Erreur de localisation</string>
+    <string name="dialog_location_error_message">Désolé, votre location n\'a pas pu être trouvée. Veuillez vérifier que votre service de location est activé ou réessayer plus tard.</string>
+    <string name="dialog_location_permission_title">Permission nécessaire</string>
+    <string name="dialog_location_permission_message">Cette application a besoin de votre permission pour utiliser le service de location. Veuillez accepter la permission pour pouvoir utiliser ses fonctionnalités</string>
 
     <!-- Text displayed within Toasts -->
     <string name="toast_login_success">Vous êtes connecté en tant que</string>
     <string name="toast_login_canceled">Veuillez vous connecter avant d\'utiliser cette application.</string>
-    <string name="toast_login_no_network">Désolé, aucun réseau n\a été détecté. Veuillez réessayer plus tard.</string>
+    <string name="toast_login_no_network">Désolé, aucun réseau n\a été détecté. Veuillez vérifier votre réseau ou réessayer plus tard.</string>
     <string name="toast_login_unknown_error">Désolé, un problème inconnu est survenu. Veuillez réessayer plus tard.</string>
+    <string name="toast_navigation_my_lunch_null">Vous n\'avez pas encore choisir de restaurant aujourd\'hui.</string>
 
     <!-- Text displayed within Notifications -->
     <string name="notification_lunch_text">Votre déj chez</string>

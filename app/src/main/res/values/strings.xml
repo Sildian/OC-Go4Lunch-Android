@@ -48,12 +48,17 @@
     <string name="dialog_api_no_restaurant_found_message">No restaurant matching your criteria was found in the area.</string>
     <string name="dialog_account_delete_title">Delete account</string>
     <string name="dialog_account_delete_message">You are going to delete your account and its data. Do you confirm?</string>
+    <string name="dialog_location_error_title">Location error</string>
+    <string name="dialog_location_error_message">Sorry, could not find your location. Please check that your location service is activated or try again later.</string>
+    <string name="dialog_location_permission_title">Location permission needed</string>
+    <string name="dialog_location_permission_message">This app needs your permission to use the location service. Please grant this permission in order to use its functions.</string>
 
     <!-- Text displayed within Toasts -->
     <string name="toast_login_success">Your are connected as</string>
     <string name="toast_login_canceled">Please sign in before using this app.</string>
-    <string name="toast_login_no_network">Sorry, no network was detected. Please try again later.</string>
+    <string name="toast_login_no_network">Sorry, no network was detected. Please check your network or try again later.</string>
     <string name="toast_login_unknown_error">Sorry, an unknown error occurred. Please try again later.</string>
+    <string name="toast_navigation_my_lunch_null">You haven\'t chosen a restaurant yet today.</string>
 
     <!-- Text displayed within Notifications -->
     <string name="notification_lunch_text">Your lunch at</string>

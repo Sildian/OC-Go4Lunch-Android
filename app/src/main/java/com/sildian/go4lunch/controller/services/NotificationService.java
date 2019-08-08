@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -58,11 +59,11 @@ public class NotificationService extends FirebaseMessagingService {
         FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
         FirebaseQueriesWorkmate.getWorkmate(user.getUid())
                 .addOnFailureListener(e -> {
-                    //TODO handle
+                    Log.d("TAG_FIREBASE", e.getMessage());
                 })
                 .addOnSuccessListener(documentSnapshot ->  {
                     this.currentUser=documentSnapshot.toObject(Workmate.class);
-                    if(this.currentUser.getChosenRestaurantoday()!=null) {
+                    if(this.currentUser.getChosenRestaurantoday()!=null&&this.currentUser.getSettings().getNotificationsOn()) {
                         sendNotification();
                     }
                 });
