@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -198,10 +199,16 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onGetWorkmateResult(Workmate workmate) {
-        this.currentUser=workmate;
-        updateNavigationDrawerItems();
-        showFragment(R.id.menu_navigation_map);
-        updateUserLocation();
+
+        /*If the workmate doesn't exist in Firebase, then creates it. Else, gets its related data and shows MapFragment.*/
+
+        if(workmate==null){
+            createWorkmateInFirebase(FirebaseAuth.getInstance().getCurrentUser(), this);
+        }else {
+            this.currentUser = workmate;
+            updateNavigationDrawerItems();
+            showFragment(R.id.menu_navigation_map);
+        }
     }
 
     @Override
@@ -351,24 +358,37 @@ public class MainActivity extends BaseActivity
 
         IdpResponse loginResponse = IdpResponse.fromResultIntent(data);
 
-        //TODO add actions
+        /*If the response is a success, then shows a message and gets the user's data from Firebase*/
 
         if(resultCode == RESULT_OK) {
+
             Log.d("TAG_LOGIN", "Connected");
-            createWorkmateInFirebase(FirebaseAuth.getInstance().getCurrentUser(), this);
-            showFragment(R.id.menu_navigation_map);
+            FirebaseUser user=FirebaseAuth.getInstance().getCurrentUser();
+            String text=getString(R.string.toast_login_success)+" "+user.getDisplayName()+".";
+            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+            getWorkmateFromFirebase(user.getUid(), this);
+
+            /*Else shows a message and leaves the app*/
+
         }else {
+
             if (loginResponse == null) {
                 Log.d("TAG_LOGIN", "Canceled");
+                Toast.makeText(this, R.string.toast_login_canceled, Toast.LENGTH_LONG).show();
             }else if(loginResponse.getError()==null){
                 Log.d("TAG_LOGIN", "Unknown error");
+                Toast.makeText(this, R.string.toast_login_unknown_error, Toast.LENGTH_LONG).show();
             }else if (loginResponse.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
                 Log.d("TAG_LOGIN", "No network");
+                Toast.makeText(this, R.string.toast_login_no_network, Toast.LENGTH_LONG).show();
             }else if (loginResponse.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
                 Log.d("TAG_LOGIN", "Unknown error");
+                Toast.makeText(this, R.string.toast_login_unknown_error, Toast.LENGTH_LONG).show();
             }else{
                 Log.d("TAG_LOGIN", "Unknown error");
+                Toast.makeText(this, R.string.toast_login_unknown_error, Toast.LENGTH_LONG).show();
             }
+            finish();
         }
     }
 

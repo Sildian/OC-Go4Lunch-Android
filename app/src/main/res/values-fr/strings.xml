@@ -43,6 +43,12 @@
     <string name="dialog_account_delete_title">Suppression de compte</string>
     <string name="dialog_account_delete_message">Vous êtes sur le point de supprimer votre compte et ses informations. Confirmez-vous la suppression?</string>
 
+    <!-- Text displayed within Toasts -->
+    <string name="toast_login_success">Vous êtes connecté en tant que</string>
+    <string name="toast_login_canceled">Veuillez vous connecter avant d\'utiliser cette application.</string>
+    <string name="toast_login_no_network">Désolé, aucun réseau n\a été détecté. Veuillez réessayer plus tard.</string>
+    <string name="toast_login_unknown_error">Désolé, un problème inconnu est survenu. Veuillez réessayer plus tard.</string>
+
     <!-- Text displayed within Notifications -->
     <string name="notification_lunch_text">Votre déj chez</string>
 

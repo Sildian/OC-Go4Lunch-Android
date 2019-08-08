@@ -42,6 +42,12 @@
     <string name="dialog_account_delete_title">Delete account</string>
     <string name="dialog_account_delete_message">You are going to delete your account and its data. Do you confirm?</string>
 
+    <!-- Text displayed within Toasts -->
+    <string name="toast_login_success">Your are connected as</string>
+    <string name="toast_login_canceled">Please sign in before using this app.</string>
+    <string name="toast_login_no_network">Sorry, no network was detected. Please try again later.</string>
+    <string name="toast_login_unknown_error">Sorry, an unknown error occurred. Please try again later.</string>
+
     <!-- Text displayed within Notifications -->
     <string name="notification_lunch_text">Your lunch at</string>
 
