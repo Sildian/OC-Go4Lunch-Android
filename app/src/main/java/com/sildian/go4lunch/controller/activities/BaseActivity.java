@@ -1,8 +1,10 @@
 package com.sildian.go4lunch.controller.activities;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -10,6 +12,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
@@ -42,13 +45,20 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
     private Disposable disposable;          //The disposable which gets the response from the API
 
     /*********************************************************************************************
+     * Abstract methods
+     ********************************************************************************************/
+
+    protected abstract void updateUIBeforeQuery();      //Updates the UI before a query runs
+    protected abstract void updateUIAfterQuery();       //Updates the UI after a query runs
+
+    /*********************************************************************************************
      * Callbacks
      ********************************************************************************************/
 
     @Override
     public void onFailure(@NonNull Exception e) {
         Log.d("TAG_FIREBASE", e.getMessage());
-        //TODO Handle Firebase errors
+        showDialog(getString(R.string.dialog_firebase_error_title), getString(R.string.dialog_firebase_error_message));
     }
 
     /*********************************************************************************************
@@ -188,23 +198,41 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
      */
 
     public void runGooglePlacesSearchQuery(LatLng location, long radius, OnPlaceQueryResultListener listener){
+
+        updateUIBeforeQuery();
+
         this.disposable= APIStreams.streamGetNearbyRestaurants(this, location, radius)
                 .subscribeWith(new DisposableObserver<GooglePlacesSearchResponse>(){
+
                     @Override
                     public void onNext(GooglePlacesSearchResponse response) {
-                        if(response.getResults()!=null) {
+
+                        updateUIAfterQuery();
+
+                        /*If the response contains results, then feeds the restaurants list and sends it to the listener*/
+
+                        if(response.getResults()!=null&&!response.getResults().isEmpty()) {
                             List<Restaurant> restaurants=new ArrayList<>();
                             for (GooglePlacesSearchResponse.Result apiRestaurant : response.getResults()) {
                                 restaurants.add(new Restaurant(apiRestaurant));
                             }
                             listener.onGetGooglePlacesSearchResult(restaurants);
                         }
+
+                        /*Else shows a dialog to notify the user that no result was found*/
+
+                        else{
+                            showDialog(getString(R.string.dialog_api_no_restaurant_found_title),
+                                    getString(R.string.dialog_api_no_restaurant_found_message));
+                        }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d("TAG_API", e.getMessage());
-                        //TODO handle
+                        updateUIAfterQuery();
+                        showDialog(getString(R.string.dialog_api_error_title),
+                                getString(R.string.dialog_api_error_message));
                     }
 
                     @Override
@@ -220,9 +248,11 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
      */
 
     public void runRestaurantAllDetailsQuery(Restaurant restaurant, OnPlaceQueryResultListener listener){
-        //TODO change radius to value
-        this.disposable= APIStreams.streamGetRestaurantAllDetails(this, restaurant, 100)
+
+        this.disposable= APIStreams.streamGetRestaurantAllDetails(
+                this, restaurant, getResources().getInteger(R.integer.figure_radius_for_details))
                 .subscribeWith(new DisposableObserver<Restaurant>(){
+
                     @Override
                     public void onNext(Restaurant restaurantWithAllDetails) {
                         listener.onGetRestaurantAllDetailsResult(restaurantWithAllDetails);
@@ -231,7 +261,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
                     @Override
                     public void onError(Throwable e) {
                         Log.d("TAG_API", e.getMessage());
-                        //TODO handle
+                        showDialog(getString(R.string.dialog_api_error_title),
+                                getString(R.string.dialog_api_error_message));
                     }
 
                     @Override
@@ -239,5 +270,20 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
 
                     }
                 });
+    }
+
+    /*********************************************************************************************
+     * Dialogs management
+     ********************************************************************************************/
+
+    private void showDialog(String title, String message){
+        AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.setNeutralButton("OK", (dialogNeutral, which) -> {
+
+        });
+        dialog.create();
+        dialog.show();
     }
 }

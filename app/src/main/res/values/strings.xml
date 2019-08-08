@@ -37,8 +37,15 @@
     <string name="hint_search_restaurant">Search restaurants</string>
 
     <!-- Text displayed within Dialogs -->
+    <string name="dialog_neutral_button_text">Ok</string>
     <string name="dialog_positive_button_text">Yes</string>
     <string name="dialog_negative_button_text">No</string>
+    <string name="dialog_firebase_error_title">Database error</string>
+    <string name="dialog_firebase_error_message">Sorry, could not connect to the database. Please try again later.</string>
+    <string name="dialog_api_error_title">Error</string>
+    <string name="dialog_api_error_message">Sorry, an error occurred while fetching the data. Please try again later.</string>
+    <string name="dialog_api_no_restaurant_found_title">Empty result</string>
+    <string name="dialog_api_no_restaurant_found_message">No restaurant matching your criteria was found in the area.</string>
     <string name="dialog_account_delete_title">Delete account</string>
     <string name="dialog_account_delete_message">You are going to delete your account and its data. Do you confirm?</string>
 

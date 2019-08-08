@@ -16,7 +16,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,6 +103,7 @@ public class MainActivity extends BaseActivity
     /**UI Components**/
 
     private Toolbar toolbar;                                                //The top toolbar
+    private ProgressBar progressBar;                                        //The progress bar
     private DrawerLayout drawerLayout;                                      //The drawer allowing to show the hidden navigation view
     private NavigationView navigationViewHidden;                            //The hidden navigation view on the left
     private BottomNavigationView navigationBar;                             //The bottom navigation bar
@@ -116,6 +119,7 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         this.restaurants = new ArrayList<>();
         initializeToolbar();
+        initializeProgressBar();
         initializeNavigationDrawer();
         initializeNavigationBar();
         initializePlaces();
@@ -229,12 +233,30 @@ public class MainActivity extends BaseActivity
     }
 
     /*********************************************************************************************
+     * BaseActivity methods
+     ********************************************************************************************/
+
+    @Override
+    protected void updateUIBeforeQuery() {
+        this.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void updateUIAfterQuery() {
+        this.progressBar.setVisibility(View.GONE);
+    }
+
+    /*********************************************************************************************
      * Initializations
      ********************************************************************************************/
 
     private void initializeToolbar(){
         this.toolbar=findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(this.toolbar);
+    }
+
+    private void initializeProgressBar(){
+        this.progressBar=findViewById(R.id.activity_main_progress_bar);
     }
 
     private void initializeNavigationDrawer(){

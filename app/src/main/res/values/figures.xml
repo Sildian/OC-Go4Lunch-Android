@@ -5,5 +5,6 @@
 
     <integer name="figure_default_radius">1500</integer>
     <integer name="figure_max_radius">2000</integer>
+    <integer name="figure_radius_for_details">100</integer>
 
 </resources>

@@ -38,8 +38,15 @@
     <string name="hint_search_restaurant">Rechercher des restaurants</string>
 
     <!-- Text displayed within Dialogs -->
+    <string name="dialog_neutral_button_text">Ok</string>
     <string name="dialog_positive_button_text">Oui</string>
     <string name="dialog_negative_button_text">Non</string>
+    <string name="dialog_firebase_error_title">Erreur base de données</string>
+    <string name="dialog_firebase_error_message">Désolé, un problème est survenu lors de la connexion à la base de données. Veuillez réessayer plus tard.</string>
+    <string name="dialog_api_error_title">Erreur</string>
+    <string name="dialog_api_error_message">Désolé, une erreur est survenue au moment de récupérer les données. Veuillez réessayer plus tard.</string>
+    <string name="dialog_api_no_restaurant_found_title">Aucun résultat</string>
+    <string name="dialog_api_no_restaurant_found_message">Aucun restaurant correspondant à vos critère n\'a été trouvé dans la zone.</string>
     <string name="dialog_account_delete_title">Suppression de compte</string>
     <string name="dialog_account_delete_message">Vous êtes sur le point de supprimer votre compte et ses informations. Confirmez-vous la suppression?</string>
 
