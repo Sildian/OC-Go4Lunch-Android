@@ -58,7 +58,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
     @Override
     public void onFailure(@NonNull Exception e) {
         Log.d("TAG_FIREBASE", e.getMessage());
-        showDialog(getString(R.string.dialog_firebase_error_title), getString(R.string.dialog_firebase_error_message));
     }
 
     /*********************************************************************************************
@@ -120,6 +119,18 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
                 .addOnFailureListener(this)
                 .addOnSuccessListener(documentSnapshot ->
                         listener.onGetWorkmateResult(documentSnapshot.toObject(Workmate.class)));
+    }
+
+    /**Gets a restaurant from Firebase
+     * @param placeId : the place id
+     * @param listener : the listener
+     */
+
+    public void getRestaurantFromFirebase(String placeId, OnFirebaseQueryResultListener listener){
+        FirebaseQueriesRestaurant.getRestaurant(placeId)
+                .addOnFailureListener(this)
+                .addOnSuccessListener(documentSnapshot ->
+                        listener.onGetRestaurantResult(documentSnapshot.toObject(Restaurant.class)));
     }
 
     /**Gets workmates eating at a given restaurant today
@@ -263,8 +274,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
                     @Override
                     public void onError(Throwable e) {
                         Log.d("TAG_API", e.getMessage());
-                        showDialog(getString(R.string.dialog_api_error_title),
-                                getString(R.string.dialog_api_error_message));
                     }
 
                     @Override

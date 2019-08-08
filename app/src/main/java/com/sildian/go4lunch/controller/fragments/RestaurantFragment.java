@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -35,6 +36,7 @@ import com.sildian.go4lunch.utils.DateUtilities;
 import com.sildian.go4lunch.utils.api.APIStreams;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesLunch;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
+import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
 import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
 import com.sildian.go4lunch.view.WorkmateAdapter;
 import com.sildian.go4lunch.view.WorkmateViewHolder;
@@ -53,7 +55,7 @@ import io.reactivex.observers.DisposableObserver;
  * Shows a restaurant's information
  *************************************************************************************************/
 
-public class RestaurantFragment extends Fragment implements OnPlaceQueryResultListener {
+public class RestaurantFragment extends Fragment implements OnFirebaseQueryResultListener, OnPlaceQueryResultListener {
 
     /*********************************************************************************************
      * Members
@@ -71,6 +73,7 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
     @BindView(R.id.fragment_restaurant_image) ImageView imageView;
     @BindView(R.id.fragment_restaurant_name) TextView nameText;
     @BindView(R.id.fragment_restaurant_stars) RatingBar starsRatingBar;
+    @BindView(R.id.fragment_restaurant_nb_likes) TextView nbLikesText;
     @BindView(R.id.fragment_restaurant_cuisineType) TextView cuisineTypeText;
     @BindView(R.id.fragment_restaurant_address) TextView addressText;
     @BindView(R.id.fragment_restaurant_button_call) Button callButton;
@@ -114,6 +117,24 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
     }
 
     @Override
+    public void onGetWorkmateResult(Workmate workmate) {
+
+    }
+
+    @Override
+    public void onGetRestaurantResult(Restaurant restaurant) {
+        if(restaurant!=null&&restaurant.getNbLikes()>0){
+            this.restaurant.setNbLikes(restaurant.getNbLikes());
+            updateNbLikes();
+        }
+    }
+
+    @Override
+    public void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates) {
+
+    }
+
+    @Override
     public void onGetGooglePlacesSearchResult(List<Restaurant> restaurants) {
 
     }
@@ -128,9 +149,11 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
      ********************************************************************************************/
 
     private void initializeView(){
+        RestaurantActivity activity=(RestaurantActivity) getActivity();
         APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
         this.nameText.setText(this.restaurant.getName());
         this.starsRatingBar.setRating(restaurant.getNbStars());
+        activity.getRestaurantFromFirebase(this.restaurant.getPlaceId(), this);
         this.cuisineTypeText.setText("");
         this.addressText.setText(this.restaurant.getAddress());
         initializeCallButton();
@@ -138,7 +161,6 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
         initializeWebsiteButton();
         initializeLunchButton();
         initializeWorkmatesView();
-        RestaurantActivity activity=(RestaurantActivity) getActivity();
         activity.runRestaurantAllDetailsQuery(this.restaurant, this);
     }
 
@@ -164,6 +186,7 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
                 activity.updateWorkmateLikesInFirebase(this.currentUser);
                 activity.updateCurrentUser(this.currentUser);
                 disableButton(this.likeButton);
+                updateNbLikes();
             }
         });
     }
@@ -195,6 +218,8 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
                 activity.createOrUpdateRestaurantInFirebase(this.restaurant);
                 activity.updateWorkmateLunchesInFirebase(this.currentUser);
                 activity.updateCurrentUser(this.currentUser);
+                String text=getString(R.string.toast_restaurant_lunch_confirmation)+" "+this.restaurant.getName()+".";
+                Toast.makeText(getContext(), text, Toast.LENGTH_LONG).show();
                 disableLunchButton();
             }
 
@@ -224,6 +249,15 @@ public class RestaurantFragment extends Fragment implements OnPlaceQueryResultLi
         if(this.websiteButton.getTag()==null){
             disableButton(this.websiteButton);
         }
+    }
+
+    private void updateNbLikes(){
+        if(this.nbLikesText.getVisibility()!=View.VISIBLE) {
+            this.nbLikesText.setVisibility(View.VISIBLE);
+            this.nbLikesText.getCompoundDrawables()[0].mutate().setColorFilter
+                    (new PorterDuffColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_IN));
+        }
+        this.nbLikesText.setText(String.valueOf(this.restaurant.getNbLikes()));
     }
 
     private void disableButton(Button button){

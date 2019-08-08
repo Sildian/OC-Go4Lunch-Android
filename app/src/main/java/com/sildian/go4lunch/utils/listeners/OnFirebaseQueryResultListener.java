@@ -14,5 +14,7 @@ public interface OnFirebaseQueryResultListener {
 
     void onGetWorkmateResult(Workmate workmate);
 
+    void onGetRestaurantResult(Restaurant restaurant);
+
     void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates);
 }

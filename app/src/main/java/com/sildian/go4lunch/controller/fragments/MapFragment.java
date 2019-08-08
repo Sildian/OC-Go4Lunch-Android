@@ -156,6 +156,11 @@ public class MapFragment extends BaseFragment
     }
 
     @Override
+    public void onGetRestaurantResult(Restaurant restaurant) {
+
+    }
+
+    @Override
     public void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates) {
         showRestaurantLocation(restaurant, !workmates.isEmpty());
     }

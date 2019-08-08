@@ -60,6 +60,7 @@
     <string name="toast_login_no_network">Désolé, aucun réseau n\a été détecté. Veuillez vérifier votre réseau ou réessayer plus tard.</string>
     <string name="toast_login_unknown_error">Désolé, un problème inconnu est survenu. Veuillez réessayer plus tard.</string>
     <string name="toast_navigation_my_lunch_null">Vous n\'avez pas encore choisir de restaurant aujourd\'hui.</string>
+    <string name="toast_restaurant_lunch_confirmation">Vous déjeunez chez</string>
 
     <!-- Text displayed within Notifications -->
     <string name="notification_lunch_text">Votre déj chez</string>

@@ -67,23 +67,15 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/text_size_title" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/list_restaurant_item_nb_workmates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_margin="@dimen/components_margin_small"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/list_restaurant_item_nb_workmates"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:drawableStart="@drawable/ic_person"
-                android:text="@string/template_text_number"
-                android:textSize="@dimen/text_size_body" />
-
-        </LinearLayout>
+            android:drawableStart="@drawable/ic_person"
+            android:text="@string/template_text_number"
+            android:textSize="@dimen/text_size_body" />
 
         <RatingBar
             android:id="@+id/list_restaurant_item_stars"
@@ -96,6 +88,16 @@
             android:numStars="3"
             android:rating="0" />
 
+        <TextView
+            android:id="@+id/list_restaurant_item_nb_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/components_margin_small"
+            android:drawableStart="@drawable/ic_like"
+            android:text="@string/template_text_number"
+            android:textSize="@dimen/text_size_body" />
+
     </LinearLayout>
 
     <ImageView
@@ -103,6 +105,7 @@
         android:layout_width="@dimen/image_width"
         android:layout_height="@dimen/image_width"
         android:layout_margin="@dimen/components_margin_small"
+        android:layout_gravity="center"
         android:contentDescription="@string/template_text_image"
         tools:srcCompat="@tools:sample/avatars[12]" />
 

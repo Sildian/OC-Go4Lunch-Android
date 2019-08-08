@@ -44,6 +44,7 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder
     @BindView(R.id.list_restaurant_item_distance) TextView distanceText;
     @BindView(R.id.list_restaurant_item_nb_workmates) TextView nbWorkmatesText;
     @BindView(R.id.list_restaurant_item_stars) RatingBar starsRatingBar;
+    @BindView(R.id.list_restaurant_item_nb_likes) TextView nbLikesText;
     @BindView(R.id.list_restaurant_item_image) ImageView imageView;
 
     /**Information**/
@@ -64,6 +65,14 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder
     @Override
     public void onGetWorkmateResult(Workmate workmate) {
 
+    }
+
+    @Override
+    public void onGetRestaurantResult(Restaurant restaurant) {
+        if(restaurant!=null&&restaurant.getNbLikes()>0){
+            this.nbLikesText.setVisibility(View.VISIBLE);
+            this.nbLikesText.setText(String.valueOf(restaurant.getNbLikes()));
+        }
     }
 
     @Override
@@ -101,6 +110,8 @@ public class RestaurantViewHolder extends RecyclerView.ViewHolder
         this.nbWorkmatesText.setVisibility(View.INVISIBLE);
         activity.getWorkmatesEatingAtRestaurantFromFirebase(restaurant, this);
         this.starsRatingBar.setRating(restaurant.getNbStars());
+        this.nbLikesText.setVisibility(View.INVISIBLE);
+        activity.getRestaurantFromFirebase(restaurant.getPlaceId(), this);
         APIStreams.streamGetRestaurantImage(this.placesClient, restaurant, this.imageView);
         activity.runRestaurantAllDetailsQuery(restaurant, this);
     }

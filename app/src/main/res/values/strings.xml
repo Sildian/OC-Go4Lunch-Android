@@ -59,6 +59,7 @@
     <string name="toast_login_no_network">Sorry, no network was detected. Please check your network or try again later.</string>
     <string name="toast_login_unknown_error">Sorry, an unknown error occurred. Please try again later.</string>
     <string name="toast_navigation_my_lunch_null">You haven\'t chosen a restaurant yet today.</string>
+    <string name="toast_restaurant_lunch_confirmation">You take your lunch at</string>
 
     <!-- Text displayed within Notifications -->
     <string name="notification_lunch_text">Your lunch at</string>

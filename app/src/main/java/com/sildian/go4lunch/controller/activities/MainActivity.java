@@ -217,6 +217,11 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
+    public void onGetRestaurantResult(Restaurant restaurant) {
+
+    }
+
+    @Override
     public void onGetWorkmatesEatingAtRestaurantResult(Restaurant restaurant, List<Workmate> workmates) {
 
     }
