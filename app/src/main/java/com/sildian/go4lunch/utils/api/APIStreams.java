@@ -51,7 +51,7 @@ public class APIStreams {
 
         String queryLocation=location.latitude+","+location.longitude;
         String queryRadius=String.valueOf(radius);
-        String queryPlaceType="restaurant";
+        String queryPlaceType=context.getString(R.string.query_place_type);
         String queryApiKey=context.getString(R.string.google_api_key);
 
         /*Runs the query and returns the response*/
@@ -104,13 +104,14 @@ public class APIStreams {
         /*Prepares the query's parameters*/
 
         String queryArea=location.latitude+","+location.longitude+";r="+radius;
-        String queryPlaceType="restaurant";
+        String queryPlaceType=context.getString(R.string.query_place_type);
         String queryAppId=context.getString(R.string.here_app_id);
         String queryAppCode=context.getString(R.string.here_app_code);
 
         /*Runs the query and returns the response*/
 
-        return apiQueries.getPlaceExtraDetails(queryArea, queryPlaceType, restaurantName, queryAppId, queryAppCode)
+        return apiQueries.getPlaceExtraDetails(context.getString(R.string.query_language),
+                queryArea, queryPlaceType, restaurantName, queryAppId, queryAppCode)
                 .subscribeOn(Schedulers.io())
                 .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread());

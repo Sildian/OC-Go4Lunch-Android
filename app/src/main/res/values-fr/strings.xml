@@ -74,4 +74,8 @@
     <string name="template_text_number">Nb</string>
     <string name="template_text_image">Image</string>
 
+    <!-- Text used within queries -->
+    <string name="query_language">fr</string>
+    <string name="query_place_type">restaurant</string>
+
 </resources>
