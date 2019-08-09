@@ -608,4 +608,8 @@ public class MainActivity extends BaseActivity
                     getString(R.string.dialog_location_error_message));
         }
     }
+
+    public void searchRestaurantsAtCameraLocation(LatLng cameraLocation){
+        runGooglePlacesSearchQuery(cameraLocation, this.currentUser.getSettings().getSearchRadius(), this);
+    }
 }

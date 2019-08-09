@@ -56,6 +56,7 @@ public class MapFragment extends BaseFragment
     /**UI Components**/
 
     @BindView(R.id.fragment_map_map_view) MapView mapView;
+    @BindView(R.id.fragment_map_button_search) FloatingActionButton searchButton;
     @BindView(R.id.fragment_map_button_location) FloatingActionButton locationButton;
     @BindView(R.id.fragment_map_restaurant_description) LinearLayout restaurantDescriptionLayout;
     @BindView(R.id.fragment_map_text_restaurant_name) TextView restaurantNameText;
@@ -67,7 +68,8 @@ public class MapFragment extends BaseFragment
 
     /**Map management**/
 
-    private GoogleMap map;
+    private GoogleMap map;                          //The map
+    private LatLng currentSearchLocation;           //The current search location (user location or camera location)
 
     /*********************************************************************************************
      * Constructors
@@ -136,6 +138,7 @@ public class MapFragment extends BaseFragment
     public void onMapReady(GoogleMap googleMap) {
         this.map=googleMap;
         this.map.setOnMarkerClickListener(this);
+        this.currentSearchLocation=this.userLocation;
     }
 
     @Override
@@ -176,6 +179,7 @@ public class MapFragment extends BaseFragment
 
     @Override
     protected void initializeView(Bundle savedInstanceState) {
+        initializeSearchButton();
         initializeLocationButton();
         initializeMapView(savedInstanceState);
         initializeRestaurantButton();
@@ -193,7 +197,9 @@ public class MapFragment extends BaseFragment
         this.restaurants=restaurants;
         if(this.map!=null) {
             this.map.clear();
-            showUserLocation();
+            if(this.currentSearchLocation==null||this.currentSearchLocation.equals(this.userLocation)){
+                showUserLocation();
+            }
             MainActivity activity=(MainActivity) getActivity();
             for (Restaurant restaurant : this.restaurants) {
                 activity.getWorkmatesEatingAtRestaurantFromFirebase(restaurant, this);
@@ -205,8 +211,14 @@ public class MapFragment extends BaseFragment
      * initializations
      ********************************************************************************************/
 
+    private void initializeSearchButton(){
+        this.searchButton.setOnClickListener(v ->
+            searchRestaurantsAtCameraLocation());
+    }
+
     private void initializeLocationButton(){
         this.locationButton.setOnClickListener(v -> {
+            this.currentSearchLocation=this.userLocation;
             MainActivity mainActivity=(MainActivity) getActivity();
             mainActivity.updateUserLocation();
         });
@@ -282,5 +294,14 @@ public class MapFragment extends BaseFragment
                 .position(new LatLng(restaurant.getLocationLat(), restaurant.getLocationLng()))
                 .icon(icon))
                 .setTag(restaurant);
+    }
+
+    /**Searches restaurants nearby camera location**/
+
+    private void searchRestaurantsAtCameraLocation(){
+        LatLng cameraLocation=this.map.getCameraPosition().target;
+        this.currentSearchLocation=cameraLocation;
+        MainActivity activity=(MainActivity) getActivity();
+        activity.searchRestaurantsAtCameraLocation(cameraLocation);
     }
 }

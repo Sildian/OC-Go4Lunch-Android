@@ -11,17 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragment_map_button_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/components_margin_large"
-        android:clickable="true"
-        android:focusable="true"
-        app:srcCompat="@drawable/ic_my_location"
-        app:backgroundTint="@android:color/white" />
-
     <LinearLayout
         android:id="@+id/fragment_map_restaurant_description"
         android:layout_width="match_parent"
@@ -86,6 +75,34 @@
             android:text="@string/button_restaurant_more_details"
             app:iconTint="@color/colorPrimary"
             app:icon="@drawable/ic_restaurant" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom|end">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragment_map_button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/components_margin_large"
+            android:clickable="true"
+            android:focusable="true"
+            app:backgroundTint="@android:color/white"
+            app:srcCompat="@drawable/ic_search_black" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragment_map_button_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/components_margin_large"
+            android:clickable="true"
+            android:focusable="true"
+            app:backgroundTint="@android:color/white"
+            app:srcCompat="@drawable/ic_my_location" />
 
     </LinearLayout>
 
