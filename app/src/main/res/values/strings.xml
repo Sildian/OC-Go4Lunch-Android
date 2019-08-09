@@ -75,6 +75,8 @@
     <string name="template_text_opening_hours">Opening hours</string>
     <string name="template_text_number">Nb</string>
     <string name="template_text_image">Image</string>
+    <string name="template_text_message">Message</string>
+    <string name="template_text_date">Date</string>
 
     <!-- Text used within queries -->
     <string name="query_language">en</string>

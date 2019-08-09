@@ -13,11 +13,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.sildian.go4lunch.R;
+import com.sildian.go4lunch.model.Message;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.utils.api.APIStreams;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesLunch;
+import com.sildian.go4lunch.utils.firebase.FirebaseQueriesMessage;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesRestaurant;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
 import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
@@ -106,6 +108,15 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
 
     public void createLunchInFirebase(Restaurant restaurant, Workmate workmate){
         FirebaseQueriesLunch.createLunch(restaurant, workmate)
+                .addOnFailureListener(this);
+    }
+
+    /**Creates a message in Firebase
+     * @param message : the message
+     */
+
+    public void createMessageInFirebase(Message message){
+        FirebaseQueriesMessage.createMessage(message)
                 .addOnFailureListener(this);
     }
 
