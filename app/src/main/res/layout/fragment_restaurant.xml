@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/components_margin_small"
                 android:visibility="invisible"
-                android:drawableStart="@drawable/ic_like"
+                android:drawableStart="@drawable/ic_like_white"
                 android:text="@string/template_text_number"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/text_size_body" />

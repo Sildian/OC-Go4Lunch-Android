@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,10 +104,13 @@ public class MainActivity extends BaseActivity
 
     /**UI Components**/
 
+    private RequestManager glide;                                           //Request manager allowing to show images
     private Toolbar toolbar;                                                //The top toolbar
     private ProgressBar progressBar;                                        //The progress bar
     private DrawerLayout drawerLayout;                                      //The drawer allowing to show the hidden navigation view
     private NavigationView navigationViewHidden;                            //The hidden navigation view on the left
+    private ImageView navigationDrawerUserImage;                            //The user image shown into the hidden navigation view
+    private TextView navigationDrawerUserNameText;                          //The user name shown into the hidden navigation view
     private BottomNavigationView navigationBar;                             //The bottom navigation bar
     private BaseFragment fragment;                                          //The fragment
 
@@ -119,6 +123,7 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.restaurants = new ArrayList<>();
+        glide=Glide.with(this);
         initializeToolbar();
         initializeProgressBar();
         initializeNavigationDrawer();
@@ -267,14 +272,29 @@ public class MainActivity extends BaseActivity
     }
 
     private void initializeNavigationDrawer(){
+
+        /*Navigation drawer*/
+
         this.drawerLayout = findViewById(R.id.activity_main_drawer_layout);
         ActionBarDrawerToggle toggle =
                 new ActionBarDrawerToggle(this, this.drawerLayout, this.toolbar,
                         R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         this.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        /*Navigation view*/
+
         this.navigationViewHidden = findViewById(R.id.activity_main_navigation_view);
         this.navigationViewHidden.setNavigationItemSelectedListener(this);
+
+        /*Header views*/
+
+        View navigationViewHiddenHeader=getLayoutInflater()
+                .inflate(R.layout.navigation_hidden_header, this.navigationViewHidden);
+        this.navigationDrawerUserImage=navigationViewHiddenHeader
+                .findViewById(R.id.navigation_hidden_header_user_image);
+        this.navigationDrawerUserNameText=navigationViewHiddenHeader
+                .findViewById(R.id.navigation_hidden_header_user_name);
     }
 
     private void initializeNavigationBar(){
@@ -306,11 +326,9 @@ public class MainActivity extends BaseActivity
      ********************************************************************************************/
 
     private void updateNavigationDrawerItems(){
-        ImageView navigationDrawerUserImage=findViewById(R.id.navigation_hidden_header_user_image);
-        TextView navigationDrawerUserName=findViewById(R.id.navigation_hidden_header_user_name);
-        RequestManager glide= Glide.with(this);
-        glide.load(this.currentUser.getImageUrl()).apply(RequestOptions.circleCropTransform()).into(navigationDrawerUserImage);
-        navigationDrawerUserName.setText(this.currentUser.getName());
+        this.glide.load(this.currentUser.getImageUrl())
+                .apply(RequestOptions.circleCropTransform()).into(this.navigationDrawerUserImage);
+        this.navigationDrawerUserNameText.setText(this.currentUser.getName());
     }
 
     /*********************************************************************************************

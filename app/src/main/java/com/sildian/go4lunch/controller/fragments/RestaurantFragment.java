@@ -91,8 +91,10 @@ public class RestaurantFragment extends Fragment implements OnFirebaseQueryResul
 
     }
 
-    public RestaurantFragment(PlacesClient placesClient) {
+    public RestaurantFragment(PlacesClient placesClient, Workmate currentUser, Restaurant restaurant) {
         this.placesClient=placesClient;
+        this.currentUser=currentUser;
+        this.restaurant=restaurant;
     }
 
     /*********************************************************************************************
@@ -103,17 +105,8 @@ public class RestaurantFragment extends Fragment implements OnFirebaseQueryResul
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_restaurant, container, false);
         ButterKnife.bind(this, view);
+        initializeView();
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if(getActivity().getIntent()!=null) {
-            this.currentUser = getActivity().getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
-            this.restaurant = getActivity().getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_RESTAURANT);
-            initializeView();
-        }
     }
 
     @Override
@@ -254,8 +247,6 @@ public class RestaurantFragment extends Fragment implements OnFirebaseQueryResul
     private void updateNbLikes(){
         if(this.nbLikesText.getVisibility()!=View.VISIBLE) {
             this.nbLikesText.setVisibility(View.VISIBLE);
-            this.nbLikesText.getCompoundDrawables()[0].mutate().setColorFilter
-                    (new PorterDuffColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_IN));
         }
         this.nbLikesText.setText(String.valueOf(this.restaurant.getNbLikes()));
     }

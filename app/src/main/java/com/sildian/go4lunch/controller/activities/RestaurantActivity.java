@@ -8,6 +8,7 @@ import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.fragments.RestaurantFragment;
+import com.sildian.go4lunch.model.Restaurant;
 
 /**************************************************************************************************
  * RestaurantActivity
@@ -22,6 +23,7 @@ public class RestaurantActivity extends BaseActivity {
 
     /**Data**/
 
+    private Restaurant restaurant;          //The restaurant
     private PlacesClient placesClient;      //The placesClient allowing to use Google Places API
 
     /**Fragment**/
@@ -37,6 +39,7 @@ public class RestaurantActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_restaurant);
         this.currentUser=getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_USER);
+        this.restaurant=getIntent().getParcelableExtra(MainActivity.KEY_BUNDLE_RESTAURANT);
         initializePlaces();
         initializeResultIntent();
         showFragment();
@@ -77,7 +80,7 @@ public class RestaurantActivity extends BaseActivity {
 
     private void showFragment(){
         this.fragment=(RestaurantFragment)getSupportFragmentManager().findFragmentById(R.id.activity_restaurant_fragment);
-        this.fragment=new RestaurantFragment(this.placesClient);
+        this.fragment=new RestaurantFragment(this.placesClient, this.currentUser, this.restaurant);
         getSupportFragmentManager().beginTransaction().add(R.id.activity_restaurant_fragment, this.fragment).commit();
     }
 }

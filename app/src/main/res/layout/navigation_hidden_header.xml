@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/components_margin_large"
             android:layout_gravity="center"
+            android:textColor="@android:color/white"
             android:text="@string/template_text_name" />
 
     </LinearLayout>
