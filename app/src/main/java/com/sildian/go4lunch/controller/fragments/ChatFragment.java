@@ -43,7 +43,7 @@ import butterknife.BindView;
  * Allow the workmates to chat together
  *************************************************************************************************/
 
-public class ChatFragment extends BaseFragment {
+public class ChatFragment extends BaseFragment implements MessageAdapter.OnDataChangedListener{
 
     /*********************************************************************************************
      * UI components
@@ -64,6 +64,15 @@ public class ChatFragment extends BaseFragment {
 
     public ChatFragment(PlacesClient placesClient, LatLng userLocation, Workmate currentUser, List<Restaurant> restaurants) {
         super(placesClient, userLocation, currentUser, restaurants);
+    }
+
+    /*********************************************************************************************
+     * Callbacks
+     ********************************************************************************************/
+
+    @Override
+    public void onDataChanged() {
+        this.messagesView.smoothScrollToPosition(0);
     }
 
     /*********************************************************************************************
@@ -98,9 +107,11 @@ public class ChatFragment extends BaseFragment {
     private void initializeMessagesView(){
         this.messageAdapter=new MessageAdapter(
                 generateOptionsForAdapter(FirebaseQueriesMessage.getLast50Messages()),
-                this.currentUser, Glide.with(this));
+                this.currentUser, Glide.with(this), this);
         this.messagesView.setAdapter(this.messageAdapter);
-        this.messagesView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        this.messagesView.setLayoutManager(layoutManager);
     }
 
     private void initializeMessageButton(){

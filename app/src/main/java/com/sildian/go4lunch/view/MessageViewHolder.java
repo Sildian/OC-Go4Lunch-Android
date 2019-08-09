@@ -13,6 +13,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Message;
 import com.sildian.go4lunch.model.Workmate;
+import com.sildian.go4lunch.utils.DateUtilities;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,8 +34,8 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.list_message_item) LinearLayout messageLayout;
     @BindView(R.id.list_message_item_text) TextView messageText;
     @BindView(R.id.list_message_item_sender_image) ImageView senderImage;
-    @BindView(R.id.list_message_item_sender_name) TextView senderName;
-    @BindView(R.id.list_message_item_date) TextView messageDate;
+    @BindView(R.id.list_message_item_sender_name) TextView senderNameText;
+    @BindView(R.id.list_message_item_date) TextView messageDateText;
 
     /**Data**/
 
@@ -60,13 +64,32 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
             this.messageLayout.setGravity(Gravity.END);
         }
 
-        /*Updates the other components*/
+        /*Updates the message's text*/
 
         this.messageText.setText(message.getText());
         if(message.getWorkmate().getImageUrl()!=null){
             glide.load(message.getWorkmate().getImageUrl()).apply(RequestOptions.circleCropTransform()).into(this.senderImage);
         }
-        this.senderName.setText(message.getWorkmate().getName());
-        this.messageDate.setText(message.getDate().toString());
+
+        /*Updates the sender's name*/
+
+        this.senderNameText.setText(message.getWorkmate().getName());
+
+        /*Updates the message's date*/
+
+        String currentDate=DateUtilities.Companion.convertFormat(
+                Calendar.getInstance().getTime(), DateUtilities.Companion.getLocalDateFormatPattern());
+        String messageDate= DateUtilities.Companion.convertFormat(message.getDate(), DateUtilities.Companion.getLocalDateFormatPattern());
+        String messageTime= DateUtilities.Companion.convertFormat(message.getDate(), DateUtilities.Companion.getLocalTimeFormatPattern());
+
+        String fullDate=null;
+
+        if(currentDate.equals(messageDate)){
+            fullDate=messageTime;
+        }else{
+            fullDate=messageDate+" "+messageTime;
+        }
+
+        this.messageDateText.setText(fullDate);
     }
 }

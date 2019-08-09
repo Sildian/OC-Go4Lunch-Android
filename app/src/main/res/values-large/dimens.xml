@@ -11,5 +11,5 @@
     <dimen name="image_small_width">45dp</dimen>
     <dimen name="image_large_min_height">250dp</dimen>
     <dimen name="message_background_corner_radius">45dp</dimen>
-    <dimen name="message_width">350dp</dimen>
+    <dimen name="message_width">275dp</dimen>
 </resources>

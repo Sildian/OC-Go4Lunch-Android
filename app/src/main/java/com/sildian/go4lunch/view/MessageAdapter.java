@@ -20,20 +20,29 @@ import com.sildian.go4lunch.model.Workmate;
 
 public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageViewHolder> {
 
+    /**Interface allowing to notify the listener when the data has changed**/
+
+    public interface OnDataChangedListener{
+        void onDataChanged();
+    }
+
     /**Data**/
 
     private Workmate currentUser;                           //The current user
     private RequestManager glide;                           //Glide manager to display the images
+    private OnDataChangedListener listener;                 //The listener
 
     /**Constructor**/
 
-    public MessageAdapter(@NonNull FirestoreRecyclerOptions<Message> options, Workmate currentUser, RequestManager glide) {
+    public MessageAdapter(@NonNull FirestoreRecyclerOptions<Message> options, Workmate currentUser,
+                          RequestManager glide, OnDataChangedListener listener) {
         super(options);
         this.currentUser=currentUser;
         this.glide = glide;
+        this.listener=listener;
     }
 
-    /**Adapter methods**/
+    /**Callbacks**/
 
     @NonNull
     @Override
@@ -46,5 +55,11 @@ public class MessageAdapter extends FirestoreRecyclerAdapter<Message, MessageVie
     @Override
     protected void onBindViewHolder(@NonNull MessageViewHolder holder, int position, @NonNull Message message) {
         holder.update(message, this.glide);
+    }
+
+    @Override
+    public void onDataChanged() {
+        super.onDataChanged();
+        this.listener.onDataChanged();
     }
 }

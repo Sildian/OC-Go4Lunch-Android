@@ -26,6 +26,16 @@ class DateUtilities {
             return calendar.time
         }
 
+        /**Gets the local date format pattern
+         * @return a String containing the local date format's pattern
+         */
+
+        fun getLocalDateFormatPattern(): String {
+            val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
+            val simpleDateFormat = dateFormat as SimpleDateFormat
+            return simpleDateFormat.toPattern()
+        }
+
         /**Gets the local time format pattern
          * @return a String containing the local time format's pattern
          */
@@ -64,6 +74,16 @@ class DateUtilities {
             }
 
             return outputItem
+        }
+
+        /**Converts a date or time's format
+         * @param date : the date
+         * @param outputFormat : the output format
+         */
+
+        fun convertFormat(date:Date, outputFormat: String):String{
+            val simpleOutputFormat = SimpleDateFormat(outputFormat)
+            return simpleOutputFormat.format(date)
         }
     }
 }

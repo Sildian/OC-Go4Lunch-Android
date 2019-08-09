@@ -33,6 +33,6 @@ public class FirebaseQueriesMessage {
     /**Gets the last 50 messages from Firebase**/
 
     public static Query getLast50Messages(){
-        return getMessageCollection().orderBy("date").limit(50);
+        return getMessageCollection().orderBy("date", Query.Direction.DESCENDING).limit(50);
     }
 }
