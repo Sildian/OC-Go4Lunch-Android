@@ -6,6 +6,7 @@
     <string name="menu_map">Map View</string>
     <string name="menu_list">List View</string>
     <string name="menu_workmates">Workmates</string>
+    <string name="menu_chat">Chat</string>
     <string name="menu_your_lunch">Your lunch</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_logout">Logout</string>
@@ -32,12 +33,14 @@
     <string name="button_restaurant_more_details">More details</string>
     <string name="button_settings_reset">Reset settings</string>
     <string name="button_settings_account_delete">Delete my account</string>
+    <string name="button_chat_message_send">Send</string>
 
     <!-- Text hints -->
     <string name="hint_search_restaurant">Search restaurants</string>
+    <string name="hint_chat_message">Your message</string>
 
     <!-- Text displayed within Dialogs -->
-    <string name="dialog_neutral_button_text">Ok</string>
+    <string name="dialog_neutral_button_text">OK</string>
     <string name="dialog_positive_button_text">Yes</string>
     <string name="dialog_negative_button_text">No</string>
     <string name="dialog_firebase_error_title">Database error</string>

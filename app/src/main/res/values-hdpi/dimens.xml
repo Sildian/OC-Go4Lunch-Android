@@ -10,4 +10,5 @@
     <dimen name="image_width">75dp</dimen>
     <dimen name="image_small_width">40dp</dimen>
     <dimen name="image_large_min_height">200dp</dimen>
+    <dimen name="message_background_corner_radius">40dp</dimen>
 </resources>

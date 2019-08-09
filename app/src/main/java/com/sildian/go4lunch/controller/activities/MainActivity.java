@@ -46,6 +46,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.controller.fragments.BaseFragment;
+import com.sildian.go4lunch.controller.fragments.ChatFragment;
 import com.sildian.go4lunch.controller.fragments.ListFragment;
 import com.sildian.go4lunch.controller.fragments.MapFragment;
 import com.sildian.go4lunch.controller.fragments.WorkmateFragment;
@@ -505,6 +506,10 @@ public class MainActivity extends BaseActivity
 
             case R.id.menu_navigation_workmates:
                 this.fragment=new WorkmateFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
+                break;
+
+            case R.id.menu_navigation_chat:
+                this.fragment=new ChatFragment(this.placesClient, this.userLocation, this.currentUser, this.restaurants);
                 break;
         }
 

@@ -7,6 +7,7 @@
     <string name="menu_map">Carte</string>
     <string name="menu_list">Liste Restos</string>
     <string name="menu_workmates">Collègues</string>
+    <string name="menu_chat">Chat</string>
     <string name="menu_your_lunch">Mon déj</string>
     <string name="menu_settings">Mes paramètres</string>
     <string name="menu_logout">Me déconnecter</string>
@@ -33,12 +34,14 @@
     <string name="button_restaurant_more_details">Plus</string>
     <string name="button_settings_reset">Réinitialiser</string>
     <string name="button_settings_account_delete">Supprimer mon compte</string>
+    <string name="button_chat_message_send">Envoyer</string>
 
     <!--Text hints -->
     <string name="hint_search_restaurant">Rechercher des restaurants</string>
+    <string name="hint_chat_message">Mon message</string>
 
     <!-- Text displayed within Dialogs -->
-    <string name="dialog_neutral_button_text">Ok</string>
+    <string name="dialog_neutral_button_text">OK</string>
     <string name="dialog_positive_button_text">Oui</string>
     <string name="dialog_negative_button_text">Non</string>
     <string name="dialog_firebase_error_title">Erreur base de données</string>

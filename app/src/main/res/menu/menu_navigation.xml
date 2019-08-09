@@ -17,5 +17,10 @@
             android:icon="@drawable/ic_workmates"
             android:title="@string/menu_workmates">
         </item>
+        <item
+            android:id="@+id/menu_navigation_chat"
+            android:icon="@drawable/ic_chat"
+            android:title="@string/menu_chat">
+        </item>
     </group>
 </menu>
