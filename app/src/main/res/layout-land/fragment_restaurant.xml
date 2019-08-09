@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:baselineAligned="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3">
+
+        <ImageView
+            android:id="@+id/fragment_restaurant_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/image_large_min_height"
+            android:contentDescription="@string/template_text_image"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_restaurant_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars[12]" />
+
+        <LinearLayout
+            android:id="@+id/fragment_restaurant_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/fragment_restaurant_contact"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_restaurant_image">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fragment_restaurant_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/components_margin_small"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_title"
+                    android:textStyle="bold"
+                    android:text="@string/template_text_name"/>
+
+                <RatingBar
+                    android:id="@+id/fragment_restaurant_stars"
+                    style="@style/Widget.AppCompat.RatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/components_margin_small"
+                    android:clickable="false"
+                    android:numStars="3"
+                    android:rating="0" />
+
+                <TextView
+                    android:id="@+id/fragment_restaurant_nb_likes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/components_margin_small"
+                    android:visibility="invisible"
+                    android:drawableStart="@drawable/ic_like_white"
+                    android:text="@string/template_text_number"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_body" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fragment_restaurant_cuisineType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/components_margin_small"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_body"
+                android:text="@string/template_text_cuisine_type"/>
+
+            <TextView
+                android:id="@+id/fragment_restaurant_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/components_margin_small"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_body"
+                android:text="@string/template_text_address"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fragment_restaurant_button_lunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/components_margin_large"
+            android:clickable="true"
+            android:focusable="true"
+            android:tint="@color/colorPrimary"
+            app:backgroundTint="@android:color/white"
+            app:layout_constraintBottom_toTopOf="@id/fragment_restaurant_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/fragment_restaurant_description"
+            app:srcCompat="@drawable/ic_lunch" />
+
+        <LinearLayout
+            android:id="@+id/fragment_restaurant_contact"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fragment_restaurant_description">
+
+            <Button
+                android:id="@+id/fragment_restaurant_button_call"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/components_margin_small"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/button_restaurant_call"
+                android:drawableTop="@drawable/ic_phone"/>
+
+            <Button
+                android:id="@+id/fragment_restaurant_button_like"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/components_margin_small"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/button_restaurant_like"
+                android:drawableTop="@drawable/ic_like"/>
+
+            <Button
+                android:id="@+id/fragment_restaurant_button_website"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_weight="1"
+                android:layout_margin="@dimen/components_margin_small"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/button_restaurant_website"
+                android:drawableTop="@drawable/ic_website"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/components_margin_small"
+            android:textSize="@dimen/text_size_title"
+            android:textColor="@color/colorPrimary"
+            android:textAllCaps="true"
+            android:text="@string/text_restaurant_workmates"/>
+
+        <View
+            android:id="@+id/fragment_restaurant_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="@dimen/components_margin_small"
+            android:background="?android:attr/listDivider" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragment_restaurant_workmates"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</LinearLayout>
+

@@ -20,6 +20,7 @@
     <string name="text_restaurant_opening_hours_unknown">Horaires inconnus</string>
     <string name="text_restaurant_opening_hours_closed">Fermé</string>
     <string name="text_restaurant_opening_hours_open">Ouvre</string>
+    <string name="text_restaurant_workmates">Ces collègues déjeunent ici</string>
     <string name="text_workmate_name_and_action_workmate_on">mange chez</string>
     <string name="text_workmate_name_and_action_workmate_off">n\'a pas encore décidé</string>
     <string name="text_workmate_name_and_action_restaurant">mange ici</string>

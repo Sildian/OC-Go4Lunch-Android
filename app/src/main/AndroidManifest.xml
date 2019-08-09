@@ -41,11 +41,15 @@
 
         <activity
             android:name=".controller.activities.SettingsActivity"
-            android:parentActivityName=".controller.activities.MainActivity"></activity>
+            android:parentActivityName=".controller.activities.MainActivity"
+            android:configChanges="orientation|screenSize">
+
+        </activity>
 
         <activity android:name=".controller.activities.RestaurantActivity" />
 
-        <activity android:name=".controller.activities.MainActivity">
+        <activity android:name=".controller.activities.MainActivity"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

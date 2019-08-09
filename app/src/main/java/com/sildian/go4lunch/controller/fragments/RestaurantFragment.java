@@ -7,12 +7,11 @@ import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,32 +22,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.Query;
+
 import com.sildian.go4lunch.R;
-import com.sildian.go4lunch.controller.activities.MainActivity;
 import com.sildian.go4lunch.controller.activities.RestaurantActivity;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.Workmate;
 import com.sildian.go4lunch.utils.DateUtilities;
 import com.sildian.go4lunch.utils.api.APIStreams;
 import com.sildian.go4lunch.utils.firebase.FirebaseQueriesLunch;
-import com.sildian.go4lunch.utils.firebase.FirebaseQueriesWorkmate;
 import com.sildian.go4lunch.utils.listeners.OnFirebaseQueryResultListener;
 import com.sildian.go4lunch.utils.listeners.OnPlaceQueryResultListener;
 import com.sildian.go4lunch.view.WorkmateAdapter;
 import com.sildian.go4lunch.view.WorkmateViewHolder;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import icepick.Icepick;
+import icepick.State;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.observers.DisposableObserver;
 
 /**************************************************************************************************
  * RestaurantFragment
@@ -65,8 +66,8 @@ public class RestaurantFragment extends Fragment implements OnFirebaseQueryResul
 
     private PlacesClient placesClient;                  //The placesClient allowing to use Google Places API
     private Disposable disposable;                      //The disposable which gets the response from the API
-    private Workmate currentUser;                       //The current user
-    private Restaurant restaurant;                      //The restaurant
+    @State Workmate currentUser;                        //The current user
+    @State Restaurant restaurant;                       //The restaurant
 
     /**UI Components**/
 
@@ -105,8 +106,17 @@ public class RestaurantFragment extends Fragment implements OnFirebaseQueryResul
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_restaurant, container, false);
         ButterKnife.bind(this, view);
+        Icepick.restoreInstanceState(this, savedInstanceState);
+        if(this.placesClient==null){
+            initializePlaces();
+        }
         initializeView();
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        Icepick.saveInstanceState(this, outState);
     }
 
     @Override
@@ -140,6 +150,11 @@ public class RestaurantFragment extends Fragment implements OnFirebaseQueryResul
     /*********************************************************************************************
      * Initializations
      ********************************************************************************************/
+
+    private void initializePlaces(){
+        Places.initialize(getContext(), getString(R.string.google_maps_key));
+        this.placesClient = Places.createClient(getContext());
+    }
 
     private void initializeView(){
         RestaurantActivity activity=(RestaurantActivity) getActivity();
