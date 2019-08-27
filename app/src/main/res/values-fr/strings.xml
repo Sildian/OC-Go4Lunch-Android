@@ -54,9 +54,9 @@
     <string name="dialog_account_delete_title">Suppression de compte</string>
     <string name="dialog_account_delete_message">Vous êtes sur le point de supprimer votre compte et ses informations. Confirmez-vous la suppression?</string>
     <string name="dialog_location_error_title">Erreur de localisation</string>
-    <string name="dialog_location_error_message">Désolé, votre location n\'a pas pu être trouvée. Veuillez vérifier que votre service de location est activé ou réessayer plus tard.</string>
+    <string name="dialog_location_error_message">Désolé, votre localisation n\'a pas pu être trouvée. Veuillez vérifier que votre service de localisation est activé ou réessayer plus tard.</string>
     <string name="dialog_location_permission_title">Permission nécessaire</string>
-    <string name="dialog_location_permission_message">Cette application a besoin de votre permission pour utiliser le service de location. Veuillez accepter la permission pour pouvoir utiliser ses fonctionnalités</string>
+    <string name="dialog_location_permission_message">Cette application a besoin de votre permission pour utiliser le service de localisation. Veuillez accepter la permission pour pouvoir utiliser ses fonctionnalités</string>
 
     <!-- Text displayed within Toasts -->
     <string name="toast_login_success">Vous êtes connecté en tant que</string>

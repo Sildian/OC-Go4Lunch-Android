@@ -533,7 +533,7 @@ public class MainActivity extends BaseActivity
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.activity_main_fragment, this.fragment)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     /*********************************************************************************************

@@ -144,7 +144,8 @@ public class APIStreams {
                         .map(response -> {
                             restaurantWithDetails.addExtraDetails(response.getResults().getItems().get(0));
                             return restaurantWithDetails;
-                        }));
+                        })
+                .onErrorReturnItem(restaurant));
     }
 
     /**Gets a restaurant's main image
