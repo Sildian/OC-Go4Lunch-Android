@@ -28,7 +28,7 @@
 
     <!-- Login theme -->
     <style name="LoginTheme" parent="AppTheme">
-        <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="android:windowBackground">@drawable/background_login</item>
     </style>
 
 </resources>
