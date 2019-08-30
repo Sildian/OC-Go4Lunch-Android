@@ -364,11 +364,12 @@ public class MainActivity extends BaseActivity
         /*Prepares the fields to be retrieved*/
 
         List<Place.Field> fields = Arrays.asList(
-                Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS, Place.Field.RATING);
+                Place.Field.TYPES, Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG,
+                Place.Field.ADDRESS, Place.Field.RATING);
 
         /*Runs the autocomplete intent*/
 
-        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
                 .setHint(getString(R.string.hint_search_restaurant))
                 .setLocationRestriction(locationRestriction)
                 .setTypeFilter(TypeFilter.ESTABLISHMENT)
@@ -441,18 +442,28 @@ public class MainActivity extends BaseActivity
 
             if(data!=null) {
 
-                /*Gets the place information*/
+                /*Checks that the place's type is a restaurant*/
 
                 Place place = Autocomplete.getPlaceFromIntent(data);
-                Restaurant restaurant = new Restaurant(
-                        place.getId(), place.getName(), place.getLatLng().latitude, place.getLatLng().longitude,
-                        place.getAddress(), place.getRating());
 
-                /*Updates the restaurants list and the fragment*/
+                if(place.getTypes().contains(Place.Type.RESTAURANT)) {
 
-                this.restaurants.clear();
-                this.restaurants.add(restaurant);
-                this.fragment.onRestaurantsReceived(this.restaurants);
+                    /*Gets the place's information*/
+
+                    Restaurant restaurant = new Restaurant(
+                            place.getId(), place.getName(), place.getLatLng().latitude, place.getLatLng().longitude,
+                            place.getAddress(), place.getRating());
+
+                    /*Updates the restaurants list and the fragment*/
+
+                    this.restaurants.clear();
+                    this.restaurants.add(restaurant);
+                    this.fragment.onRestaurantsReceived(this.restaurants);
+
+                }else{
+                    String message=place.getName()+" "+getString(R.string.dialog_api_place_is_not_restaurant_message);
+                    showDialog(getString(R.string.dialog_api_place_is_not_restaurant_title), message);
+                }
 
             }else{
                 showDialog(getString(R.string.dialog_api_no_restaurant_found_title),

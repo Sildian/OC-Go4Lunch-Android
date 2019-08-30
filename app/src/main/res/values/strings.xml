@@ -50,6 +50,8 @@
     <string name="dialog_api_error_message">Sorry, an error occurred while fetching the data. Please try again later.</string>
     <string name="dialog_api_no_restaurant_found_title">Empty result</string>
     <string name="dialog_api_no_restaurant_found_message">No restaurant matching your criteria was found in the area.</string>
+    <string name="dialog_api_place_is_not_restaurant_title">Wrong place type</string>
+    <string name="dialog_api_place_is_not_restaurant_message">is not a restaurant.</string>
     <string name="dialog_account_delete_title">Delete account</string>
     <string name="dialog_account_delete_message">You are going to delete your account and its data. Do you confirm?</string>
     <string name="dialog_location_error_title">Location error</string>
