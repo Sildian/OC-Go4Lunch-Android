@@ -29,7 +29,7 @@ public class ListFragment extends BaseFragment {
      * UI components
      ********************************************************************************************/
 
-    @BindView(R.id.fragment_list_restaurants) RecyclerView restaurantsView;
+    @BindView(R.id.fragment_list_restaurants) RecyclerView restaurantsRecyclerView;
     private RestaurantAdapter restaurantAdapter;
 
     /*********************************************************************************************
@@ -78,12 +78,12 @@ public class ListFragment extends BaseFragment {
         /*Initializes the different items to create the RecyclerView*/
 
         this.restaurantAdapter=new RestaurantAdapter(this.placesClient, this.restaurants, this.userLocation);
-        this.restaurantsView.setAdapter(this.restaurantAdapter);
-        this.restaurantsView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        this.restaurantsRecyclerView.setAdapter(this.restaurantAdapter);
+        this.restaurantsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         /*Initializes the item click support*/
 
-        ItemClickSupport.addTo(this.restaurantsView, R.layout.list_restaurant_item)
+        ItemClickSupport.addTo(this.restaurantsRecyclerView, R.layout.list_restaurant_item)
                 .setOnItemClickListener((recyclerView, position, v) -> {
                     startRestaurantActivity(this.restaurants.get(position));
                 });

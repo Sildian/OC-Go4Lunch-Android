@@ -81,7 +81,7 @@ public class RestaurantFragment extends Fragment implements OnFirebaseQueryResul
     @BindView(R.id.fragment_restaurant_button_like) Button likeButton;
     @BindView(R.id.fragment_restaurant_button_website) Button websiteButton;
     @BindView(R.id.fragment_restaurant_button_lunch) FloatingActionButton lunchButton;
-    @BindView(R.id.fragment_restaurant_workmates) RecyclerView workmatesView;
+    @BindView(R.id.fragment_restaurant_workmates) RecyclerView workmatesRecyclerView;
     private WorkmateAdapter workmateAdapter;
 
     /*********************************************************************************************
@@ -239,8 +239,8 @@ public class RestaurantFragment extends Fragment implements OnFirebaseQueryResul
         this.workmateAdapter=new WorkmateAdapter(
                 generateOptionsForAdapter(FirebaseQueriesLunch.getWorkmatesEatingAtRestaurant(this.restaurant)),
                 WorkmateViewHolder.ID_RESTAURANT, Glide.with(this));
-        this.workmatesView.setAdapter(this.workmateAdapter);
-        this.workmatesView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        this.workmatesRecyclerView.setAdapter(this.workmateAdapter);
+        this.workmatesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     /*********************************************************************************************

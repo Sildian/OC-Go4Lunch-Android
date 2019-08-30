@@ -49,7 +49,7 @@ public class ChatFragment extends BaseFragment implements MessageAdapter.OnDataC
      * UI components
      ********************************************************************************************/
 
-    @BindView(R.id.fragment_chat_messages) RecyclerView messagesView;
+    @BindView(R.id.fragment_chat_messages) RecyclerView messagesRecyclerView;
     @BindView(R.id.fragment_chat_message_text) TextView messageText;
     @BindView(R.id.fragment_chat_message_button) Button messageButton;
     private MessageAdapter messageAdapter;
@@ -72,7 +72,7 @@ public class ChatFragment extends BaseFragment implements MessageAdapter.OnDataC
 
     @Override
     public void onDataChanged() {
-        this.messagesView.smoothScrollToPosition(0);
+        this.messagesRecyclerView.smoothScrollToPosition(0);
     }
 
     /*********************************************************************************************
@@ -108,10 +108,10 @@ public class ChatFragment extends BaseFragment implements MessageAdapter.OnDataC
         this.messageAdapter=new MessageAdapter(
                 generateOptionsForAdapter(FirebaseQueriesMessage.getLast50Messages()),
                 this.currentUser, Glide.with(this), this);
-        this.messagesView.setAdapter(this.messageAdapter);
+        this.messagesRecyclerView.setAdapter(this.messageAdapter);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
-        this.messagesView.setLayoutManager(layoutManager);
+        this.messagesRecyclerView.setLayoutManager(layoutManager);
     }
 
     private void initializeMessageButton(){

@@ -34,7 +34,7 @@ public class WorkmateFragment extends BaseFragment{
      * UI Components
      ********************************************************************************************/
 
-    @BindView(R.id.fragment_workmate_workmates) RecyclerView workmatesView;
+    @BindView(R.id.fragment_workmate_workmates) RecyclerView workmatesRecyclerView;
     private WorkmateAdapter workmateAdapter;
 
     /*********************************************************************************************
@@ -84,12 +84,12 @@ public class WorkmateFragment extends BaseFragment{
         this.workmateAdapter=new WorkmateAdapter(
                 generateOptionsForAdapter(FirebaseQueriesWorkmate.getAllWorkmates()),
                 WorkmateViewHolder.ID_WORKMATE, Glide.with(this));
-        this.workmatesView.setAdapter(this.workmateAdapter);
-        this.workmatesView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        this.workmatesRecyclerView.setAdapter(this.workmateAdapter);
+        this.workmatesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         /*Initializes the item click support*/
 
-        ItemClickSupport.addTo(this.workmatesView, R.layout.list_workmate_item)
+        ItemClickSupport.addTo(this.workmatesRecyclerView, R.layout.list_workmate_item)
                 .setOnItemClickListener((recyclerView, position, v) -> {
 
                     Workmate workmate=this.workmateAdapter.getItem(position);
