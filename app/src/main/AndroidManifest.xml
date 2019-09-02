@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sildian.go4lunch">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
          location permissions for the 'MyLocation' functionality.
     -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,6 +22,29 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
+
+        <activity
+            android:name=".controller.activities.AutocompleteSearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".controller.activities.MainActivity"></activity>
+
+        <activity
+            android:name=".controller.activities.SettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".controller.activities.MainActivity"></activity>
+
+        <activity android:name=".controller.activities.RestaurantActivity" />
+
+        <activity
+            android:name=".controller.activities.MainActivity"
+            android:configChanges="orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
@@ -35,28 +54,14 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <activity
-            android:name=".controller.activities.SettingsActivity"
-            android:parentActivityName=".controller.activities.MainActivity"
-            android:configChanges="orientation|screenSize">
-
-        </activity>
-
-        <activity android:name=".controller.activities.RestaurantActivity" />
-
-        <activity android:name=".controller.activities.MainActivity"
-            android:configChanges="orientation|screenSize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/components_margin_small"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/list_autocomplete_suggestion_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/components_margin_small"
+        android:textSize="@dimen/text_size_title"
+        android:text="@string/template_text_autocomplete_suggestion_name"/>
+
+    <TextView
+        android:id="@+id/list_autocomplete_suggestion_item_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/components_margin_small"
+        android:textSize="@dimen/text_size_body"
+        android:text="@string/template_text_autocomplete_suggestion_address"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/components_margin_small"
+        android:background="?android:attr/listDivider" />
+
+</LinearLayout>

@@ -86,6 +86,9 @@ public class MainActivity extends BaseActivity
 
     public static final String KEY_BUNDLE_USER="KEY_BUNDLE_USER";
     public static final String KEY_BUNDLE_RESTAURANT="KEY_BUNDLE_RESTAURANT";
+    public static final String KEY_BUNDLE_USER_LOCATION_LATITUDE="KEY_BUNDLE_USER_LOCATION_LATITUDE";
+    public static final String KEY_BUNDLE_USER_LOCATION_LONGITUDE="KEY_BUNDLE_USER_LOCATION_LONGITUDE";
+    public static final String KEY_BUNDLE_KEYWORD="KEY_BUNDLE_KEYWORD";
 
     /**Location permission**/
 
@@ -354,27 +357,10 @@ public class MainActivity extends BaseActivity
     /**Starts an activity to search restaurants by filling a text**/
 
     private void startAutocompleteActivity(){
-
-        /*Prepares bounds to restrict the research*/
-
-        RectangularBounds locationRestriction=RectangularBounds.newInstance(
-                new LatLng(this.userLocation.latitude-0.01, this.userLocation.longitude-0.01),
-                new LatLng(this.userLocation.latitude+0.01, this.userLocation.longitude+0.01));
-
-        /*Prepares the fields to be retrieved*/
-
-        List<Place.Field> fields = Arrays.asList(
-                Place.Field.TYPES, Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG,
-                Place.Field.ADDRESS, Place.Field.RATING);
-
-        /*Runs the autocomplete intent*/
-
-        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
-                .setHint(getString(R.string.hint_search_restaurant))
-                .setLocationRestriction(locationRestriction)
-                .setTypeFilter(TypeFilter.ESTABLISHMENT)
-                .build(this);
-        startActivityForResult(intent, KEY_REQUEST_AUTOCOMPLETE);
+        Intent autocompleteSearchIActivityntent=new Intent(this, AutocompleteSearchActivity.class);
+        autocompleteSearchIActivityntent.putExtra(KEY_BUNDLE_USER_LOCATION_LATITUDE, this.userLocation.latitude);
+        autocompleteSearchIActivityntent.putExtra(KEY_BUNDLE_USER_LOCATION_LONGITUDE, this.userLocation.longitude);
+        startActivityForResult(autocompleteSearchIActivityntent, KEY_REQUEST_AUTOCOMPLETE);
     }
 
     /**Starts the RestaurantActivity
@@ -438,37 +424,14 @@ public class MainActivity extends BaseActivity
 
     private void handleAutocompleteResult(int resultCode, Intent data){
 
-        if (resultCode == RESULT_OK) {
+        /*If the result is ok and the data is not null, then runs a query to get the restaurant matching the keyword*/
 
-            if(data!=null) {
+        if (resultCode == RESULT_OK&&data!=null) {
+                String keyword=data.getStringExtra(KEY_BUNDLE_KEYWORD);
+                runGooglePlacesSearchQuery(this.userLocation, this.currentUser.getSettings().getSearchRadius(),
+                        keyword, this);
 
-                /*Checks that the place's type is a restaurant*/
-
-                Place place = Autocomplete.getPlaceFromIntent(data);
-
-                if(place.getTypes().contains(Place.Type.RESTAURANT)) {
-
-                    /*Gets the place's information*/
-
-                    Restaurant restaurant = new Restaurant(
-                            place.getId(), place.getName(), place.getLatLng().latitude, place.getLatLng().longitude,
-                            place.getAddress(), place.getRating());
-
-                    /*Updates the restaurants list and the fragment*/
-
-                    this.restaurants.clear();
-                    this.restaurants.add(restaurant);
-                    this.fragment.onRestaurantsReceived(this.restaurants);
-
-                }else{
-                    String message=place.getName()+" "+getString(R.string.dialog_api_place_is_not_restaurant_message);
-                    showDialog(getString(R.string.dialog_api_place_is_not_restaurant_title), message);
-                }
-
-            }else{
-                showDialog(getString(R.string.dialog_api_no_restaurant_found_title),
-                        getString(R.string.dialog_api_no_restaurant_found_message));
-            }
+                /*Else shows a message*/
 
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);

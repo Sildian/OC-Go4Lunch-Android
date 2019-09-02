@@ -51,8 +51,6 @@
     <string name="dialog_api_error_message">Désolé, une erreur est survenue au moment de récupérer les données. Veuillez réessayer plus tard.</string>
     <string name="dialog_api_no_restaurant_found_title">Aucun résultat</string>
     <string name="dialog_api_no_restaurant_found_message">Aucun restaurant correspondant à vos critère n\'a été trouvé dans la zone.</string>
-    <string name="dialog_api_place_is_not_restaurant_title">Mauvaise catégorie</string>
-    <string name="dialog_api_place_is_not_restaurant_message">n\'est pas un restaurant.</string>
     <string name="dialog_account_delete_title">Suppression de compte</string>
     <string name="dialog_account_delete_message">Vous êtes sur le point de supprimer votre compte et ses informations. Confirmez-vous la suppression?</string>
     <string name="dialog_location_error_title">Erreur de localisation</string>
@@ -81,6 +79,8 @@
     <string name="template_text_image">Image</string>
     <string name="template_text_message">Message</string>
     <string name="template_text_date">Date</string>
+    <string name="template_text_autocomplete_suggestion_name">Nom</string>
+    <string name="template_text_autocomplete_suggestion_address">Addresse</string>
 
     <!-- Text used within queries -->
     <string name="query_language">fr</string>

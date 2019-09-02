@@ -7,16 +7,22 @@ import android.widget.ImageView;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.sildian.go4lunch.R;
 import com.sildian.go4lunch.model.Restaurant;
 import com.sildian.go4lunch.model.api.GooglePlacesDetailsResponse;
 import com.sildian.go4lunch.model.api.GooglePlacesSearchResponse;
 import com.sildian.go4lunch.model.api.HerePlacesResponse;
+import com.sildian.go4lunch.view.AutocompleteSuggestionAdapter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,6 +63,36 @@ public class APIStreams {
         /*Runs the query and returns the response*/
 
         return apiQueries.getNearbyPlaces(queryLocation, queryRadius, queryPlaceType, queryApiKey)
+                .subscribeOn(Schedulers.io())
+                .timeout(10, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**Gets restaurants near a location and within a radius, specifying the name
+     * @param context : context
+     * @param location : the location
+     * @param radius : the radius in meters
+     * @param restaurantName : the name of the restaurant
+     * @return a response containing the places
+     */
+
+    public static Observable<GooglePlacesSearchResponse> streamGetNearbyRestaurants(
+            Context context, LatLng location, long radius, String restaurantName){
+
+        /*Prepares Retrofit queries*/
+
+        GooglePlacesAPIQueries apiQueries=GooglePlacesAPIQueries.retrofit.create(GooglePlacesAPIQueries.class);
+
+        /*Prepares the query's parameters*/
+
+        String queryLocation=location.latitude+","+location.longitude;
+        String queryRadius=String.valueOf(radius);
+        String queryPlaceType=context.getString(R.string.query_place_type);
+        String queryApiKey=context.getString(R.string.google_api_key);
+
+        /*Runs the query and returns the response*/
+
+        return apiQueries.getNearbyPlaces(queryLocation, queryRadius, queryPlaceType, restaurantName, queryApiKey)
                 .subscribeOn(Schedulers.io())
                 .timeout(10, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread());
@@ -193,5 +229,57 @@ public class APIStreams {
                 });
             }
         });
+    }
+
+    /**Uses Google Places Autocomplete API to get restaurants near a location
+     * @param placesClient : the placesClient allowing to use Google Places API
+     * @param location : the location
+     * @param keyword : the query keyword
+     * @param predictions : the list of suggestions returned by the API
+     * @param adapter : the adapter displaying the results
+     */
+
+    public static void streamGetAutocompleteRestaurants(PlacesClient placesClient, LatLng location,
+                                                   String keyword, List<AutocompletePrediction> predictions,
+                                                   AutocompleteSuggestionAdapter adapter){
+
+        /*Creates a new token for the autocomplete session*/
+
+        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
+
+        /*Prepares bounds to restrict the research*/
+
+        RectangularBounds locationRestriction=RectangularBounds.newInstance(
+                new LatLng(location.latitude-0.01, location.longitude-0.01),
+                new LatLng(location.latitude+0.01, location.longitude+0.01));
+
+        /*Creates a FindAutocompletePredictionsRequest*/
+
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setLocationRestriction(locationRestriction)
+                .setTypeFilter(TypeFilter.ESTABLISHMENT)
+                .setSessionToken(token)
+                .setQuery(keyword)
+                .build();
+
+        /*Runs the request and, if the successful, feeds the recyclerView*/
+
+        placesClient.findAutocompletePredictions(request)
+                .addOnSuccessListener((response) -> {
+                    predictions.clear();
+                    for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
+                        if (prediction.getPlaceTypes().contains(Place.Type.RESTAURANT)) {
+                            predictions.add(prediction);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+
+                })
+                .addOnFailureListener((exception) -> {
+                    if (exception instanceof ApiException) {
+                        ApiException apiException = (ApiException) exception;
+                        Log.d("TAG_API", apiException.getMessage());
+                    }
+                });
     }
 }

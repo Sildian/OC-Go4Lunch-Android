@@ -266,6 +266,58 @@ public abstract class BaseActivity extends AppCompatActivity implements OnFailur
                 });
     }
 
+    /**Runs a query to get the list of restaurants near a location and within a radius from Google Places API,
+     * specifying the restaurant's name
+     * @param location : the location
+     * @param radius : the radius in meters
+     * @param restaurantName : the restaurant's name
+     * @param listener : the listener
+     */
+
+    public void runGooglePlacesSearchQuery(LatLng location, long radius, String restaurantName, OnPlaceQueryResultListener listener){
+
+        updateUIBeforeQuery();
+
+        this.disposable= APIStreams.streamGetNearbyRestaurants(this, location, radius, restaurantName)
+                .subscribeWith(new DisposableObserver<GooglePlacesSearchResponse>(){
+                    @Override
+                    public void onNext(GooglePlacesSearchResponse response) {
+
+                        updateUIAfterQuery();
+
+                        /*If the response contains results, then feeds the restaurants list and sends it to the listener*/
+
+                        if(response.getResults()!=null&&!response.getResults().isEmpty()) {
+                            List<Restaurant> restaurants=new ArrayList<>();
+                            for (GooglePlacesSearchResponse.Result apiRestaurant : response.getResults()) {
+                                restaurants.add(new Restaurant(apiRestaurant));
+                            }
+                            listener.onGetGooglePlacesSearchResult(restaurants);
+                        }
+
+                        /*Else shows a dialog to notify the user that no result was found*/
+
+                        else{
+                            showDialog(getString(R.string.dialog_api_no_restaurant_found_title),
+                                    getString(R.string.dialog_api_no_restaurant_found_message));
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("TAG_API", e.getMessage());
+                        updateUIAfterQuery();
+                        showDialog(getString(R.string.dialog_api_error_title),
+                                getString(R.string.dialog_api_error_message));
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
     /**Runs a query to get all details about a restaurant from Google and Here APIs
      * @param restaurant : the restaurant
      * @param listener : the listener
